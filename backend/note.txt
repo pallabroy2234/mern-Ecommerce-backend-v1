@@ -1,0 +1,3 @@
+
+
+npm i express bcrypt body-parser cloudinary cookie-parser cors dotenv formidable jsonwebtoken mongoose moment socket.io stripe uuid nodemon  http-errors
