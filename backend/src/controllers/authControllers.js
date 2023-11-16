@@ -6,6 +6,8 @@ const Admin = require('../models/adminModel')
 const {createToken} = require("../utiles/jsonWebToken");
 
 class authControllers {
+    
+    // ! admin login -> POST
     admin_login = async (req, res, next) => {
         try {
             const {email, password} = req.body;
@@ -20,24 +22,36 @@ class authControllers {
             }
             
             const token = await createToken({
-                id: admin._id,
-                role: admin.role,
+                id: admin._id, role: admin.role,
             })
             
             res.cookie("accessToken", token, {
-                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), httpOnly: true, secure: true, sameSite: "none",
             })
             
             return successResponse(res, {
-                statusCode: 200,
-                message: "Admin login success",
-                payload: token
+                statusCode: 200, message: "Admin login success", payload: token
             })
         } catch (error) {
             next(error)
+        }
+    }
+    
+    
+    // ! GET USER -> GET
+    getUser = async (req, res, next) => {
+        const {id, role} = req;
+        try {
+            if (role === "admin") {
+                const user = await Admin.findById(id)
+                return successResponse(res, {
+                    statusCode: 200, message: "Get user success", payload: user
+                })
+            } else {
+                console.log("role", role)
+            }
+        } catch (e) {
+            next(e)
         }
     }
 }
