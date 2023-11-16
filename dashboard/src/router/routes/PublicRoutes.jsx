@@ -5,18 +5,18 @@ const Register = lazy(() => import("../../views/auth/Register.jsx"));
 const AdminLogin = lazy(() => import("../../views/auth/AdminLogin.jsx"));
 
 const PublicRoutes = [
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/admin/login",
-    element: <AdminLogin />,
-  },
+    {
+        path: "/login",
+        element: <Login/>,
+    },
+    {
+        path: "/register",
+        element: <Register/>,
+    },
+    {
+        path: "/admin-login",
+        element: <AdminLogin/>,
+    },
 ];
 
 export default PublicRoutes;

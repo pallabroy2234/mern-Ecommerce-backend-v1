@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
+import toast from "react-hot-toast";
 
 
 export const admin_login = createAsyncThunk(
@@ -7,12 +8,12 @@ export const admin_login = createAsyncThunk(
     async (info) => {
         console.log(info)
         try {
-            
             const {data} = await api.post("/admin-login", info, {withCredentials: true})
-            console.log(data)
-            
+            if (data.success === true) {
+                toast.success(data.message)
+            }
         } catch (e) {
-            console.log(e)
+            toast.error(e.response.data.message)
         }
     }
 )

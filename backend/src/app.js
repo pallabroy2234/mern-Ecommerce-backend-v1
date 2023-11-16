@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
 const authRouter = require("./routes/authRouters")
 
 
@@ -18,6 +19,13 @@ app.use(cookieParser())
 
 // ! routers
 app.use("/api", authRouter)
+
+
+// ! client side error handler
+// client error handle
+app.use((req, res, next) => {
+    next(createError(404, "Route not found"));
+});
 
 
 // !  all server error handler
