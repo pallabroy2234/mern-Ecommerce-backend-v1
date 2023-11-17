@@ -1,6 +1,6 @@
 const AdminDashboard = () => {
     return (
-        <div>AdminDashboard</div>
+        <div className="text-white ml-[300px]">AdminDashboard</div>
     )
 }
 export default AdminDashboard
