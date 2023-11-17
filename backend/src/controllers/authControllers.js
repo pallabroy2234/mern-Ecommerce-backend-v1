@@ -17,6 +17,7 @@ class authControllers {
                 throw createError(404, "Email not found")
             }
             const isPasswordMatch = await bcypt.compare(password, admin.password)
+            
             if (!isPasswordMatch) {
                 throw createError(400, "Password not match")
             }

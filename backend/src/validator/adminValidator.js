@@ -3,11 +3,11 @@ const {body} = require("express-validator");
 // registration validator
 
 const validAdmin = [
-    body("email").trim().notEmpty().withMessage("Email is required. Enter your email address").isEmail().withMessage("Invalid email address"),
+    body("email").trim().notEmpty().withMessage("Enter your email address").isEmail().withMessage("Invalid email address"),
     body("password")
         .trim()
         .notEmpty()
-        .withMessage("Passsword is required. Enter your password")
+        .withMessage("Enter your password")
         .isLength({min: 6})
         .withMessage("Password should be at least 6 characters long")
         .matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*\W).+$/)
