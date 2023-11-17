@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.activeHide {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 0, 61% 0, 40% 0, 0 0);
+    transition: all 0.5s ease-in-out;
+}
+
+.activeShow {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 76% 100%, 41% 100%, 0 100%);
+    transition: all 0.5s ease-in-out;
+}
