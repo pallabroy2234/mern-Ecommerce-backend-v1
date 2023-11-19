@@ -45,7 +45,7 @@ export const allNav = [
         title: "Deactive Sellers",
         icon: <FiUsers/>,
         role: "admin",
-        path: "/admin/dashboard/deactive-sellers"
+        path: "/admin/dashboard/deActive-sellers"
     }, {
         id: 7,
         title: "Sellers Request",
