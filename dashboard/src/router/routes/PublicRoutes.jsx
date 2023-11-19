@@ -1,4 +1,5 @@
 import {lazy} from "react";
+import NoFound from "../../views/No-found.jsx";
 
 const Login = lazy(() => import("../../views/auth/Login.jsx"));
 const Register = lazy(() => import("../../views/auth/Register.jsx"));
@@ -16,6 +17,9 @@ const PublicRoutes = [
     {
         path: "/admin-login",
         element: <AdminLogin/>,
+    }, {
+        path: "*",
+        element: <NoFound/>,
     },
 ];
 

@@ -3,6 +3,7 @@ import AdminDashboard from "../../views/admin/AdminDashboard.jsx";
 import Orders from "../../views/admin/Orders.jsx";
 import Category from "../../views/admin/Category.jsx";
 import Sellers from "../../views/admin/Sellers.jsx";
+import PaymentRequest from "../../views/admin/PaymentRequest.jsx";
 
 
 // const AdminDashboard = lazy(() => import("../../views/admin/AdminDashboard.jsx"));
@@ -28,6 +29,11 @@ export const adminRoutes = [
     {
         path: "/admin/dashboard/sellers",
         element: <Sellers/>,
+        role: "admin"
+    },
+    {
+        path: "/admin/dashboard/payment-request",
+        element: <PaymentRequest/>,
         role: "admin"
     }
 ]

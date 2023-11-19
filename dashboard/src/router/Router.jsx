@@ -1,8 +1,8 @@
 import {useRoutes} from "react-router-dom";
 
 const Router = ({allRoutes}) => {
-  const routes = useRoutes([...allRoutes]);
-  return routes;
+    let element = useRoutes([...allRoutes]);
+    return element;
 };
 
 export default Router;
