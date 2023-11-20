@@ -7,6 +7,7 @@ import PaymentRequest from "../../views/admin/PaymentRequest.jsx";
 import DeactiveSellers from "../../views/admin/DeactiveSellers.jsx";
 import SellerRequest from "../../views/admin/SellerRequest.jsx";
 import SellerDetails from "../../views/admin/SellerDetails.jsx";
+import ChatSeller from "../../views/admin/ChatSeller.jsx";
 
 
 // const AdminDashboard = lazy(() => import("../../views/admin/AdminDashboard.jsx"));
@@ -49,10 +50,14 @@ export const adminRoutes = [
         element: <SellerRequest/>,
         role: "admin"
     },
-    
     {
         path: "/admin/dashboard/seller/details/:sellerId",
         element: <SellerDetails/>,
+        role: "admin"
+    },
+    {
+        path: "/admin/dashboard/chat-sellers",
+        element: <ChatSeller/>,
         role: "admin"
     }
 ]
