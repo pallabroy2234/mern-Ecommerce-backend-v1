@@ -44,7 +44,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -64,28 +64,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
-                                <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
-                                    <BsArrowBarDown/></div>
-                            </div>
-                            {/* sub order */}
-                            <div className={`${show ? "block border-b border-slate-700 bg-slate-800 rounded" : "hidden"}`}>
-                                <div className="flex justify-start items-start border-b border-slate-700">
-                                    <div className="py-4 w-[25%] font-medium whitespace-nowrap pl-3">6555021a8c3cbf2c56421e31</div>
-                                    <div className="py-4 w-[13%]">$560</div>
-                                    <div className="py-4 w-[18%]">pending</div>
-                                    <div className="py-4 w-[18%]">pending</div>
-                                </div>
-                            </div>
-                            
-                            
-                            {/*main */}
-                            <div className="flex justify-between items-start border-b border-slate-700">
-                                <div className="py-4 w-[25%] font-medium whitespace-nowrap">6555021a8c3cbf2c56421e31</div>
-                                <div className="py-4 w-[13%]">$560</div>
-                                <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -106,7 +85,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -127,7 +106,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -148,7 +127,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -169,7 +148,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -190,7 +169,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -211,7 +190,7 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
@@ -232,7 +211,28 @@ const Orders = () => {
                                 <div className="py-4 w-[13%]">$560</div>
                                 <div className="py-4 w-[18%]">pending</div>
                                 <div className="py-4 w-[18%]">pending</div>
-                                <div className="py-4 w-[18%]"><Link>View</Link></div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
+                                <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
+                                    <BsArrowBarDown/></div>
+                            </div>
+                            {/* sub order */}
+                            <div className={`${show ? "block border-b border-slate-700 bg-slate-800 rounded" : "hidden"}`}>
+                                <div className="flex justify-start items-start border-b border-slate-700">
+                                    <div className="py-4 w-[25%] font-medium whitespace-nowrap pl-3">6555021a8c3cbf2c56421e31</div>
+                                    <div className="py-4 w-[13%]">$560</div>
+                                    <div className="py-4 w-[18%]">pending</div>
+                                    <div className="py-4 w-[18%]">pending</div>
+                                </div>
+                            </div>
+                            
+                            
+                            {/*main */}
+                            <div className="flex justify-between items-start border-b border-slate-700">
+                                <div className="py-4 w-[25%] font-medium whitespace-nowrap">6555021a8c3cbf2c56421e31</div>
+                                <div className="py-4 w-[13%]">$560</div>
+                                <div className="py-4 w-[18%]">pending</div>
+                                <div className="py-4 w-[18%]">pending</div>
+                                <div className="py-4 w-[18%]"><Link to={`/admin/dashboard/order/details/6555021a8c3cbf2c56421e31`}>View</Link></div>
                                 <div className="py-4 w-[8%] cursor-pointer" onClick={() => setShow(!show)}>
                                     <BsArrowBarDown/></div>
                             </div>
