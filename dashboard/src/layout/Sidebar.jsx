@@ -8,10 +8,10 @@ const Sidebar = ({showSidebar, setShowSidebar}) => {
     const [allNav, setAllNav] = useState("")
     
     useEffect(() => {
-        const navs = getNavs("admin")
+        const navs = getNavs("seller")
         setAllNav(navs)
     }, []);
-    
+
     return (
         <div>
             <div onClick={() => setShowSidebar(!showSidebar)} className={`fixed duration-200 ${showSidebar ? "visible" : "invisible"} w-screen h-screen bg-[#22292f80] top-0 left-0  z-10`}></div>

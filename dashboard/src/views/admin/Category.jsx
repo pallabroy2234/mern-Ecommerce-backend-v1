@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {FaEdit, FaTrash} from "react-icons/fa";
-import Pagination from "../seller/Pagination.jsx";
+import Pagination from "../Pagination.jsx";
 import {BsImage} from "react-icons/bs";
 import {GrClose} from "react-icons/gr";
 

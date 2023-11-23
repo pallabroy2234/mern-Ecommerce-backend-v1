@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import { FaEye} from "react-icons/fa";
-import Pagination from "../seller/Pagination.jsx";
+import Pagination from "../Pagination.jsx";
 import {useState} from "react";
 
 
