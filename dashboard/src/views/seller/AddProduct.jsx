@@ -69,7 +69,7 @@ const AddProduct = () => {
          const files = e.target.files;
          const length = files.length;
          if(length>0){
-             setImages(([...images,...files]))
+             setImages([...images,...files])
              let imageUrl =[];
              
                 for(let i=0; i<length; i++){
@@ -78,6 +78,8 @@ const AddProduct = () => {
                 }
          }
   }
+   
+   
     
     // ! change image
     const changeImage = (image,index)=> {

@@ -79,22 +79,20 @@ export const allNav = [
         title: "All Product",
         icon: <AiFillDashboard/>,
         role: "seller",
-        path: "/seller/dashboard/all-product"
-    },
-    
-    {
-        id: 12,
-        title: "Orders",
-        icon: <AiFillDashboard/>,
-        role: "seller",
-        path: "/seller/dashboard/orders"
+        path: "/seller/dashboard/products"
     },
     {
         id: 13,
         title: "Discount Product",
         icon: <AiFillDashboard/>,
         role: "seller",
-        path: "/seller/dashboard/discount-product"
+        path: "/seller/dashboard/discount-products"
+    }, {
+        id: 12,
+        title: "Orders",
+        icon: <AiFillDashboard/>,
+        role: "seller",
+        path: "/seller/dashboard/orders"
     },
     {
         id: 14,
