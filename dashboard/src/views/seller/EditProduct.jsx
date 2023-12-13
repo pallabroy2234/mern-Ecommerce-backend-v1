@@ -72,7 +72,8 @@ const EditProduct = () => {
         if (files.length > 0) {
             console.log(image);
             console.log(files);
-            console.log(files[0])
+            console.log(files[0]);
+            
         }
     }
     

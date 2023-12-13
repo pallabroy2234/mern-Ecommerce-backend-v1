@@ -40,7 +40,7 @@ const Orders = () => {
                                         <span>Pending</span>
                                     </td>
                                     <td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">
-                                        <Link className="p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50 flex justify-center items-center w-[30px]"><FaEye/></Link>
+                                        <Link to={`/seller/dashboard/order/details/${item}`} className="p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50 flex justify-center items-center w-[30px]"><FaEye/></Link>
                                     </td>
                                 </tr>
                             ))
