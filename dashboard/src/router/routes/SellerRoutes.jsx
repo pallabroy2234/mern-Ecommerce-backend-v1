@@ -5,6 +5,8 @@ import Products from "../../views/seller/Products.jsx";
 import DiscountProducts from "../../views/seller/DiscountProducts.jsx";
 import Orders from "../../views/seller/Orders.jsx";
 import Payments from "../../views/seller/Payments.jsx";
+import SellerToCustomer from "../../views/seller/SellerToCustomer.jsx";
+import SellerToAdmin from "../../views/seller/SellerToAdmin.jsx";
 
 
 const Home = lazy(() => import("../../views/Home.jsx"));
@@ -17,30 +19,53 @@ export const sellerRoutes = [
     {
         path: "/seller/dashboard",
         element: <SellerDashboard/>,
-        ability: ["seller"]
+        role: "seller",
+        status:"active"
     }
     , {
         path: "/seller/dashboard/add-product",
         element: <AddProduct/>,
-        ability: ["seller"]
+        role: "seller",
+        status:"active"
     },
     {
         path: "/seller/dashboard/products",
         element: <Products/>,
-        ability: ["seller"]
+        role: "seller",
+        status:"active"
     },
     {
         path: "/seller/dashboard/discount-products",
         element: <DiscountProducts/>,
-        ability: ["seller"]
+        role: "seller",
+        status:"active"
     },{
         path: "/seller/dashboard/orders",
         element: <Orders/>,
-        ability: ["seller"]
+        role: "seller",
+        ability: ["active", "deactive"],
     },
     {
         path: "/seller/dashboard/payments",
         element: <Payments/>,
-        ability: ["seller"]
+        role: "seller",
+        status:"active"
+    },
+    {
+        path: "/seller/dashboard/chat-support",
+        element: <SellerToAdmin/>,
+        ability: ["active", "deactive","pending"],
+    },
+    {
+        path: "/seller/dashboard/chat-customer/:customerId",
+        element: <SellerToCustomer/>,
+         role: "seller",
+         status: "active"
+    },
+    {
+        path: "/seller/dashboard/chat-customer",
+        element: <SellerToCustomer/>,
+        role: "seller",
+        status: "active"
     }
 ]
