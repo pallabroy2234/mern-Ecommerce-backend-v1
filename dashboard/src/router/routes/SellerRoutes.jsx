@@ -7,6 +7,7 @@ import Orders from "../../views/seller/Orders.jsx";
 import Payments from "../../views/seller/Payments.jsx";
 import SellerToCustomer from "../../views/seller/SellerToCustomer.jsx";
 import SellerToAdmin from "../../views/seller/SellerToAdmin.jsx";
+import Profile from "../../views/seller/Profile.jsx";
 
 
 const Home = lazy(() => import("../../views/Home.jsx"));
@@ -65,6 +66,12 @@ export const sellerRoutes = [
     {
         path: "/seller/dashboard/chat-customer",
         element: <SellerToCustomer/>,
+        role: "seller",
+        status: "active"
+    },
+    {
+        path: "/seller/dashboard/profile",
+        element: <Profile/>,
         role: "seller",
         status: "active"
     }
