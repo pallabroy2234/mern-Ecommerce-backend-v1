@@ -77,7 +77,7 @@ const Payments = () => {
             </div>
             
         {/* send Request and success withdraw  */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 pb-4">
                 
                 <div className="bg-secondary text-white rounded-md p-5">
                     <h2 className="text-lg">Send Request</h2>
@@ -94,7 +94,7 @@ const Payments = () => {
                     
                     {/* pending request   */}
                     <div>
-                        <h2 className="text-lg pb-4 text-white">Pending Request</h2>
+                        <h2 className="text-lg pb-4 text-white pt-4">Pending Request</h2>
                         <div className="w-full overflow-x-auto text-white">
                             <div className="flex bg-[#161d31] uppercase min-w-[340px]">
                                 <div className="w-[25%] p-2 text-white">No</div>
