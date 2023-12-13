@@ -99,7 +99,6 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        
                         <div className="px-0 md:px-5 py-2">
                             {
                                 userInfo ?
