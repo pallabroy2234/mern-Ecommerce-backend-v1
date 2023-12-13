@@ -4,6 +4,7 @@ import AddProduct from "../../views/seller/AddProduct.jsx";
 import Products from "../../views/seller/Products.jsx";
 import DiscountProducts from "../../views/seller/DiscountProducts.jsx";
 import Orders from "../../views/seller/Orders.jsx";
+import Payments from "../../views/seller/Payments.jsx";
 
 
 const Home = lazy(() => import("../../views/Home.jsx"));
@@ -35,6 +36,11 @@ export const sellerRoutes = [
     },{
         path: "/seller/dashboard/orders",
         element: <Orders/>,
+        ability: ["seller"]
+    },
+    {
+        path: "/seller/dashboard/payments",
+        element: <Payments/>,
         ability: ["seller"]
     }
 ]

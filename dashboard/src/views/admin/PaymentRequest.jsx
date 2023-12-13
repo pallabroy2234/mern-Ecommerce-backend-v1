@@ -44,7 +44,6 @@ const PaymentRequest = () => {
                         {
                             <List style={{
                                 minWidth: "340px",
-                                overflow: "hidden"
                             }} className="List" height={450} itemCount={100} itemSize={35} outerElementType={outerElementType}>
                                 {Row}
                             </List>
