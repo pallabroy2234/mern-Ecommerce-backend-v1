@@ -5,6 +5,7 @@ import {PropagateLoader} from "react-spinners";
 import {useEffect} from "react";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
+import {overrideStyle} from "../../utils/utils.js";
 
 const AdminLogin = () => {
     const dispatch = useDispatch()
@@ -12,7 +13,8 @@ const AdminLogin = () => {
     const navigate = useNavigate()
     const form = useForm({
         defaultValues: {
-            email: "", password: "",
+            email: "",
+            password: "",
         },
     });
     
@@ -36,11 +38,7 @@ const AdminLogin = () => {
         }
     }, [successMessage, errorMessage]);
     
-    const overrideStyle = {
-        display: "flex", margin: "0 auto", height: "24px", justifyContent: "center", alignItems: "center",
-        
-        
-    }
+
     
     return (<div className="w-full min-h-screen bg-[#161d31] flex justify-center items-center">
         <div className="w-[400px] text-[#d0d2d6] p-2">

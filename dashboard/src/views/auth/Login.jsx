@@ -1,11 +1,19 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {AiOutlineGithub, AiOutlineGooglePlus} from "react-icons/ai";
 import {FiFacebook} from "react-icons/fi";
 import {CiTwitter} from "react-icons/ci";
 import {useForm} from "react-hook-form";
+import {PropagateLoader} from "react-spinners";
+import {overrideStyle} from "../../utils/utils.js";
+import {useDispatch, useSelector} from "react-redux";
+import {seller_login ,messageClear} from "../../store/Reducers/authReducer.js";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const dispatch = useDispatch()
+  const {loader,errorMessage,successMessage } = useSelector((state)=> state.auth)
+  
   const form = useForm({
     defaultValues: {
       email: "",
@@ -15,8 +23,19 @@ const Login = () => {
   const {register, handleSubmit} = form;
 
   const submit = (data) => {
-    console.log(data);
+    dispatch(seller_login(data))
   };
+  
+  useEffect(() => {
+         if(successMessage){
+           toast.success(successMessage)
+              dispatch(messageClear())
+         }
+         if (errorMessage){
+            toast.error(errorMessage)
+            dispatch(messageClear())
+         }
+  }, [successMessage,errorMessage]);
 
   return (
     <div className='w-full min-h-screen bg-[#161d31] flex justify-center items-center'>
@@ -34,22 +53,22 @@ const Login = () => {
               <label htmlFor='password'>Password</label>
               <input {...register("password")} type='text' id='password' placeholder='Password' className='px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md text-[#d0d2d6] focus:border-indigo-500 overflow-hidden' />
             </div>
-
+            
             <div>
-              <button type='submit' className='w-full py-2 mb-3 text-lg bg-blue-500 rounded-md hover:shadow-blue-500/50 hover:shadow-lg px-7 py7'>
-                Sign In
+              <button disabled={loader ? true : false} type="submit" className="w-full py-2 mb-3 text-lg bg-blue-500 rounded-md hover:shadow-blue-500/20 hover:shadow-lg px-7 py7">
+                {loader ? <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Log In"}
               </button>
             </div>
-
-            <div className='flex items-center justify-center gap-3 mb-3'>
+            
+            <div className="flex items-center justify-center gap-3 mb-3">
               <p>
                 Don't have an account ?{" "}
-                <Link to={"/register"} className='underline'>
+                <Link to={"/register"} className="underline">
                   Sign up here
                 </Link>
               </p>
             </div>
-
+            
             <div className='flex items-center justify-center w-full mb-3'>
               <div className='w-[45%] bg-slate-700 h-[1px]'></div>
               <div className='w-[10%] justify-center items-center flex'>
