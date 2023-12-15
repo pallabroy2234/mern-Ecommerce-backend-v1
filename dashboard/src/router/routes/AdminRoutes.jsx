@@ -1,5 +1,5 @@
 import {lazy} from "react";
-import AdminDashboard from "../../views/admin/AdminDashboard.jsx";
+// import AdminDashboard from "../../views/admin/AdminDashboard.jsx";
 import Orders from "../../views/admin/Orders.jsx";
 import Category from "../../views/admin/Category.jsx";
 import Sellers from "../../views/admin/Sellers.jsx";
@@ -10,7 +10,7 @@ import SellerDetails from "../../views/admin/SellerDetails.jsx";
 import ChatSeller from "../../views/admin/ChatSeller.jsx";
 import OrderDetails from "../../views/admin/OrderDetails.jsx";
 
-// const AdminDashboard = lazy(() => import("../../views/admin/AdminDashboard.jsx"));
+const AdminDashboard = lazy(() => import("../../views/admin/AdminDashboard.jsx"));
 // const Orders = lazy(() => import("../../views/admin/Orders.jsx"));
 // const Category = lazy(() => import("../../views/admin/Category.jsx"));
 // const Sellers = lazy(() => import("../../views/admin/Sellers.jsx"));

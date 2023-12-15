@@ -6,10 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {get_user_info} from "./store/Reducers/authReducer.js";
 
 
-
 const App = () => {
     const dispatch = useDispatch()
-    const {token} = useSelector(state=> state.auth)
+    const {token} = useSelector(state => state.auth)
     const [allRoutes, setAllRoutes] = useState([...publicRoutes])
     
     useEffect(() => {
@@ -18,11 +17,12 @@ const App = () => {
     }, []);
     
     useEffect(() => {
-       if(token){
-           dispatch(get_user_info())
-       }
+        if (token) {
+            dispatch(get_user_info())
+        }
     }, [token]);
     
+    // const filteredRoutes = token ? allRoutes.filter((route)=> !route.public) :allRoutes;
     
     return (
         <Routes allRoutes={allRoutes}/>

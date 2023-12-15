@@ -10,7 +10,6 @@ export const getRoutes = () => {
  privateRoutes.map((route)=> {
      route.element = <ProtectRoutes route={route}>{route.element}</ProtectRoutes>
  })
-    
     return {
         path: "/",
         element: <MainLayout/>,
