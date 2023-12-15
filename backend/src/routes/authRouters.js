@@ -11,7 +11,8 @@ const {sellerValidRegister, sellerValidLogin} = require("../validator/sellerVali
 // ! admin login -> POST
 authRouter.post("/admin-login", validAdmin, runValidation, authControllers.admin_login)
 
-authRouter.get("/get-user", authMiddleware, authControllers.getUser)
+// ! get user info -> GET
+authRouter.get("/get-user",authMiddleware, authControllers.getUser)
 
 
 // ! seller register -> POST

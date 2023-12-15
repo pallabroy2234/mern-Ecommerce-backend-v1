@@ -1,11 +1,10 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
-import register from "../../views/auth/Register.jsx";
+import {jwtDecode} from "jwt-decode";
 
 
 export const admin_login = createAsyncThunk("auth/admin_login", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
-        console.log(info)
         const {data} = await api.post("/admin-login", info, {withCredentials: true})
         localStorage.setItem("accessToken", data.payload)
         return fulfillWithValue(data)
@@ -15,27 +14,57 @@ export const admin_login = createAsyncThunk("auth/admin_login", async (info, {re
 })
 
 // ! seller register
-export const seller_register = createAsyncThunk("auth/seller_register", async (info, {rejectWithValue, fulfillWithValue}) => {
+export const seller_register = createAsyncThunk("auth/seller_register", async (info, {
+    rejectWithValue,
+    fulfillWithValue
+}) => {
     try {
         const {data} = await api.post("/seller-register", info, {withCredentials: true})
-         localStorage.setItem("accessToken",data.payload)
+        localStorage.setItem("accessToken", data.payload)
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
     }
 })
 
+
+// ! get  admin and seller info
+export const get_user_info = createAsyncThunk("auth/get_user_info", async (_, {rejectWithValue, fulfillWithValue}) => {
+    try {
+        const {data} = await api.get("/get-user", {withCredentials: true})
+        return fulfillWithValue(data)
+    } catch (e) {
+        return rejectWithValue(e.response.data)
+    }
+})
 
 // ! seller login
 export const seller_login = createAsyncThunk("auth/seller_login", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
         const {data} = await api.post("/seller-login", info, {withCredentials: true})
-        localStorage.setItem("accessToken",data.payload)
+        localStorage.setItem("accessToken", data.payload)
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
     }
 })
+
+// ! decoded token
+
+const returnRole = (token) => {
+    if (token) {
+        const decodedToken = jwtDecode(token)
+        const expireTime = new Date(decodedToken.exp * 1000);
+        if (new Date() >= expireTime) {
+            localStorage.removeItem("accessToken")
+            return ""
+        } else {
+            return decodedToken.role
+        }
+    } else {
+        return ""
+    }
+}
 
 
 export const authReducer = createSlice({
@@ -44,6 +73,8 @@ export const authReducer = createSlice({
         errorMessage: "",
         loader: false,
         userInfo: "",
+        role: returnRole(localStorage.getItem("accessToken")),
+        token: localStorage.getItem("accessToken"),
     }, reducers: {
         messageClear: (state) => {
             state.successMessage = "";
@@ -51,7 +82,8 @@ export const authReducer = createSlice({
         },
         
     }, extraReducers: builder => {
-        builder.addCase(admin_login.pending, (state) => {
+        
+        builder.addCase(admin_login.pending, (state, _) => {
             state.loader = true;
         });
         builder.addCase(admin_login.rejected, (state, {payload}) => {
@@ -61,29 +93,35 @@ export const authReducer = createSlice({
         builder.addCase(admin_login.fulfilled, (state, {payload}) => {
             state.loader = false;
             state.successMessage = payload.message;
+            state.token = payload.payload;
+            state.role = returnRole(payload.payload);
+            
         });
-        builder.addCase(seller_register.pending, (state)=>{
-            state.loader=true;
+        builder.addCase(seller_register.rejected, (state, {payload}) => {
+            state.loader = false;
+            state.errorMessage = payload.message;
         });
-        builder.addCase(seller_register.rejected, (state,{payload})=> {
-            state.loader=false;
-            state.errorMessage=payload.message;
+        builder.addCase(seller_register.fulfilled, (state, {payload}) => {
+            state.loader = false;
+            state.successMessage = payload.message;
         });
-        builder.addCase(seller_register.fulfilled, (state,{payload})=> {
-            state.loader=false;
-            state.successMessage=payload.message;
-        })
-        builder.addCase(seller_login.pending, (state)=>{
-            state.loader=true;
+        builder.addCase(seller_login.pending, (state, _) => {
+            state.loader = true;
         });
-        builder.addCase(seller_login.rejected, (state,{payload})=> {
-            state.loader=false;
-            state.errorMessage=payload.message;
+        builder.addCase(seller_login.rejected,(state, {payload})=> {
+            state.loader = false;
+            state.errorMessage = payload.message;
         });
-        builder.addCase(seller_login.fulfilled, (state,{payload})=> {
-            state.loader=false;
-            state.successMessage=payload.message;
-        })
+        builder.addCase(seller_login.fulfilled, (state, {payload}) => {
+            state.loader = false;
+            state.successMessage = payload.message;
+            state.token = payload.payload;
+            state.role = returnRole(payload.payload);
+        });
+        builder.addCase(get_user_info.fulfilled, (state, {payload}) => {
+            state.loader = false;
+            state.userInfo = payload.payload
+        });
     },
 });
 

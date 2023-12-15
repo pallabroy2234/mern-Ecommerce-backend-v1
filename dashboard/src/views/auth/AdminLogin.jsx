@@ -1,6 +1,6 @@
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {admin_login, messageClear} from "../../store/Reducers/authReducer.js";
+import {admin_login, get_user_info, messageClear} from "../../store/Reducers/authReducer.js";
 import {PropagateLoader} from "react-spinners";
 import {useEffect} from "react";
 import toast from "react-hot-toast";
@@ -9,8 +9,8 @@ import {overrideStyle} from "../../utils/utils.js";
 
 const AdminLogin = () => {
     const dispatch = useDispatch()
-    const {loader, errorMessage, successMessage} = useSelector(state => state.auth)
     const navigate = useNavigate()
+    const {loader, errorMessage, successMessage} = useSelector(state => state.auth)
     const form = useForm({
         defaultValues: {
             email: "",
@@ -28,17 +28,20 @@ const AdminLogin = () => {
     
     useEffect(() => {
         if (successMessage) {
-            toast.success(successMessage)
-            dispatch(messageClear())
+            toast.success(successMessage);
+            dispatch(messageClear());
             navigate("/")
+            
         }
         if (errorMessage) {
-            toast.error(errorMessage)
-            dispatch(messageClear())
+            toast.error(errorMessage);
+            dispatch(messageClear());
         }
+        
+        // Check if token is not available, then redirect to login page
+        
     }, [successMessage, errorMessage]);
     
-
     
     return (<div className="w-full min-h-screen bg-[#161d31] flex justify-center items-center">
         <div className="w-[400px] text-[#d0d2d6] p-2">
@@ -56,7 +59,7 @@ const AdminLogin = () => {
                     
                     <div className="flex flex-col w-full gap-3 mb-8">
                         <label htmlFor="password">Password</label>
-                        <input {...register("password")} type="text" id="password" placeholder="Password" className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md text-[#d0d2d6] focus:border-indigo-500 overflow-hidden"/>
+                        <input {...register("password")} type="password" id="password" placeholder="Password" className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md text-[#d0d2d6] focus:border-indigo-500 overflow-hidden"/>
                     </div>
                     
                     <div>

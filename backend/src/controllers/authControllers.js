@@ -139,21 +139,23 @@ class authControllers {
     
     // ! GET USER -> GET
     getUser = async (req, res, next) => {
-        const {id, role} = req;
         try {
+            const {id, role} = req;
             if (role === "admin") {
-                const user = await Admin.findById(id)
+                const admin = await Admin.findById(id)
                 return successResponse(res, {
-                    statusCode: 200, message: "Get user success", payload: user
+                    statusCode: 200, message: "Get user success", payload: admin
                 })
-            } else {
-                console.log("role", role)
+            } else if (role === "seller") {
+                const seller = await Seller.findById(id)
+                return successResponse(res, {
+                    statusCode: 200, message: "Get user success", payload: seller
+                })
             }
         } catch (e) {
             next(e)
         }
     }
-    
     
 }
 

@@ -1,4 +1,5 @@
 import {lazy} from "react";
+
 import SellerDashboard from "../../views/seller/SellerDashboard.jsx";
 import AddProduct from "../../views/seller/AddProduct.jsx";
 import Products from "../../views/seller/Products.jsx";
@@ -11,14 +12,22 @@ import Profile from "../../views/seller/Profile.jsx";
 import EditProduct from "../../views/seller/EditProduct.jsx";
 import OrderDetails from "../../views/seller/OrderDetails.jsx";
 
+// const SellerDashboard = lazy(() => import("../../views/seller/SellerDashboard.jsx"));
+// const AddProduct = lazy(() => import("../../views/seller/AddProduct.jsx"));
+// const Products = lazy(() => import("../../views/seller/Products.jsx"));
+// const DiscountProducts = lazy(() => import("../../views/seller/DiscountProducts.jsx"));
+// const Orders = lazy(() => import("../../views/seller/Orders.jsx"));1
+// const Payments = lazy(() => import("../../views/seller/Payments.jsx"));
+// const SellerToCustomer = lazy(() => import("../../views/seller/SellerToCustomer.jsx"));
+// const SellerToAdmin = lazy(() => import("../../views/seller/SellerToAdmin.jsx"));
+// const Profile = lazy(() => import("../../views/seller/Profile.jsx"));
+// const EditProduct = lazy(() => import("../../views/seller/EditProduct.jsx"));
+// const OrderDetails = lazy(() => import("../../views/seller/OrderDetails.jsx"));
 
-const Home = lazy(() => import("../../views/Home.jsx"));
+
+
 export const sellerRoutes = [
-    {
-        path: "/",
-        element: <Home/>,
-        ability: ["admin", "seller"]
-    },
+   
     {
         path: "/seller/dashboard",
         element: <SellerDashboard/>,
