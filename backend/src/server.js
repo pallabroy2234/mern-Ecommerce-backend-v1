@@ -8,3 +8,5 @@ app.listen(port, async () => {
     await connectDatabase()
     console.log(`server is running at http://localhost:${port}`);
 });
+
+
