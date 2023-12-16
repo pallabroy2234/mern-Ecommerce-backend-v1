@@ -25,5 +25,5 @@ categorySchema.index({
 })
 
 
-const Category = model("categorys", categorySchema)
+const Category = model("categories", categorySchema)
 module.exports = Category;
