@@ -47,8 +47,6 @@ const AddProduct = () => {
             setAllCategories(categories)
         }
     }
-    
-    
     // ! get categories
     
     useEffect(()=>{

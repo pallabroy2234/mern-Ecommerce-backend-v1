@@ -4,6 +4,7 @@ const Products = require("../../models/productModal");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const Category = require("../../models/categoryModal");
+const mongoose = require("mongoose");
 
 
 // !  ADD PRODUCT -> POST  MULTIPLE IMAGE HANDLE WITH CLOUDINARY
@@ -81,6 +82,7 @@ const add_product = async (req, res, next) => {
 
 
 
+// ! GET PRODUCTS SELLER ID -> GET REQUEST
 const get_products =async (req,res)=>{
     try {
         const {id}= req
@@ -118,9 +120,57 @@ const get_products =async (req,res)=>{
 }
 
 
+// ! GET PRODUCT BY ID -> GET REQUEST
+const get_product =async (req,res)=> {
+    try {
+       const {id} =req;
+       if(!id){
+           return errorResponse(res, {statusCode: 400, message: "Login first"});
+       }
+       const {productId}= req.params;
+       if(!productId){
+           return errorResponse(res, {statusCode: 400, message: "Product id required"});
+       }
+       const product =await Products.findById(productId)
+     if(!product){
+             return errorResponse(res, {statusCode: 400, message: "Product not found"});
+         }
+     
+     
+     
+     return successResponse(res,{statusCode: 200, payload: product})
+        
+    }catch (error) {
+        if (error instanceof mongoose.Error) {
+           return errorResponse(res, {statusCode: 400, message: "Invalid product id"});
+        }
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Something went wrong"
+        
+        })
+    }
+}
 
+
+
+// ! UPDATE PRODUCT -> POST REQUEST
+
+const update_product =async (req,res)=>{
+    try{
+        console.log("ok")
+        
+    }catch (e) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Something went wrong"
+        })
+    }
+}
 
 module.exports = {
     add_product,
-    get_products
+    get_products,
+    get_product,
+    update_product,
 }
