@@ -22,6 +22,7 @@ app.use(cookieParser())
 // ! routers
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
+app.use("/api" , require("./routes/dashboard/productRoutes"))
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,

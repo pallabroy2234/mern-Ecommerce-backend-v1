@@ -2,19 +2,17 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-
-
-export const categoryAdd =createAsyncThunk(
+export const categoryAdd = createAsyncThunk(
     "category/categoryAdd",
-    async (info,{rejectWithValue,fulfillWithValue})=>{
-        try{
+    async (info, {rejectWithValue, fulfillWithValue}) => {
+        try {
             const formData = new FormData();
             formData.append("name", info.name);
             formData.append("image", info.image);
-            const {data}= await api.post("/category-add",formData,{withCredentials:true})
+            const {data} = await api.post("/category-add", formData, {withCredentials: true})
             return fulfillWithValue(data)
             
-        }catch (e) {
+        } catch (e) {
             console.log(e.response.data)
             return rejectWithValue(e.response.data)
         }
@@ -22,54 +20,59 @@ export const categoryAdd =createAsyncThunk(
 )
 
 
-export const get_categories =createAsyncThunk(
+export const get_categories = createAsyncThunk(
     "category/get_categories",
-    async ({parPage,page,searchValue},{rejectWithValue,fulfillWithValue})=>{
-        try{
-
-            const {data}= await api.get(`/get-categories?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}`,{withCredentials:true})
-            console.log(data)
+    async ({parPage, page, searchValue}, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            
+            const {data} = await api.get(`/get-categories?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}`, {withCredentials: true})
             return fulfillWithValue(data)
-
-        }catch (e) {
+            
+        } catch (e) {
             console.log(e.response.data)
             return rejectWithValue(e.response.data)
         }
     }
 )
-
 
 
 export const categoryReducer = createSlice({
-    name:"category",
-    initialState:{
-        successMessage:"",
-        errorMessage:"",
-        loader:false,
-        categories:[],
+    name: "category",
+    initialState: {
+        successMessage: "",
+        errorMessage: "",
+        loader: false,
+        categories: [],
+        totalCategories: 0,
     },
-    reducers:{
-     messageClear:(state)=>{
-         state.successMessage="";
-         state.errorMessage="";
-     },
+    reducers: {
+        messageClear: (state) => {
+            state.successMessage = "";
+            state.errorMessage = "";
+        },
     },
-    extraReducers:builder=>{
-       builder.addCase(categoryAdd.pending,(state,_)=> {
-           state.loader=true;
-       });
-       builder.addCase(categoryAdd.rejected,(state,{payload})=>{
-           state.loader=false;
-           state.errorMessage = payload.message;
-       });
+    extraReducers: builder => {
+        builder.addCase(categoryAdd.pending, (state, _) => {
+            state.loader = true;
+        });
+        builder.addCase(categoryAdd.rejected, (state, {payload}) => {
+            state.loader = false;
+            state.errorMessage = payload.message;
+        });
         builder.addCase(categoryAdd.fulfilled, (state, {payload}) => {
             state.loader = false;
             state.successMessage = payload.message;
-            state.categories =payload.payload
-        })
+            state.categories = [...state.categories,payload.payload]
+        });
+        builder.addCase(get_categories.fulfilled, (state, {payload}) => {
+            state.categories = payload?.payload?.categories;
+            state.totalCategories = payload?.payload?.totalCategories;
+            
+        });
     }
+    
 })
 
 
-export const {messageClear} = categoryReducer.actions;
+export const {messageClear, stateClear} = categoryReducer.actions;
 export default categoryReducer.reducer;

@@ -7,19 +7,20 @@ import {GrClose} from "react-icons/gr";
 import {PropagateLoader} from "react-spinners";
 import {overrideStyle} from "../../utils/utils.js";
 import {useDispatch, useSelector} from "react-redux";
-import {categoryAdd, messageClear,get_categories} from "../../store/Reducers/categoryReducer.js";
+import {categoryAdd, messageClear, get_categories, stateClear} from "../../store/Reducers/categoryReducer.js";
 import toast from "react-hot-toast";
 import Search from "../components/Search.jsx";
 
 
 const Category = () => {
     const dispatch = useDispatch()
-    const {loader ,successMessage,errorMessage}= useSelector((state)=> state.category)
+    const {loader ,successMessage,errorMessage,categories}= useSelector((state)=> state.category)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState("");
     const [parPage, setParPage] = useState(5);
-    const [show, setShow] = useState(false)
-   const [imageShow,setImageShow]=useState("")
+    const [show, setShow] = useState(false);
+   const [imageShow,setImageShow]=useState("");
+    
     
     const [state, setState] = useState({
         name: "",
@@ -92,24 +93,26 @@ const Category = () => {
                                 </thead>
                                 <tbody>
                                 {
-                                    [1, 2, 3, 4, 5].map((item, index) => (
-                                        <tr key={index}>
-                                            <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">{item}</td>
-                                            <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
-                                                <img className="w-[45px] h-[45px]" src={`../../../public/images/category/${item}.jpg`} alt=""/>
-                                            </td>
-                                            <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
-                                                <span>Sports</span>
-                                            </td>
-                                            <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
-                                                <div className="flex justify-start items-center gap-4">
-                                                    <Link className="p-[6px] bg-yellow-500 rounded-sm hover:shadow-lg hover:shadow-yellow-500/50"><FaEdit/></Link>
-                                                    
-                                                    <Link className="p-[6px] bg-red-500 rounded-sm hover:shadow-lg hover:shadow-red-500/50"><FaTrash/></Link>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
+                                    categories?.map((item,index)=> {
+                                       return (
+                                           <tr key={index}>
+                                               <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">{index + 1}</td>
+                                               <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
+                                                   <img className="w-[45px] h-[45px] object-contain" src={item?.image} alt={item?.name}/>
+                                               </td>
+                                               <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
+                                                   <span>{item?.name}</span>
+                                               </td>
+                                               <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
+                                                   <div className="flex justify-start items-center gap-4">
+                                                       <Link className="p-[6px] bg-yellow-500 rounded-sm hover:shadow-lg hover:shadow-yellow-500/50"><FaEdit/></Link>
+                                                       
+                                                       <Link className="p-[6px] bg-red-500 rounded-sm hover:shadow-lg hover:shadow-red-500/50"><FaTrash/></Link>
+                                                   </div>
+                                               </td>
+                                           </tr>
+                                       )
+                                   })
                                 }
                                 </tbody>
                             </table>
@@ -128,7 +131,7 @@ const Category = () => {
                         <div className="bg-[#283046] h-screen lg:h-auto px-3 py-2 lg:rounded-md text-white">
                             <div className="flex justify-between items-center mb-4">
                                 <h1 className="text-white font-semibold  text-xl">Add Category</h1>
-                                <div onClick={()=>setShow(false)} className="block lg:hidden text-white cursor-pointer">
+                                <div onClick={() => setShow(false)} className="block lg:hidden text-white cursor-pointer">
                                     <GrClose/>
                                 </div>
                             </div>

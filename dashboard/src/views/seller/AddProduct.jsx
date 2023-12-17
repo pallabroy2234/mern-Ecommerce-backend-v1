@@ -1,133 +1,182 @@
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import category from "../admin/Category.jsx";
 import {BsImages} from "react-icons/bs";
 import {IoClose, IoCloseSharp} from "react-icons/io5";
+import {useDispatch, useSelector} from "react-redux";
+import {get_categories} from "../../store/Reducers/categoryReducer.js";
+import {add_product, messageClear} from "../../store/Reducers/productReducer.js";
+import {PropagateLoader} from "react-spinners";
+import {overrideStyle} from "../../utils/utils.js";
+import toast from "react-hot-toast";
 
 
 const AddProduct = () => {
-    const categories = [
-        {
-            id:1,
-            name: "Sports"
-        } ,{
-            id:2,
-            name: "Mobile"
-        }, {
-            id:3,
-            name: "Jarcy"
-        }, {
-            id:4,
-            name: "Pant"
-        }, {
-            id:5,
-            name: "Watch"
-        }
-    ];
+    
+    const {categories}= useSelector(state => state.category)
+    const {successMessage ,errorMessage ,loader} =useSelector((state)=> state.product)
+    
+    const dispatch = useDispatch()
+    
+    const [state, setState] = useState({
+        name: "",
+        description: "",
+        discount: "",
+        price: "",
+        brand: "",
+        stock: "",
+        
+    })
     
     
-     const form = useForm({
-         defaultValues: {
-             name: "",
-             description: "",
-             discount: "",
-             price: "",
-             brand: "",
-             stock: "",
-         }
-     })
-    const {register, handleSubmit} = form;
-     
-     const submit = (data) => {
-            console.log(data)
-     }
-    
-     
     //  ! category
     
     const [catShow, setCatShow] = useState(false)
+    const [allCategories, setAllCategories] = useState([]);
     const [category, setCategory] = useState("");
-    const [allCategory, setAllCategory] = useState(categories);
     const [searchValue, setSearchValue] = useState("");
-     const categorySearch = (e)=> {
-         const value = e.target.value;
-         setSearchValue(value)
-         if(value){
-            let srcValue = allCategory.filter((item)=> item.name.toLowerCase().indexOf(value.toLowerCase()) >-1)
-             setAllCategory(srcValue)
-         }else {
-                setAllCategory(categories)
-         }
-     }
     
-     
-    //  ! image handle change
-    const [images, setImages] = useState([])
-    const [imageShow, setImageShow] = useState([])
-  const imageHandle = (e)=> {
-         const files = e.target.files;
-         const length = files.length;
-         if(length>0){
-             setImages([...images,...files])
-             let imageUrl =[];
-             
-                for(let i=0; i<length; i++){
-                    imageUrl.push({url: URL.createObjectURL(files[i])})
-                    setImageShow([...imageShow,...imageUrl])
-                }
-         }
-  }
-   
-   
-    
-    // ! change image
-    const changeImage = (image,index)=> {
-         if(image){
-             let tempUrl = imageShow;
-             let tempImage = images;
-             tempImage[index]= image;
-             tempUrl[index]= {url: URL.createObjectURL(image)}
-                setImageShow([...tempUrl])
-                setImages([...tempImage])
-         }
+    const categorySearch = (e) => {
+        const value = e.target.value;
+        setSearchValue(value)
+        if (value) {
+            let srcValue = allCategories.filter((item) => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1)
+            setAllCategories(srcValue)
+        } else {
+            setAllCategories(categories)
+        }
     }
     
     
+    // ! get categories
+    
+    useEffect(()=>{
+        dispatch(get_categories({
+            searchValue: "",
+            page:"",
+            parPage:""
+        }))
+    },[])
+    
+    useEffect(() => {
+        setAllCategories(categories)
+    }, [categories]);
+    
+    //  ! image handle change
+    const [images, setImages] = useState([])
+    const [imageShow, setImageShow] = useState([])
+    const imageHandle = (e) => {
+        const files = e.target.files;
+        const length = files.length;
+        if (length > 0) {
+            setImages([...images, ...files])
+            let imageUrl = [];
+            
+            for (let i = 0; i < length; i++) {
+                imageUrl.push({url: URL.createObjectURL(files[i])})
+                setImageShow([...imageShow, ...imageUrl])
+            }
+        }
+    }
+    
+    
+    // ! change image
+    const changeImage = (image, index) => {
+        if (image) {
+            let tempUrl = imageShow;
+            let tempImage = images;
+            tempImage[index] = image;
+            tempUrl[index] = {url: URL.createObjectURL(image)}
+            setImageShow([...tempUrl])
+            setImages([...tempImage])
+        }
+    }
+    
     
     // ! remove image
-    const removeImage = (index)=> {
-         const filterImage = images.filter((item,i)=> index !== i)
-        const filterImageShow = imageShow.filter((item,i)=> index !== i)
+    const removeImage = (index) => {
+        const filterImage = images.filter((item, i) => index !== i)
+        const filterImageShow = imageShow.filter((item, i) => index !== i)
         setImageShow(filterImageShow)
         setImages(filterImage)
     }
     
-  
+    
+    
+    const inputHandler = (e)=> {
+        const name = e.target.name;
+        const value = e.target.value;
+        setState({...state, [name]:value})
+    }
+    
+    
+    const handleSubmit = (e)=> {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("name", state.name);
+        formData.append("brand", state.brand);
+        formData.append("category", category);
+        formData.append("stock", state.stock);
+        formData.append("price", state.price);
+        formData.append("discount", state.discount);
+        formData.append("description", state.description);
+        formData.append("shopName" , "Pallab Fashion");
+        images.forEach((item, i) => {
+            formData.append("images", item);
+        })
+        dispatch(add_product(formData))
+    }
+    
+    useEffect(() => {
+        if(successMessage){
+          toast.success(successMessage)
+            dispatch(messageClear())
+            setState({
+                name: "",
+                description: "",
+                discount: "",
+                price: "",
+                brand: "",
+                stock: "",
+            })
+            setImageShow([]);
+           setImages([]);
+           setCategory("");
+        }
+        if(errorMessage){
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+    }, [successMessage,errorMessage]);
+    
+    
+    
+    
     
     return (
         <div className="px-2 md:px-7 py-5">
             <div className="w-full bg-secondary p-4 rounded-md pb-4">
-               {/* Heading Section */}
-               <div className="flex  justify-between items-center pb-4">
+                {/* Heading Section */}
+                <div className="flex  justify-between items-center pb-4">
                     <h1 className="text-white text-xl font-semibold">Add Product</h1>
-                   <Link to={"/seller/dashboard/products"} className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">Products</Link>
-               </div>
-               
-            {/*  Input section   */}
+                    <Link to={"/seller/dashboard/products"} className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">Products</Link>
+                </div>
+                
+                {/*  Input section   */}
                 <div>
-                    <form onSubmit={handleSubmit(submit)}>
+                    <form onSubmit={handleSubmit}>
                         <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-white">
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="name">Product Name</label>
-                                <input type="text" {...register("name")} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Product Name" id="name"/>
+                                <input type="text" onChange={inputHandler} name="name" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Product Name" id="name" value={state.name}/>
                             </div>
                             
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="brand">Brand</label>
-                                <input type="text" {...register("brand")} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Brand" id="brand"/>
+                                <input type="text" onChange={inputHandler} name="brand" value={state.brand} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Brand" id="brand"/>
                             </div>
                         </div>
                         
@@ -143,12 +192,12 @@ const AddProduct = () => {
                                     <div className="pt-16"></div>
                                     <div className="flex justify-start items-start  flex-col h-[200px]  overflow-y-scroll">
                                         {
-                                            allCategory.map((item) => (
-                                                <span key={item.id} onClick={() => {
+                                            allCategories?.map((item ,index) => (
+                                                <span key={index} onClick={() => {
                                                     setCategory(item.name);
                                                     setCatShow(false);
                                                     setSearchValue("");
-                                                    setAllCategory(categories)
+                                                   setAllCategories(allCategories)
                                                 }} className={`px-4 py-2 hover:bg-indigo-500 hover:text-white hover:shadow-lg cursor-pointer w-full ${category === item.name && "bg-indigo-500"}`}>
                                                    {item.name}
                                                </span>
@@ -159,7 +208,7 @@ const AddProduct = () => {
                             </div>
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="stock">Stock</label>
-                                <input type="number" min="0" {...register("stock")} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="stock" id="stock"/>
+                                <input type="number" min="0" onChange={inputHandler} name="stock" value={state.stock} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="stock" id="stock"/>
                             </div>
                         </div>
                         
@@ -167,20 +216,20 @@ const AddProduct = () => {
                         <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-white">
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="price">Price</label>
-                                <input type="number" min={0} {...register("price")} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Price" id="price"/>
+                                <input type="number" min={0} onChange={inputHandler} name="price" value={state.price} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Price" id="price"/>
                             </div>
                             
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="discount">Discount</label>
-                                <input type="number" min={0} {...register("discount")} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
+                                <input type="number" min={0} onChange={inputHandler} name="discount" value={state.discount} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
                             </div>
                         </div>
                         
                         
                         <div className="flex flex-col w-full gap-1 text-white mb-4">
                             <label htmlFor="description">Description</label>
-                            <textarea {...register("description")} rows={5} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Description" id="price"/>
+                            <textarea onChange={inputHandler} name="description" value={state.description} rows={5} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Description" id="price"/>
                         </div>
                         
                         
@@ -207,9 +256,9 @@ const AddProduct = () => {
                             <input multiple onChange={imageHandle} type="file" id="image" name="image" className="hidden" accept="image"/>
                         
                         </div>
-                        <div className="flex text-white">
-                            <button type="submit" className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 my-4  text-center">
-                                Add Product
+                        <div className="text-white pt-8 flex">
+                            <button disabled={loader ? true : false} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+                                {loader ? <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Add Product"}
                             </button>
                         </div>
                     </form>

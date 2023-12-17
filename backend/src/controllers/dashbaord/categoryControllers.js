@@ -7,7 +7,7 @@ const fs = require("fs");
 
 class categoryControllers {
 // ! add category -> POST
-
+    
     
     add_category = async (req, res, next) => {
         try {
@@ -43,7 +43,10 @@ class categoryControllers {
                 }
             }
             const category = await Category.create({
-                name, image: imageLink, imageId, slug,
+                name,
+                image: imageLink,
+                imageId,
+                slug,
             })
             
             return successResponse(res, {statusCode: 201, message: "Category added successfully", payload: category})
@@ -53,37 +56,45 @@ class categoryControllers {
                 statusCode: 500,
                 message: "Something went wrong"
             })
-            }
         }
+    }
 
 // ! get all categories -> GET
     get_category = async (req, res, next) => {
-       try{
-           const {page, parPage, searchValue} = req.query;
-           const skipPage = parseInt(parPage) * (parseInt(page) - 1);
-           if(searchValue){
-               const categories = await Category.find({
-                   $text:{$search:searchValue}
-               }).skip(skipPage).limit(parseInt(parPage)).sort({createdAt:-1})
-               
+        try {
+            const {page, parPage, searchValue} = req.query;
+            let skipPage = "";
+            if(parPage && page){
+                skipPage = (parseInt(page) - 1) * parseInt(parPage)
+            }
+            if (searchValue && page && parPage) {
+                const categories = await Category.find({
+                    name: {$regex: searchValue, $options: "i"}
+                }).skip(skipPage).limit(parseInt(parPage)).sort({createdAt: -1})
+                
                 const totalCategories = await Category.find({
-                     $text:{$search:searchValue}
+                    name: {$regex: searchValue, $options: "i"}
                 }).countDocuments()
-               
-               return successResponse(res, {statusCode:200,payload:{categories,totalCategories}})
-           }else {
-               const categories =await Category.find({}).skip(skipPage).limit(parseInt(parPage)).sort({createdAt:-1})
+                
+                return successResponse(res, {statusCode: 200, payload: {categories, totalCategories}})
+            }else if(searchValue === "" && page && parPage) {
+                const categories = await Category.find({}).skip(skipPage).limit(parseInt(parPage)).sort({createdAt: -1})
                 const totalCategories = await Category.find({}).countDocuments()
-                return successResponse(res, {statusCode:200,payload:{categories,totalCategories}})
-           }
-           
-       }catch (e) {
-           return errorResponse(res, {
-               statusCode: 500,
-               message: "Something went wrong"
-           })
-       }
-       
+                return successResponse(res, {statusCode: 200, payload: {categories, totalCategories}})
+            }
+            else {
+                const categories = await Category.find({}).sort({createdAt: -1})
+                const totalCategories = await Category.find({}).countDocuments()
+                return successResponse(res, {statusCode: 200, payload: {categories, totalCategories}})
+            }
+            
+        } catch (e) {
+            return errorResponse(res, {
+                statusCode: 500,
+                message: "Something went wrong"
+            })
+        }
+        
     }
 }
 

@@ -3,8 +3,6 @@ const express = require('express');
 
 const categoryRouter =express.Router();
 const categoryControllers = require("../../controllers/dashbaord/categoryControllers")
-const {categoryValidator} = require("../../validator/dashboard/categoryValidator");
-const {runValidation} = require("../../validator");
 const {authMiddleware} = require("../../middleware/authMiddleware");
 const {upload} =require("../../utiles/upload")
 // ! Add category -> POST
