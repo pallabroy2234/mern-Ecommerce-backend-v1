@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import category from "../admin/Category.jsx";
@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 
 const AddProduct = () => {
-    
+    const navigate = useNavigate()
     const {categories}= useSelector(state => state.category)
     const {successMessage ,errorMessage ,loader} =useSelector((state)=> state.product)
     
@@ -143,6 +143,7 @@ const AddProduct = () => {
             setImageShow([]);
            setImages([]);
            setCategory("");
+          navigate("/seller/dashboard/products")
         }
         if(errorMessage){
             toast.error(errorMessage)
@@ -170,24 +171,24 @@ const AddProduct = () => {
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="name">Product Name</label>
-                                <input type="text" onChange={inputHandler} name="name" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Product Name" id="name" value={state.name}/>
+                                <input type="text" onChange={inputHandler} required name="name" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Product Name" id="name" value={state.name}/>
                             </div>
                             
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="brand">Brand</label>
-                                <input type="text" onChange={inputHandler} name="brand" value={state.brand} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Brand" id="brand"/>
+                                <input type="text" onChange={inputHandler} name="brand" required value={state.brand} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Brand" id="brand"/>
                             </div>
                         </div>
                         
                         <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-white">
                             <div className="flex flex-col w-full gap-1 relative">
                                 <label htmlFor="category">Category</label>
-                                <input readOnly value={category} onClick={() => setCatShow(!catShow)} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="---Select Category---" id="name"/>
+                                <input readOnly value={category} onClick={() => setCatShow(!catShow)} required className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="---Select Category---" id="name"/>
                                 
                                 <div className={`absolute top-[101%] bg-slate-800 w-full transition-all ${catShow ? "scale-100" : "scale-0"}`}>
                                     <div className="w-full px-4 py-2 fixed">
-                                        <input onChange={categorySearch} type="search" placeholder="search" className="w-full px-3 py-2 focus:border-indigo-500 border outline-none  bg-transparent overflow-hidden border-slate-700 rounded-md text-white my-3"/>
+                                        <input onChange={categorySearch} type="search"  placeholder="search" className="w-full px-3 py-2 focus:border-indigo-500 border outline-none  bg-transparent overflow-hidden border-slate-700 rounded-md text-white my-3"/>
                                     </div>
                                     <div className="pt-16"></div>
                                     <div className="flex justify-start items-start  flex-col h-[200px]  overflow-y-scroll">
@@ -208,7 +209,7 @@ const AddProduct = () => {
                             </div>
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="stock">Stock</label>
-                                <input type="number" min="0" onChange={inputHandler} name="stock" value={state.stock} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="stock" id="stock"/>
+                                <input type="number" min="0" onChange={inputHandler} required name="stock" value={state.stock} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="stock" id="stock"/>
                             </div>
                         </div>
                         
@@ -216,20 +217,19 @@ const AddProduct = () => {
                         <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-white">
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="price">Price</label>
-                                <input type="number" min={0} onChange={inputHandler} name="price" value={state.price} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Price" id="price"/>
+                                <input type="number" min={0} onChange={inputHandler} name="price" value={state.price}  required className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Price" id="price"/>
                             </div>
-                            
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="discount">Discount</label>
-                                <input type="number" min={0} onChange={inputHandler} name="discount" value={state.discount} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
+                                <input type="number" min={0} onChange={inputHandler} name="discount" value={state.discount} required className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
                             </div>
                         </div>
                         
                         
                         <div className="flex flex-col w-full gap-1 text-white mb-4">
                             <label htmlFor="description">Description</label>
-                            <textarea onChange={inputHandler} name="description" value={state.description} rows={5} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Description" id="price"/>
+                            <textarea onChange={inputHandler} name="description" value={state.description} rows={5} required className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Description" id="price"/>
                         </div>
                         
                         
