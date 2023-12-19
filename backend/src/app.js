@@ -8,6 +8,7 @@ const createError = require('http-errors');
 const authRouter = require("./routes/authRouters")
 const categoryRouter = require("./routes/dashboard/categoryRouters")
 const cloudinary = require("cloudinary").v2;
+const multer = require("multer");
 
 // !  all server middleware
 app.use(cors({
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
 app.use("/api" , require("./routes/dashboard/productRoutes"))
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -40,6 +42,12 @@ app.use((req, res, next) => {
 // !  all server error handler
 app.use((err, req, res, next) => {
     console.log(err);
+    if(err instanceof multer.MulterError){
+        return errorResponse(res, {
+            statusCode: 500,
+            message: err.message,
+        });
+    }
     return errorResponse(res, {
         statusCode: err.status,
         message: err.message,

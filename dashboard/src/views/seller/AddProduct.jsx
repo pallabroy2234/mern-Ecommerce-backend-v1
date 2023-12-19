@@ -16,7 +16,6 @@ const AddProduct = () => {
     const navigate = useNavigate()
     const {categories}= useSelector(state => state.category)
     const {successMessage ,errorMessage ,loader} =useSelector((state)=> state.product)
-    
     const dispatch = useDispatch()
     
     const [state, setState] = useState({
@@ -61,6 +60,7 @@ const AddProduct = () => {
         setAllCategories(categories)
     }, [categories]);
     
+    
     //  ! image handle change
     const [images, setImages] = useState([])
     const [imageShow, setImageShow] = useState([])
@@ -68,12 +68,14 @@ const AddProduct = () => {
         const files = e.target.files;
         const length = files.length;
         if (length > 0) {
-            setImages([...images, ...files])
-            let imageUrl = [];
-            
-            for (let i = 0; i < length; i++) {
-                imageUrl.push({url: URL.createObjectURL(files[i])})
-                setImageShow([...imageShow, ...imageUrl])
+            if(length <= 3){
+                for (let i = 0; i < length; i++) {
+                    const file = files[i];
+                    setImageShow((prev) => [...prev, {url: URL.createObjectURL(file)}])
+                    setImages((prev) => [...prev, file])
+                }
+            }else {
+                toast.error("You can select maximum 3 images at a time")
             }
         }
     }
@@ -238,7 +240,7 @@ const AddProduct = () => {
                                 imageShow && imageShow.map((item, i) => (
                                     <div key={i} className="h-[180px] relative">
                                         <label htmlFor={i}>
-                                            <img src={item.url} alt="" className="w-full h-full rounded-sm"/>
+                                            <img src={item.url}   alt="" className="w-full h-full object-cover"/>
                                         </label>
                                         <input onChange={(e) => changeImage(e.target.files[0], i)} type="file" id={i} className="hidden"/>
                                         <span onClick={() => removeImage(i)} className="p-2 z-10 cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 text-white rounded-full absolute top-1 right-1">
@@ -251,8 +253,7 @@ const AddProduct = () => {
                                 <span><BsImages/></span>
                                 <span>Select Image</span>
                             </label>
-                            <input multiple onChange={imageHandle} type="file" id="image" name="image" className="hidden" accept="image"/>
-                        
+                            <input multiple  onChange={imageHandle} type="file" id="image" name="image" className="hidden" accept="image"/>
                         </div>
                         <div className="text-white pt-8 flex">
                             <button disabled={loader ? true : false} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">

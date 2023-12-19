@@ -2,18 +2,20 @@ import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {get_categories} from "../../store/Reducers/categoryReducer.js";
-import {get_product, messageClear} from "../../store/Reducers/productReducer.js";
+import {get_product, messageClear, update_product} from "../../store/Reducers/productReducer.js";
 import toast from "react-hot-toast";
 import {PropagateLoader} from "react-spinners";
 import {overrideStyle} from "../../utils/utils.js";
+import {IoCloseSharp} from "react-icons/io5";
+import {BsImages} from "react-icons/bs";
 
 
 const EditProduct = () => {
     const dispatch = useDispatch();
     const {productId} = useParams();
     const {categories} = useSelector(state => state.category)
-    const {product, errorMessage,loader ,successMessage} = useSelector(state => state.product)
-    const [imageShow, setImageShow] = useState([])
+    const {product, errorMessage, loader, successMessage} = useSelector(state => state.product)
+    
     const [state, setState] = useState({
         name: "",
         description: "",
@@ -21,7 +23,6 @@ const EditProduct = () => {
         price: "",
         brand: "",
         stock: "",
-        
     })
     
     // ! get product by id
@@ -42,29 +43,21 @@ const EditProduct = () => {
         });
         setCategory(product?.category || "");
         setImageShow(product?.images || []);
-    }, [product , errorMessage]);
+    }, [product, errorMessage]);
     
     
     // ! after submit form success or error message and clear state
     useEffect(() => {
-        if(successMessage){
+        if (successMessage) {
             toast.success(successMessage)
             dispatch(messageClear())
-            setState({
-                name: "",
-                description: "",
-                discount: "",
-                price: "",
-                brand: "",
-                stock: "",
-            })
-            setCategory("");
+            
         }
-        if(errorMessage){
+        if (errorMessage) {
             toast.error(errorMessage)
             dispatch(messageClear())
         }
-    }, [successMessage,errorMessage]);
+    }, [successMessage, errorMessage]);
     //  ! category
     
     const [catShow, setCatShow] = useState(false)
@@ -96,23 +89,49 @@ const EditProduct = () => {
     }, [categories]);
     
     
-    
     //  ! image handle change
     const [images, setImages] = useState([])
- 
+    const [imageShow, setImageShow] = useState(product?.images || [])
     
     
-    // ! change image
-    const changeImage = (image, files) => {
-        if (files.length > 0) {
-            console.log(image);
-            console.log(files);
-            console.log(files[0]);
-            
+    // ! change image handle
+    const changeImage = (image, index) => {
+        if (image) {
+            let tempImage = [...images];
+            let tempImageShow = [...imageShow];
+            tempImage[index] = image;
+            tempImageShow[index] = {url: URL.createObjectURL(image)}
+            setImageShow(tempImageShow)
+            setImages(tempImage)
         }
     }
-    
-    
+    // ! remove image handle
+    const [imagesId, setImagesId] = useState('')
+    console.log(imagesId)
+    const removeImage = (imageId, index) => {
+        const filterImage = images.filter((item, i) => i !== index);
+        const filterImageShow = imageShow.filter((item, i) => i !== index);
+        setImageShow(filterImageShow)
+        setImages(filterImage)
+        setImagesId((prev) => [...prev, imageId])
+    }
+    // ! ADD IMAGE HANDLER
+    const imageHandle = (e) => {
+        const files = e.target.files;
+        const length = files.length;
+        if (length > 0) {
+            if (length <= 3) {
+                setImages([...images, ...files]);
+                let imageUrl = [];
+                for (let i = 0; i < length; i++) {
+                    imageUrl.push({url: URL.createObjectURL(files[i])});
+                    setImageShow([...imageShow, ...imageUrl])
+                }
+            } else {
+                toast.error("You can select maximum 3 images at a time")
+            }
+        }
+    }
     
     
     // ! input handler
@@ -124,8 +143,27 @@ const EditProduct = () => {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        state.productId = productId;
-        dispatch(update_product(state))
+        const formData = new FormData();
+        formData.append("name", state.name);
+        formData.append("description", state.description);
+        formData.append("discount", state.discount);
+        formData.append("price", state.price);
+        formData.append("brand", state.brand);
+        formData.append("stock", state.stock);
+        formData.append("category", category);
+        formData.append("productId", productId);
+        
+        if (imagesId) {
+            imagesId.forEach((item, index) => {
+                formData.append("imagesId", item)
+            })
+        }
+        
+        images.forEach((item, index) => {
+            formData.append("images", item)
+        })
+        
+        dispatch(update_product(formData))
     }
     
     
@@ -197,7 +235,7 @@ const EditProduct = () => {
                             
                             <div className="flex flex-col w-full gap-1">
                                 <label htmlFor="discount">Discount</label>
-                                <input type="number" min={0} onChange={inputHandler} value={state.discount} name="discount" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
+                                <input type="number" min={0} max={100} defaultValue={0} onChange={inputHandler} value={state.discount} name="discount" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="% discount %" id="discount"/>
                             </div>
                         </div>
                         
@@ -207,25 +245,37 @@ const EditProduct = () => {
                             <textarea onChange={inputHandler} value={state.description} name="description" rows={5} className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white my-3" placeholder="Description" id="price"/>
                         </div>
                         
-                        
-                        {/*  image   */}
-                        
+                        {/* ImageShow  */}
                         <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 sm:gap-4  md:gap-4 xs:gap-4 w-full text-white mb-4">
                             {
-                                imageShow?.map((item, index) => (
-                                    <div key={index}>
-                                        <label htmlFor="img" className="cursor-pointer">
-                                            <img className="w-full h-full object-contain" src={item?.url} alt={product?.name}/>
-                                        </label>
-                                        <input onChange={(e) => changeImage(item, e.target.files)} type="file" className="hidden" id="img"/>
-                                    </div>
-                                ))
+                                imageShow && imageShow?.map((item, index) => {
+                                    return (
+                                        <div key={index} className="h-[180px] relative">
+                                            <label htmlFor={index}>
+                                                <img src={item?.url} className="w-full h-full object-cover" alt=""/>
+                                                <input type="file" id="" onChange={(e) => changeImage(e.target.files[0], index)} className="hidden"/>
+                                            </label>
+                                            <span onClick={() => removeImage(item.imageId, index)} className="p-2 z-10 cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 text-white rounded-full absolute top-1 right-1">
+                                            <IoCloseSharp/>
+                                        </span>
+                                        </div>
+                                    )
+                                })
                             }
-                        
+                            
+                            {/* Add Image */}
+                            <label htmlFor="image" className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-indigo-500 w-full text-white">
+                                <span><BsImages/></span>
+                                <span>Select Image</span>
+                            </label>
+                            <input onChange={imageHandle} type="file" id="image" name="image" className="hidden" multiple accept="image"/>
                         </div>
+                        
+                        
                         <div className="flex text-white">
                             <button disabled={loader ? true : false} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
-                                {loader ? <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Update Product"}
+                                {loader ?
+                                    <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Update Product"}
                             </button>
                         </div>
                     </form>
@@ -236,3 +286,14 @@ const EditProduct = () => {
     )
 }
 export default EditProduct;
+
+
+// setState({
+//                 name: "",
+//                 description: "",
+//                 discount: "",
+//                 price: "",
+//                 brand: "",
+//                 stock: "",
+//             })
+//             setCategory("");

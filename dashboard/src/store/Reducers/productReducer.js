@@ -25,7 +25,7 @@ export const get_products = createAsyncThunk(
     async ({page,searchValue,parPage}, {rejectWithValue, fulfillWithValue}) => {
         try {
             const {data} = await api.get(`/get_products?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}` , {withCredentials: true})
-            console.log(data)
+           
             return fulfillWithValue(data)
         } catch (e) {
             console.log(e.response.data)
@@ -41,7 +41,7 @@ export const get_product = createAsyncThunk(
     async (productId, {rejectWithValue, fulfillWithValue}) => {
         try {
             const {data} = await api.get(`/get_product/${productId}` , {withCredentials: true})
-            console.log(data)
+          
             return fulfillWithValue(data)
         } catch (e) {
             console.log(e.response.data)
@@ -100,7 +100,6 @@ export const productReducer = createSlice({
         builder.addCase(get_products.fulfilled, (state, {payload}) => {
             state.products = payload?.payload?.products;
             state.totalProducts = payload?.payload?.totalProducts;
-            
         });
         builder.addCase(get_product.fulfilled ,(state,{payload})=> {
             state.product = payload?.payload;
@@ -108,7 +107,19 @@ export const productReducer = createSlice({
         builder.addCase(get_product.rejected ,(state,{payload})=> {
             state.errorMessage = payload?.message;
             state.loader =false;
-        })
+        });
+        builder.addCase(update_product.pending,(state,_)=>{
+            state.loader =true;
+        });
+        builder.addCase(update_product.rejected,(state,{payload})=>{
+            state.loader =false;
+            state.errorMessage = payload?.message;
+        });
+        builder.addCase(update_product.fulfilled,(state,{payload})=>{
+            state.loader =false;
+            state.successMessage = payload?.message;
+            state.products = state.products.map(product => product._id === payload?.payload._id ? payload?.payload : product)
+        });
     }
     
 })
