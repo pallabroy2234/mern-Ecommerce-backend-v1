@@ -6,6 +6,9 @@ const Admin = require('../models/adminModel')
 const {createToken} = require("../utiles/jsonWebToken");
 const Seller = require("../models/sellerModal")
 const sellerCustomer = require("../models/chat/sellerCustomerModal")
+const {publicIdWithOutExtensionFromUrl, deleteImageFromCloudinary, uploadSingleImage} = require("../helper/cloudinaryHelper");
+const {unlinkAllFilesMiddleware} = require("../utiles/upload");
+const cloudinary = require("cloudinary").v2;
 
 class authControllers {
     
@@ -55,26 +58,26 @@ class authControllers {
                 name,
                 email,
                 password,
-                method:"manually",
-                shopInfo:{}
+                method: "manually",
+                shopInfo: {}
             })
             
             if (!seller) {
                 throw createError(400, "Seller register failed")
             }
-    
+            
             // ! create for chat sellerCustomer
-          const sellerId=  await sellerCustomer.create({
-                myId:seller._id,
+            const sellerId = await sellerCustomer.create({
+                myId: seller._id,
             })
             
-            if(!sellerId){
+            if (!sellerId) {
                 throw createError(400, "Seller register failed")
             }
             
-            const token = await  createToken({
-                id:seller._id,
-                role:seller.role,
+            const token = await createToken({
+                id: seller._id,
+                role: seller.role,
             })
             if (!token) {
                 throw createError(400, "Seller register failed")
@@ -85,13 +88,13 @@ class authControllers {
                 httpOnly: true,
                 secure: true,
                 sameSite: "none",
-            
+                
             })
             
             return successResponse(res, {
                 statusCode: 201,
                 message: "Seller register success",
-               payload:token
+                payload: token
             })
             
         } catch (e) {
@@ -100,24 +103,23 @@ class authControllers {
     }
     
     
-    
     // ! seller login -> POST
-    seller_login =async (req,res,next)=> {
+    seller_login = async (req, res, next) => {
         try {
             const {email, password} = req.body;
             const sellerExists = await Seller.findOne({email}).select("+password");
-            if(!sellerExists){
+            if (!sellerExists) {
                 throw createError(404, "Email not found")
             }
-            const passwordMatch = await bcypt.compare(password,sellerExists.password);
-            if(!passwordMatch){
+            const passwordMatch = await bcypt.compare(password, sellerExists.password);
+            if (!passwordMatch) {
                 throw createError(400, "Password not match")
             }
             const token = await createToken({
-                id:sellerExists._id,
-                role:sellerExists.role,
+                id: sellerExists._id,
+                role: sellerExists.role,
             })
-            if(!token){
+            if (!token) {
                 throw createError(400, "login failed")
             }
             res.cookie("accessToken", token, {
@@ -129,10 +131,10 @@ class authControllers {
             return successResponse(res, {
                 statusCode: 200,
                 message: "Login success",
-                payload:token
+                payload: token
             })
             
-        }catch (e) {
+        } catch (e) {
             next(e)
         }
     }
@@ -154,6 +156,49 @@ class authControllers {
             }
         } catch (e) {
             next(e)
+        }
+    }
+    
+    // ! Seller Profile Image Upload -> POST
+    profile_image_upload = async (req, res) => {
+        try {
+            const {id} = req;
+            const userExists = await Seller.findOne({_id:id})
+            
+            if (!userExists) {
+                return errorResponse(res, {statusCode: 404, message: "Please login first"})
+            }
+            
+            const image = req.file;
+            if(!image){
+                return errorResponse(res, {statusCode: 400, message: "Image is required"})
+            }
+            if(image.size > 1024*1024*2){
+                return errorResponse(res, {statusCode: 400, message: "Image size should be less than 2mb"})
+            }
+           const response= await uploadSingleImage(res,image,"multiVendor/sellerProfile")
+            
+            const updateSeller = await Seller.findByIdAndUpdate(id,{image:response},{new:true})
+            
+            if(!updateSeller){
+                return errorResponse(res, {statusCode: 400, message: "Image upload failed"})
+            }
+            
+            // ! delete previous image from cloudinary
+            if(userExists.image){
+                const publicId =await publicIdWithOutExtensionFromUrl(userExists.image);
+                await deleteImageFromCloudinary(res,publicId,"multiVendor/sellerProfile")
+            }
+            
+            unlinkAllFilesMiddleware()
+            return successResponse(res, {
+                statusCode: 200,
+                message: "Image upload successfully",
+                payload:updateSeller
+            })
+            
+        } catch (e) {
+            return errorResponse(res, {statusCode: 500, message: "Internal Server Error"})
         }
     }
     

@@ -24,7 +24,7 @@ const EditProduct = () => {
         brand: "",
         stock: "",
     })
-    
+    console.log(state)
     // ! get product by id
     useEffect(() => {
         dispatch(get_product(productId));
@@ -36,7 +36,7 @@ const EditProduct = () => {
         setState({
             name: product?.name || "",
             description: product?.description || "",
-            discount: product?.discount || "",
+            discount: product?.discount || +"",
             price: product?.price || "",
             brand: product?.brand || "",
             stock: product?.stock || "",
@@ -286,14 +286,3 @@ const EditProduct = () => {
     )
 }
 export default EditProduct;
-
-
-// setState({
-//                 name: "",
-//                 description: "",
-//                 discount: "",
-//                 price: "",
-//                 brand: "",
-//                 stock: "",
-//             })
-//             setCategory("");

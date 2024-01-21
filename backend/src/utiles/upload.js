@@ -23,14 +23,10 @@ const fileFilter = (req, file, cb) => {
     if (!ALLOWED_FILE_TYPES.includes(extensionName.substring(1))) {
         return cb(new Error("Only images are allowed"));
     }
-     if (req.files.length > 3) {
-         return cb(new Error("Only 5 images are allowed"));
-     }
-     if(req.files.length === 0){
-         return cb(new Error("Image is required"));
-     }
-    
-     
+    //
+    // if (req.files && req.files.length <= 3) {
+    //     return cb(new Error("Only 3 images are allowed"));
+    // }
     cb(null, true);
 };
 
@@ -53,6 +49,7 @@ const upload = multer( {
     storage,
     fileFilter,
 })
+
 const uploadMultiple = multer({
     storage,
     fileFilter,

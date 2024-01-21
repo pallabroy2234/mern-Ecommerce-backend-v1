@@ -49,6 +49,22 @@ export const seller_login = createAsyncThunk("auth/seller_login", async (info, {
     }
 })
 
+
+// ! Profile Image Upload
+
+export const profile_image_upload = createAsyncThunk("auth/profile_image_upload",async (image,{rejectWithValue,fulfillWithValue})=> {
+    try{
+        const {data} = await api.post("/profile-image-upload",image,{withCredentials:true})
+        return fulfillWithValue(data)
+    }catch (e) {
+        return rejectWithValue(e.response.data)
+    }
+})
+
+
+
+
+
 // ! decoded token
 
 const returnRole = (token) => {
@@ -65,6 +81,9 @@ const returnRole = (token) => {
         return ""
     }
 }
+
+
+
 
 
 export const authReducer = createSlice({
@@ -121,6 +140,18 @@ export const authReducer = createSlice({
         builder.addCase(get_user_info.fulfilled, (state, {payload}) => {
             state.loader = false;
             state.userInfo = payload.payload
+        });
+        builder.addCase(profile_image_upload.pending, (state, _)=> {
+            state.loader = true;
+        });
+        builder.addCase(profile_image_upload.rejected,(state, {payload})=> {
+            state.loader = false;
+            state.errorMessage = payload.message;
+        });
+        builder.addCase(profile_image_upload.fulfilled, (state, {payload})=> {
+            state.loader = false;
+            state.successMessage = payload.message;
+            state.userInfo = payload.payload;
         });
     },
 });

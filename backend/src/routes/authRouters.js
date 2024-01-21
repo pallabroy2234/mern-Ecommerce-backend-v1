@@ -6,6 +6,7 @@ const {validAdmin} = require("../validator/adminValidator");
 const {runValidation} = require("../validator");
 const {authMiddleware} = require("../middleware/authMiddleware");
 const {sellerValidRegister, sellerValidLogin} = require("../validator/sellerValidator");
+const {upload} = require("../utiles/upload");
 
 
 // ! admin login -> POST
@@ -21,6 +22,10 @@ authRouter.post("/seller-register", sellerValidRegister,runValidation ,authContr
 
 // ! seller login -> POST
 authRouter.post("/seller-login", sellerValidLogin,runValidation, authControllers.seller_login)
+
+// ! Seller Profile Image Upload -> POST
+authRouter.post("/profile-image-upload", upload.single("image"), authMiddleware, authControllers.profile_image_upload)
+
 
 module.exports = authRouter;
 
