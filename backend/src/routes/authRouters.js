@@ -5,7 +5,7 @@ const authControllers = require("../controllers/authControllers")
 const {validAdmin} = require("../validator/adminValidator");
 const {runValidation} = require("../validator");
 const {authMiddleware} = require("../middleware/authMiddleware");
-const {sellerValidRegister, sellerValidLogin} = require("../validator/sellerValidator");
+const {sellerValidRegister, sellerValidLogin, sellerProfileAddValidator} = require("../validator/sellerValidator");
 const {upload} = require("../utiles/upload");
 
 
@@ -25,6 +25,9 @@ authRouter.post("/seller-login", sellerValidLogin,runValidation, authControllers
 
 // ! Seller Profile Image Upload -> POST
 authRouter.post("/profile-image-upload", upload.single("image"), authMiddleware, authControllers.profile_image_upload)
+
+//  ! Seller Profile Info add - > POST
+authRouter.post("/profile-info-add", authMiddleware, sellerProfileAddValidator,runValidation, authControllers.profile_info_add)
 
 
 module.exports = authRouter;

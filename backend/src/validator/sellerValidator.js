@@ -31,8 +31,16 @@ const sellerValidLogin = [
 
 
 
+const sellerProfileAddValidator = [
+    body("shopName").trim().notEmpty().withMessage("Enter your shop name").isLength({min:3}).withMessage("Shop name must be at least 3 characters"),
+     body("division").trim().notEmpty().withMessage("Enter your division").isLength({min:3}).withMessage("Division must be at least 3 characters"),
+    body("district").trim().notEmpty().withMessage("Enter your district").isLength({min:3}).withMessage("District must be at least 3 characters"),
+    body("thana").trim().notEmpty().withMessage("Enter your thana").isLength({min:3}).withMessage("Thana must be at least 3 characters"),
+];
+
 module.exports = {
     sellerValidRegister,
-    sellerValidLogin
+    sellerValidLogin,
+    sellerProfileAddValidator
 }
 

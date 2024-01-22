@@ -6,8 +6,14 @@ const Admin = require('../models/adminModel')
 const {createToken} = require("../utiles/jsonWebToken");
 const Seller = require("../models/sellerModal")
 const sellerCustomer = require("../models/chat/sellerCustomerModal")
-const {publicIdWithOutExtensionFromUrl, deleteImageFromCloudinary, uploadSingleImage} = require("../helper/cloudinaryHelper");
+const {
+    publicIdWithOutExtensionFromUrl,
+    deleteImageFromCloudinary,
+    uploadSingleImage
+} = require("../helper/cloudinaryHelper");
 const {unlinkAllFilesMiddleware} = require("../utiles/upload");
+const {runValidation} = require("../validator");
+const {validate} = require("uuid");
 const cloudinary = require("cloudinary").v2;
 
 class authControllers {
@@ -163,45 +169,77 @@ class authControllers {
     profile_image_upload = async (req, res) => {
         try {
             const {id} = req;
-            const userExists = await Seller.findOne({_id:id})
+            const userExists = await Seller.findOne({_id: id})
             
             if (!userExists) {
                 return errorResponse(res, {statusCode: 404, message: "Please login first"})
             }
             
             const image = req.file;
-            if(!image){
+            if (!image) {
                 return errorResponse(res, {statusCode: 400, message: "Image is required"})
             }
-            if(image.size > 1024*1024*2){
+            if (image.size > 1024 * 1024 * 2) {
                 return errorResponse(res, {statusCode: 400, message: "Image size should be less than 2mb"})
             }
-           const response= await uploadSingleImage(res,image,"multiVendor/sellerProfile")
+            const response = await uploadSingleImage(res, image, "multiVendor/sellerProfile")
             
-            const updateSeller = await Seller.findByIdAndUpdate(id,{image:response},{new:true})
+            const updateSeller = await Seller.findByIdAndUpdate(id, {image: response}, {new: true})
             
-            if(!updateSeller){
+            if (!updateSeller) {
                 return errorResponse(res, {statusCode: 400, message: "Image upload failed"})
             }
             
             // ! delete previous image from cloudinary
-            if(userExists.image){
-                const publicId =await publicIdWithOutExtensionFromUrl(userExists.image);
-                await deleteImageFromCloudinary(res,publicId,"multiVendor/sellerProfile")
+            if (userExists.image) {
+                const publicId = await publicIdWithOutExtensionFromUrl(userExists.image);
+                await deleteImageFromCloudinary(res, publicId, "multiVendor/sellerProfile")
             }
             
             unlinkAllFilesMiddleware()
             return successResponse(res, {
                 statusCode: 200,
                 message: "Image upload successfully",
-                payload:updateSeller
+                payload: updateSeller
             })
             
         } catch (e) {
             return errorResponse(res, {statusCode: 500, message: "Internal Server Error"})
         }
     }
-    
+
+//     ! Seller Profile Info add -> POST
+    profile_info_add = async (req, res) => {
+        try {
+            const {id} = req;
+            const userExists = await Seller.exists({_id: id});
+            if (!userExists) {
+                return errorResponse(res, {statusCode: 404, message: "Please login first"})
+            }
+            const {shopName, division, district, thana} = req.body;
+            
+            const updateSeller = await Seller.findByIdAndUpdate(id, {
+                shopInfo: {
+                    shopName,
+                    division,
+                    district,
+                    thana
+                }
+            }, {new: true})
+            
+            if (!updateSeller) {
+                return errorResponse(res, {statusCode: 400, message: "Profile update failed"})
+            }
+            
+            return successResponse(res, {
+                statusCode: 200,
+                message: "Profile Info add successfully",
+                payload:updateSeller,
+            })
+        } catch (e) {
+            return errorResponse(res, {statusCode: 500, message: "Internal Server Error"})
+        }
+    }
 }
 
 
