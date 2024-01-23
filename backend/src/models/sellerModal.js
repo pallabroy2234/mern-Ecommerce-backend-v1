@@ -14,33 +14,34 @@ const sellerSchema = new Schema({
         type: String,
         required: [true, 'Please enter your password'],
         select: false,
-        set: (value)=> bcrypt.hashSync(value, bcrypt.genSaltSync(10))
+        set: (value) => bcrypt.hashSync(value, bcrypt.genSaltSync(10))
     },
     role: {
         type: String,
         default: "seller"
     },
     status: {
-        type:String,
-        default:"pending"
+        type: String,
+        default: "pending"
     },
-    payment:{
-        type:String,
-        default:"inactive"
+    payment: {
+        type: String,
+        default: "inactive"
     },
-    method:{
-        type:String,
-        required:true
+    method: {
+        type: String,
+        required: true
     },
-    image:{
-        type:String,
-        default:""
+    image: {
+        type: String,
+        default: ""
     },
-    shopInfo:{
-        type:Object,
-        default:{}
+    shopInfo: {
+        type: Object,
+        default: {}
     },
 }, {timestamps: true})
+
 
 
 const Seller = model("sellers", sellerSchema)

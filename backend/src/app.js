@@ -9,7 +9,7 @@ const authRouter = require("./routes/authRouters")
 const categoryRouter = require("./routes/dashboard/categoryRouters")
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
-
+const sellerRouter = require("./routes/dashboard/sellerRouters")
 // !  all server middleware
 app.use(cors({
     origin: ["http://localhost:5173"],
@@ -24,7 +24,7 @@ app.use(cookieParser())
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
 app.use("/api" , require("./routes/dashboard/productRoutes"))
-
+app.use("/api",  sellerRouter);
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
