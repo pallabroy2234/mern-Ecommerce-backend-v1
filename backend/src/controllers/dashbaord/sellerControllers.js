@@ -98,8 +98,33 @@ const getSellerById = async (req,res)=> {
 
 const updateSellerStatus = async(req,res)=> {
     try{
-        console.log("Pallab")
-    }catch (e) {
+        const {sellerId,status} = req.body;
+        if(!sellerId || !status){
+            return errorResponse(res,{statusCode:404,message:"Seller id or status not found"})
+        }
+        const seller =await Seller.exists({_id:sellerId});
+        if(!seller){
+            return errorResponse(res,{statusCode:404,message:"Seller not found"})
+        }
+        
+        const updateStatus= await Seller.findByIdAndUpdate(sellerId,{status},{new:true});
+        
+        if(!updateStatus){
+            return errorResponse(res,{statusCode:404,message:"Seller status not updated"})
+        }
+        
+        return successResponse(res,{
+            statusCode:200,
+            message:"Seller status updated successfully",
+            payload:updateStatus
+        })
+    }catch (error) {
+        if (error instanceof mongoose.Error) {
+            return errorResponse(res,{
+                statusCode:500,
+                message:"Invalid seller id"
+            })
+        }
         return errorResponse(res, {
             statusCode:500,
             message:"Internal Server Error"

@@ -35,6 +35,7 @@ export const update_sellerStatus = createAsyncThunk(
     async (info,{rejectWithValue, fulfillWithValue}) => {
         try{
             const {data} = await api.post("/update-sellerStatus",info,{withCredentials:true})
+            console.log(data)
             return fulfillWithValue(data)
         }catch (e) {
             return rejectWithValue(e.response.data)
@@ -47,6 +48,7 @@ export const sellerReducer = createSlice({
         successMessage: "",
         errorMessage: "",
         loader: false,
+        stateChangeLoader:false,
         sellers:[],
         totalSellers:0,
         seller:"" || {},
@@ -79,6 +81,18 @@ export const sellerReducer = createSlice({
         builder.addCase(get_sellerById.fulfilled, (state, {payload}) => {
             state.seller = payload.payload;
         });
+        builder.addCase(update_sellerStatus.pending,(state,_)=> {
+            state.stateChangeLoader = true;
+        });
+        builder.addCase(update_sellerStatus.rejected,(state,{payload})=> {
+            state.errorMessage =payload.message;
+            state.stateChangeLoader =false;
+        });
+        builder.addCase(update_sellerStatus.fulfilled,(state,{payload})=> {
+            state.successMessage= payload.message;
+            state.stateChangeLoader= false;
+            state.seller = payload.payload;
+        })
     }
     
 })

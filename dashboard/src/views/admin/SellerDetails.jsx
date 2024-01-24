@@ -1,13 +1,17 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
-import {get_sellerById, update_sellerStatus} from "../../store/Reducers/sellerReducer.js";
+import {get_sellerById, messageClear, update_sellerStatus} from "../../store/Reducers/sellerReducer.js";
+import toast from "react-hot-toast";
+import {PropagateLoader} from "react-spinners";
+import {overrideStyle} from "../../utils/utils.js";
 
 
 const SellerDetails = () => {
     const dispatch = useDispatch()
     const {sellerId} = useParams()
-    const {seller} =useSelector(state => state.sellers)
+    const {seller,stateChangeLoader, successMessage,errorMessage} =useSelector(state => state.sellers)
+    
     const [status, setStatus] = useState("")
     useEffect(() => {
         dispatch(get_sellerById(sellerId))
@@ -20,9 +24,23 @@ const SellerDetails = () => {
     
     const statusUpdateHandler = (e)=>{
         e.preventDefault()
-        dispatch(update_sellerStatus({sellerId, status}))
+        dispatch(update_sellerStatus({sellerId,status}))
     }
     
+    useEffect(() => {
+        if(successMessage){
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if(errorMessage){
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+    }, [successMessage,errorMessage]);
+    
+    useEffect(()=>{
+        setStatus(seller?.status)
+    },[seller])
    
     return (
         <div className="px-2 lg:px-7 pt-5">
@@ -109,13 +127,15 @@ const SellerDetails = () => {
                 <div>
                     <form className="mb-24  md:mb-0" onSubmit={statusUpdateHandler}>
                         <div className="flex gap-4 py-3 ">
-                            <select name="" id="" onChange={statusChanger} className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
+                            <select name="" id="" onChange={statusChanger} value={status} className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
                                 <option value="">--Select status--</option>
                                 <option value="active">Active</option>
                                 <option value="deactive">Deactive</option>
+                                <option value="pending">Pending</option>
                             </select>
-                            <button className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-8 text-white  w-[170px]  text-center">
-                                Submit
+                            <button disabled={stateChangeLoader ? true : false} className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-8 text-white  w-[170px]  text-center">
+                                    {stateChangeLoader ?
+                                            <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Submit"}
                             </button>
                         </div>
                     </form>
