@@ -4,13 +4,13 @@ const authRouter = express.Router();
 const authControllers = require("../controllers/authControllers")
 const {validAdmin} = require("../validator/adminValidator");
 const {runValidation} = require("../validator");
-const {authMiddleware} = require("../middleware/authMiddleware");
+const {authMiddleware, isLoggedOut} = require("../middleware/authMiddleware");
 const {sellerValidRegister, sellerValidLogin, sellerProfileAddValidator} = require("../validator/sellerValidator");
 const {upload} = require("../utiles/upload");
 
 
 // ! admin login -> POST
-authRouter.post("/admin-login", validAdmin, runValidation, authControllers.admin_login)
+authRouter.post("/admin-login", validAdmin, runValidation,isLoggedOut,  authControllers.admin_login)
 
 // ! get user info -> GET
 authRouter.get("/get-user",authMiddleware, authControllers.getUser)

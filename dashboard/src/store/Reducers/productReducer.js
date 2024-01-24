@@ -41,10 +41,8 @@ export const get_product = createAsyncThunk(
     async (productId, {rejectWithValue, fulfillWithValue}) => {
         try {
             const {data} = await api.get(`/get_product/${productId}` , {withCredentials: true})
-          
             return fulfillWithValue(data)
         } catch (e) {
-            console.log(e.response.data)
             return rejectWithValue(e.response.data)
         }
     }
