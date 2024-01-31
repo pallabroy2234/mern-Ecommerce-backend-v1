@@ -1,12 +1,15 @@
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Home from "./pages/Home.jsx";
 
 function App() {
-
-    
     return (
-        <>
-         <h2>Pallab Roy tushar</h2>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home/>}/>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
 export default App
+
