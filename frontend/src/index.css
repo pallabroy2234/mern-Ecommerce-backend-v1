@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer container{
+    .customContainer{
+        @apply w-[85%] lg:w-[90%] mx-auto;
+    }
+}

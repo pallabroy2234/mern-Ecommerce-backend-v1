@@ -8,6 +8,7 @@ export default {
         extend: {
             colors:{
                 "bright-gray": "#eeeeee",
+                "dark-moderate-green" :"#7fad39",
             }
         },
         screens: {
