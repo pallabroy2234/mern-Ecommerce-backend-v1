@@ -1,0 +1,6 @@
+npm install @reduxjs/toolkit react-redux axios react-hot-toast stripe react-icons react-router-dom react-multi-carousel react-range react-rating react-spinners socket.io-client
+
+
+
+
+```
