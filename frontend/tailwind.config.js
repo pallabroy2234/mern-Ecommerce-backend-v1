@@ -11,6 +11,7 @@ export default {
             }
         },
         screens: {
+            "2xl": {"min": "1201px"},
             "xl": {"max": "1200px"},
             "lg": {"max": "1080px"},
             "md-lg": {"max": "991px"},
