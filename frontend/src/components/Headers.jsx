@@ -123,7 +123,84 @@ const Headers = () => {
             
             
             {/* Small Device Navigation bar */}
-           
+            <div className="hidden md-lg:block">
+                {/* overlay */}
+                <div onClick={() => setShowSideBar(true)} className={`fixed duration-300 transition-all ${showSideBar ? "invisible" : "visible"} hidden md-lg:block w-screen h-screen bg-[rgba(0,0,0,0.5)] top-0 left-0 z-[9999]`}></div>
+                
+                {/* Navigation */}
+                
+                <div className={`w-[300px] z-[99999] transition-all duration-300 fixed  ${showSideBar ? "-left-[300px]" : "left-0"} top-0 overflow-y-auto bg-white h-screen py-6 px-8`}>
+                    <div className="flex justify-start flex-col gap-6">
+                        <Link to="/" className="w-[170px] h-[70px] flex justify-center items-center">
+                            <img src="http://localhost:5173/images/logo.png" className="w-full h-full object-contain" alt="logo"/>
+                        </Link>
+                        <div className="flex justify-start items-center gap-6">
+                            
+                            <div className="flex cursor-pointer text-slate-800 text-sm relative  justify-center items-center gap-1 border-r-[1.5px] border-[#afafaf] pr-5" onClick={() => setShowLanguage(!showLanguage)}>
+                                <img src="http://localhost:5173/images/language.png" alt=""/>
+                                <span><MdOutlineKeyboardArrowDown/></span>
+                                <ul className={`${showLanguage ? "visible top-8 transition-all duration-300" : "invisible"} z-10 absolute  top-12 rounded-sm  text-white p-2 w-[100px] flex flex-col gap-3 bg-black`}>
+                                    <li>Bangla</li>
+                                    <li>English</li>
+                                </ul>
+                            </div>
+                            {
+                                user ?
+                                    <Link className="flex cursor-pointer justify-center items-center gap-2 text-sm" to="/dashboard">
+                                        <span><FaUser/></span>
+                                        <span className="text-sm text-nowrap text-ellipsis">Pallab Roy Tushar</span>
+                                    </Link> :
+                                    <div className="flex cursor-pointer justify-center items-center gap-2 text-sm">
+                                        <span><FaLock/></span>
+                                        <span>Login</span>
+                                    </div>
+                            }
+                        </div>
+                        <ul className="flex flex-col justify-start items-start gap-3 text-md font-semibold uppercase mt-3">
+                            <li>
+                                <Link to={"/"} className={`py-2 block ${pathname === "/" ? "text-dark-moderate-green" : "text-slate-600"}`}>Home</Link>
+                            </li>
+                            <li>
+                                <Link to={"/"} className={`py-2 block ${pathname === "/shop" ? "text-dark-moderate-green" : "text-slate-600"}`}>Shop</Link>
+                            </li>
+                            <li>
+                                <Link to={"/"} className={`py-2 block ${pathname === "/block" ? "text-dark-moderate-green" : "text-slate-600"}`}>Blog</Link>
+                            </li>
+                            <li>
+                                <Link to={"/"} className={`py-2 block ${pathname === "/about" ? "text-dark-moderate-green" : "text-slate-600"}`}>About</Link>
+                            </li>
+                            <li>
+                                <Link to={"/"} className={`py-2 block ${pathname === "/contact" ? "text-dark-moderate-green" : "text-slate-600"}`}>Contact</Link>
+                            </li>
+                        </ul>
+                        <div className="flex justify-start items-center gap-4 mt-10">
+                            <a href="#"><FaFacebook/></a>
+                            <a href="#"><AiOutlineTwitter/></a>
+                            <a href="#"><FaLinkedin/></a>
+                            <a href="#"><AiFillGithub/></a>
+                        </div>
+                        
+                        <div className="w-full flex justify-end md-lg:justify-start gap-3 items-center">
+                            <div className="w-[48px] h-[48px] rounded-full flex bg-white-smoke justify-center items-center">
+                                <span><IoIosCall/></span>
+                            </div>
+                            <div className="flex justify-end flex-col gap-1">
+                                <h2 className="text-sm font-medium text-slate-700">+8801231231231</h2>
+                                <span className="text-xs">Support 33/45 time</span>
+                            </div>
+                        </div>
+                        
+                        <ul className="flex flex-col justify-start items-start gap-3 text-[#1c1c1c]">
+                            <li className="flex justify-start items-center gap-2  text-sm">
+                                <span><GrMail/></span>
+                                <span>pallabtushar2234@gmail.com</span>
+                            </li>
+                            <span className="text-sm">Multi vendor E-commerce</span>
+                        </ul>
+                    </div>
+                </div>
+            
+            </div>
             
             
             {/*  Category Option   */}
@@ -132,19 +209,19 @@ const Headers = () => {
                     <div className="w-3/12 md-lg:w-full">
                         <div className="bg-white relative">
                             <div onClick={() => setShowCategory(!showCategory)} className="h-[50px] bg-violet-400 text-white flex justify-center md-lg:justify-between md-lg:px-6 items-center gap-3 font-bold text-md cursor-pointer">
-                                 <div className="flex justify-center items-center gap-3">
-                                     <span><FaList/></span>
-                                     <span>All Category</span>
-                                 </div>
-                                 <span className="pt-1"><MdOutlineKeyboardArrowDown/></span>
-                             </div>
-                             
-                             <div className={`${showCategory ? "h-0" : "h-[400px]"} overflow-hidden  transition-all md-lg:relative duration-500 absolute z-[99999] bg-white w-full border-x`}>
-                             <ul className="py-2 text-slate-600 font-medium">
-                                 {
-                                     categories.map((item, index) => (
-                                         <li key={index} className="flex justify-start items-center px-[24px] py-[6px] border-b">
-                                             <Link to="/" className="capitalize">{item}</Link>
+                                <div className="flex justify-center items-center gap-3">
+                                    <span><FaList/></span>
+                                    <span>All Category</span>
+                                </div>
+                                <span className="pt-1"><MdOutlineKeyboardArrowDown/></span>
+                            </div>
+                            
+                            <div className={`${showCategory ? "h-0" : "h-[400px]"} overflow-hidden  transition-all md-lg:relative duration-500 absolute z-[999] bg-white w-full border-x`}>
+                                <ul className="py-2 text-slate-600 font-medium">
+                                    {
+                                        categories.map((item, index) => (
+                                            <li key={index} className="flex justify-start items-center px-[24px] py-[6px] border-b">
+                                            <Link to="/" className="capitalize">{item}</Link>
                                          </li>
                                      ))
                                  }
@@ -175,7 +252,7 @@ const Headers = () => {
                             
                             <div className="w-4/12 block md-lg:hidden pl-2 md-lg:w-full md-lg:p-0 ">
                                 <div className="w-full flex justify-end md-lg:justify-start gap-3 items-center">
-                                    <div className="w-[48px] h-[48px] rounded-full flex bg-[#f5f5f5] justify-center items-center">
+                                    <div className="w-[48px] h-[48px] rounded-full flex bg-white-smoke justify-center items-center">
                                         <span><IoIosCall/></span>
                                     </div>
                                     <div className="flex justify-end flex-col gap-1">
