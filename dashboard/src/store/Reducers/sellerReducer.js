@@ -35,7 +35,6 @@ export const update_sellerStatus = createAsyncThunk(
     async (info,{rejectWithValue, fulfillWithValue}) => {
         try{
             const {data} = await api.post("/update-sellerStatus",info,{withCredentials:true})
-            console.log(data)
             return fulfillWithValue(data)
         }catch (e) {
             return rejectWithValue(e.response.data)
