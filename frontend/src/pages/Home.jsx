@@ -1,6 +1,10 @@
+import Headers from "../components/Headers"
+
 const Home = () => {
     return (
-        <div>Home</div>
+        <div className="w-full">
+            <Headers/>
+        </div>
     )
 }
 export default Home
