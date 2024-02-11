@@ -23,7 +23,7 @@ const Banner = () => {
     };
     
     return (
-        <div className="w-full ">
+        <div className="w-full">
             <div className="customContainer">
                 <div className="w-full flex flex-wrap md-lg:gap-8">
                     <div className="w-full">
@@ -33,14 +33,14 @@ const Banner = () => {
                                       infinite={true}
                                       arrows={true}
                                       showDots={true}
-                                      dotListClass={"custom-dot-list-style"}
+                                      dotListClass={"custom-dot-list-style-bannerSection"}
                                       draggable={false}
                                       keyBoardControl={true}
                                       transitionDuration={500}>
                                 {
                                     [1,2,3,4,5,6,7].map((item,index)=> (
-                                        <Link to={"/"} key={index} className="md-lg:h-[440pc] h-auto w-full">
-                                            <img src={`http://localhost:5173/images/banner/${item}.jpg`} className="w-full h-full object-contain" alt=""/>
+                                        <Link to={"/"} key={index} className="md-lg:h-[440px] h-auto w-full">
+                                            <img src={`/images/banner/${item}.jpg`} className="w-full h-full object-contain" alt=""/>
                                         </Link>
                                     ))
                                 }

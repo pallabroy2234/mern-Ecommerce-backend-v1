@@ -10,11 +10,11 @@
 }
 
 
-.custom-dot-list-style button {
+.custom-dot-list-style-bannerSection button {
     position: relative;
 }
 
-.custom-dot-list-style:before {
+.custom-dot-list-style-bannerSection:before {
     content: "";
     position: absolute;
     width: 100%;
@@ -24,17 +24,17 @@
     filter: blur(36px);
 }
 
-.custom-dot-list-style button {
+.custom-dot-list-style-bannerSection button {
     @apply border-[2px]  border-white bg-white ml-[2px] mb-[20px] bg-transparent;
 
 }
 
-.custom-dot-list-style button.active {
+.custom-dot-list-style-bannerSection button.active {
     @apply bg-white border-[2px]  border-white;
 
 }
 
-.custom-dot-list-style button:focus {
+.custom-dot-list-style-bannerSection button:focus {
     outline: none;
 }
 
