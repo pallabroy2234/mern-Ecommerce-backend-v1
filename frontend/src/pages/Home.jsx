@@ -3,6 +3,7 @@ import Banner from "../components/Banner.jsx";
 import Categories from "../components/Categories.jsx";
 import FeatureProducts from "../components/products/FeatureProducts.jsx";
 import Products from "../components/products/Products.jsx";
+import Footer from "../components/Footer.jsx";
 
 const Home = () => {
     return (
@@ -30,6 +31,8 @@ const Home = () => {
                  </div>
              </div>
             </div>
+            
+            <Footer/>
         </div>
     )
 }
