@@ -88,7 +88,7 @@ const Headers = () => {
                                       <Link to={"/"} className={`p-2 block ${pathname === "/" ? "text-dark-moderate-green" : "text-slate-600"}`}>Home</Link>
                                   </li>
                                   <li>
-                                      <Link to={"/"} className={`p-2 block ${pathname === "/shop" ? "text-dark-moderate-green" : "text-slate-600"}`}>Shop</Link>
+                                      <Link to={"/shop"} className={`p-2 block ${pathname === "/shop" ? "text-dark-moderate-green" : "text-slate-600"}`}>Shop</Link>
                                   </li>
                                   <li>
                                       <Link to={"/"} className={`p-2 block ${pathname === "/block" ? "text-dark-moderate-green" : "text-slate-600"}`}>Blog</Link>
