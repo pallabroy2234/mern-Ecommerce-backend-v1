@@ -141,20 +141,22 @@ const Shop = () => {
                         <div className="w-9/12 md-lg:w-8/12 md:w-full">
                             <div className="pl-8 md:pl-0">
                                 <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
-                                    <h2 className="text-lg font-medium  text-slate-600">All Product</h2>
+                                    <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
-                                        <select name="" id="" className="p-1 border outline-0 text-slate-600 font-semibold ">
+                                        <select name="" id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
                                             <option selected value="">Sort By</option>
                                             <option value="">Low to High Price</option>
                                             <option value="">High to Low Price</option>
                                         </select>
-                                    {/*  Grid view and List view option   */}
+                                        {/*  Grid view and List view option   */}
                                         <div className="flex justify-center items-center gap-4 md-lg:hidden">
                                             <div onClick={()=> setStyle("grid")} className={`p-2 ${style === "grid" &&  "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><BsFillGridFill/></div>
                                             <div onClick={()=> setStyle("list")} className={`p-2 ${style === "list" && "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><FaThList/></div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                {/*  Product Grid   */}
                             </div>
                         </div>
                     </div>
