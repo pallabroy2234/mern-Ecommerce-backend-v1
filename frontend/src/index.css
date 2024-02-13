@@ -7,6 +7,9 @@
     .customContainer {
         @apply w-[85%] lg:w-[90%] mx-auto;
     }
+    .wrapper{
+        @apply w-[85%] md:w-[90%] sm:w-[90%] lg:w-[90%] mx-auto h-full ;
+    }
 }
 
 
