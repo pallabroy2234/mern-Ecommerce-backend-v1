@@ -7,14 +7,17 @@ import {Range} from "react-range";
 import {AiFillStar} from "react-icons/ai";
 import {CiStar} from "react-icons/ci";
 import Products from "../components/products/Products.jsx";
+import {BsFillGridFill} from "react-icons/bs";
+import {FaThList} from "react-icons/fa";
 
 
 const Shop = () => {
     const [filter, setFilter] = useState(true)
-    const categories = ["clothing", "sports", "phones", "laptops" , "monitors" ,"tablets", "audio" , "bags", "television"]
+    const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
     const [state, setState] = useState({
         values: [50, 2000],
     })
+    const [style, setStyle] = useState("grid")
     return (
         <div className="w-full">
             <Headers/>
@@ -64,13 +67,13 @@ const Shop = () => {
                                     max={2000}
                                     values={state.values}
                                     onChange={values => setState({values})}
-                                    renderTrack={({props, children})=> (
-                                    <div {...props} className="w-full h-[6px] bg-slate-200 rounded-full cursor-pointer">
-                                        {children}
-                                    </div>
-                                ) }
-                                    renderThumb={({props})=> (
-                                    <div {...props} className="w-5 h-5 bg-indigo-500 rounded-full cursor-pointer focus:outline-0"/>
+                                    renderTrack={({props, children}) => (
+                                        <div {...props} className="w-full h-[6px] bg-slate-200 rounded-full cursor-pointer">
+                                            {children}
+                                        </div>
+                                    )}
+                                    renderThumb={({props}) => (
+                                        <div {...props} className="w-5 h-5 bg-indigo-500 rounded-full cursor-pointer focus:outline-0"/>
                                     )}
                                 />
                                 <div>
@@ -78,7 +81,7 @@ const Shop = () => {
                                 </div>
                             </div>
                             
-                        {/* Ratting   */}
+                            {/* Ratting   */}
                             <div className="py-3 flex flex-col gap-4">
                                 <h2 className="text-2xl font-bold mb-3 text-slate-600">Ratting</h2>
                                 <div className="flex flex-col gap-3">
@@ -126,17 +129,34 @@ const Shop = () => {
                                     </div>
                                 </div>
                             </div>
-                        
-                        {/* Latest Product    */}
-                         <div className="py-5 flex flex-col gap-4 md-lg:hidden">
-                             <Products title={"Latest Product"}/>
-                         </div>
+                            
+                            {/* Latest Product    */}
+                            <div className="py-5 flex flex-col gap-4 md-lg:hidden">
+                                <Products title={"Latest Product"}/>
+                            </div>
                         </div>
-                    
                         
                         
-                    {/*  All Products    */}
-                    
+                        {/*  All Products    */}
+                        <div className="w-9/12 md-lg:w-8/12 md:w-full">
+                            <div className="pl-8 md:pl-0">
+                                <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
+                                    <h2 className="text-lg font-medium  text-slate-600">All Product</h2>
+                                    <div className="flex justify-center items-center gap-3">
+                                        <select name="" id="" className="p-1 border outline-0 text-slate-600 font-semibold ">
+                                            <option selected value="">Sort By</option>
+                                            <option value="">Low to High Price</option>
+                                            <option value="">High to Low Price</option>
+                                        </select>
+                                    {/*  Grid view and List view option   */}
+                                        <div className="flex justify-center items-center gap-4 md-lg:hidden">
+                                            <div onClick={()=> setStyle("grid")} className={`p-2 ${style === "grid" &&  "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><BsFillGridFill/></div>
+                                            <div onClick={()=> setStyle("list")} className={`p-2 ${style === "list" && "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><FaThList/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
