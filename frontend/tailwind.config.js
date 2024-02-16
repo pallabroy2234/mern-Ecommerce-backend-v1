@@ -6,10 +6,10 @@ export default {
     ],
     theme: {
         extend: {
-            colors:{
+            colors: {
                 "bright-gray": "#eeeeee",
-                "dark-moderate-green" :"#7fad39",
-                "white-smoke" : "#f5f5f5",
+                "dark-moderate-green": "#7fad39",
+                "white-smoke": "#f5f5f5",
                 
             }
         },

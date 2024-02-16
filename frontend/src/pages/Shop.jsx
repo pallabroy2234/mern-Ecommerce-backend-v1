@@ -9,6 +9,8 @@ import {CiStar} from "react-icons/ci";
 import Products from "../components/products/Products.jsx";
 import {BsFillGridFill} from "react-icons/bs";
 import {FaThList} from "react-icons/fa";
+import ShopProduct from "../components/products/ShopProduct.jsx";
+import Pagination from "../components/Pagination.jsx";
 
 
 const Shop = () => {
@@ -18,6 +20,9 @@ const Shop = () => {
         values: [50, 2000],
     })
     const [style, setStyle] = useState("grid")
+    
+    const [pageNumber, setPageNumber] = useState(1)
+    const [parPage, setParPage] = useState(3)
     return (
         <div className="w-full">
             <Headers/>
@@ -140,6 +145,7 @@ const Shop = () => {
                         {/*  All Products    */}
                         <div className="w-9/12 md-lg:w-8/12 md:w-full">
                             <div className="pl-8 md:pl-0">
+                                {/* All Product Heading */}
                                 <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
                                     <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
@@ -150,13 +156,21 @@ const Shop = () => {
                                         </select>
                                         {/*  Grid view and List view option   */}
                                         <div className="flex justify-center items-center gap-4 md-lg:hidden">
-                                            <div onClick={()=> setStyle("grid")} className={`p-2 ${style === "grid" &&  "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><BsFillGridFill/></div>
-                                            <div onClick={()=> setStyle("list")} className={`p-2 ${style === "list" && "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}><FaThList/></div>
+                                            <div onClick={() => setStyle("grid")} className={`p-2 ${style === "grid" && "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
+                                                <BsFillGridFill/></div>
+                                            <div onClick={() => setStyle("list")} className={`p-2 ${style === "list" && "bg-slate-300"} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
+                                                <FaThList/></div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                {/*  Product Grid   */}
+                                {/*  Product Grid and list view   */}
+                                <div className="pb-8">
+                                    <ShopProduct style={style}/>
+                                </div>
+                                <div className="my-3">
+                                    <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={20} parPage={parPage} showItem={Math.floor(20 / 3)}/>
+                                </div>
                             </div>
                         </div>
                     </div>
