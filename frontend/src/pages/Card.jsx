@@ -22,6 +22,7 @@ const Card = () => {
                                 <span>Card</span>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -48,7 +49,7 @@ const Card = () => {
                                                         </div>
                                                         {
                                                             [1, 2].map((item, index) => (
-                                                                <div key={index} className="w-full flex flex-wrap">
+                                                                <div key={index} className="w-full flex flex-wrap  sm:mb-10">
                                                                     <div className="flex sm:w-full gap-2 w-7/12">
                                                                         <div className="flex gap-2 justify-start items-center">
                                                                             <img className="w-[80px] h-[80px] object-cover" src={`/images/products/${index + 1}.webp`} alt="product image"/>

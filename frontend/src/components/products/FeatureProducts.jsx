@@ -14,21 +14,21 @@ const FeatureProducts = () => {
                 </div>
             </div>
             
-            <div className="w-full  grid grid-cols-4 md-lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  gap-6">
+            <div className="w-full grid 3xl:grid-cols-6 2xl:grid-cols-5  xl:grid-cols-5 lg:grid-cols-4 md-lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5">
                 {
                     [1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-                        <div key={index} className="group border transition-all duration-500 shadow-md hover:-translate-y-2  z-50 rounded-md">
+                        <div key={index} className="group border transition-all duration-300 shadow-md hover:-translate-y-2  z-50 rounded-md">
                             {/* Product Image and Link */}
                             <div className="relative overflow-hidden">
                                 <div className="z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2">6%</div>
                                 <div className="sm:w-full w-full ">
                                     <img className="w-full h-full object-fill" src={`images/products/${index + 1}.webp`} alt="produtImage"/>
                                 </div>
-                                <ul className="z-50 flex transition-all duration-500 -bottom-10 justify-center items-center gap-3 absolute w-full group-hover:bottom-3 ">
+                                <ul className="z-50 flex transition-all duration-300 -bottom-10 justify-center items-center gap-3 absolute w-full group-hover:bottom-3 ">
                                     <li className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200">
                                         <AiFillHeart/>
                                     </li>
-                                    <Link to={"/"} className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200">
+                                    <Link to="/product/details/asdjf" className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200">
                                         <FaEye/>
                                     </Link>
                                     <li className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200">

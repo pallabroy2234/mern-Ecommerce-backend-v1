@@ -74,7 +74,7 @@ const Headers = () => {
                               <Link to="/">
                                   <img src="http://localhost:5173/images/logo.png" alt="logo"/>
                               </Link>
-                              <div onClick={()=> setShowSideBar(false)} className="justify-center items-center w-[30px] h-[30px] bg-white text-slate-600 border border-slate-600 rounded-sm cursor-pointer md-lg:flex lg:hidden xl:hidden 2xl:hidden">
+                              <div onClick={()=> setShowSideBar(false)} className="justify-center items-center w-[30px] h-[30px] bg-white text-slate-600 border border-slate-600 rounded-sm cursor-pointer md-lg:flex lg:hidden xl:hidden 2xl:hidden 3xl:hidden ">
                                   <span><FaList/></span>
                               </div>
                           </div>
