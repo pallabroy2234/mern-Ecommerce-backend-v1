@@ -40,7 +40,7 @@ const Card = () => {
                                                 <h2 className="text-md text-green-500 font-semibold">Stock Products {cardProducts.length - outOfStockProducts.length}</h2>
                                             </div>
                                             {
-                                                cardProducts.map((product,index)=> (
+                                                cardProducts.map((product, index) => (
                                                     <div key={index} className="flex bg-white p-4 flex-col gap-2">
                                                         <div className="flex justify-start items-center">
                                                             {/* Shop Name */}
@@ -128,14 +128,44 @@ const Card = () => {
                                                     </div>
                                                 )
                                             }
-                                            
+                                        
                                         </div>
                                     </div>
                                 </div>
                                 
                                 {/*  Right Section   */}
                                 
-                              
+                                <div className="w-[33%] md-lg:w-full">
+                                    <div className="pl-3 md-lg:pl-0 md-lg:mt-5">
+                                        {
+                                            cardProducts.length > 0 && (
+                                                <div className="bg-white p-3 text-slate-600 flex flex-col gap-3">
+                                                    <h2 className="text-xl font-bold capitalize">Order Summary</h2>
+                                                    <div className="flex justify-between items-center">
+                                                        <span>4 Item</span>
+                                                        <span>$655</span>
+                                                    </div>
+                                                    
+                                                    <div className="flex justify-between items-center">
+                                                        <span>Shipping Fee</span>
+                                                        <span>$85</span>
+                                                    </div>
+                                                    
+                                                    <div className="flex gap-2">
+                                                        <input type="text" className="w-full px-3 border border-slate-200 outline-0 focus:border-orange-500 rounded-sm py-2" placeholder="Coupon"/>
+                                                        <button className="px-5 py-[1px] bg-blue-500 text-white rounded-sm uppercase text-sm">Apply</button>
+                                                    </div>
+                                                    
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="capitalize">Total</span>
+                                                        <span  className="text-lg text-orange-500 font-medium">$85</span>
+                                                    </div>
+                                                    <button className="px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase">Process to checkout 4</button>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
                             
                             </div>
                         ) : (
