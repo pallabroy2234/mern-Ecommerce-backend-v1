@@ -101,7 +101,8 @@ const Details = () => {
                 </div>
             </div>
             
-            <div className="customContainer pb-16">
+            {/* Product and product details section  */}
+            <section className="customContainer pb-16">
                 <div className="grid grid-cols-2  md:grid-cols-1 gap-8">
                     <div className="">
                         <div className="p-5 border ">
@@ -193,7 +194,7 @@ const Details = () => {
                         </div>
                         
                         {/* Availability and Share on    */}
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-6 py-5">
                             <div className="flex items-center justify-start gap-14">
                                 <span className="text-black font-bold text-xl sm:text-lg">Availability</span>
                                 <span className={`text-${stock ? "green" : "red"}-500`}>
@@ -221,9 +222,19 @@ const Details = () => {
                             </div>
                         </div>
                     
+                    {/*  Chatting Option  */}
+                        <div className={`flex py-5 gap-3 flex-wrap`}>
+                            {
+                                stock ? (
+                                    <button className="px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize">Buy Now</button>
+                                ) : null
+                            }
+                            
+                            <button className="px-9 py-3  whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-lime-500/40 bg-lime-500 text-white rounded-sm capitalize">Chat Seller</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
             
             
             <Footer/>
