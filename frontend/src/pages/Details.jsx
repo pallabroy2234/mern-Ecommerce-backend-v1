@@ -332,7 +332,7 @@ const Details = () => {
                                 clickable: true,
                                 el: ".customBullet",
                                 bulletActiveClass:"bg-indigo-500 opacity-100",
-                                // bulletClass: "swiperBullet",
+                                // bulletClass: "myBullet",
                             }}
                             modules={[Pagination]}
                             className="mySwiper"
