@@ -7,7 +7,8 @@ import "react-multi-carousel/lib/styles.css";
 import {GoArrowLeft, GoArrowRight} from "react-icons/go";
 import {useState} from "react";
 import Rattings from "../components/Rattings.jsx";
-import {AiFillHeart} from "react-icons/ai";
+import {AiFillGithub, AiFillHeart, AiOutlineTwitter} from "react-icons/ai";
+import {FaFacebookF, FaLinkedin} from "react-icons/fa";
 
 
 const Details = () => {
@@ -70,7 +71,7 @@ const Details = () => {
     const images = [2, 3, 4, 2, 5, 7, 8]
     const discount = 5
     const stock = 10
-
+    
     return (
         <div>
             <Headers/>
@@ -153,7 +154,7 @@ const Details = () => {
                                 discount ? (
                                     <>
                                         <h2 className="line-through">$500</h2>
-                                        <h2>${500 - Math.floor(500*discount)/ 100}(-{discount}%)</h2>
+                                        <h2>${500 - Math.floor(500 * discount) / 100}(-{discount}%)</h2>
                                     </>
                                 
                                 ) : (
@@ -161,14 +162,14 @@ const Details = () => {
                                 )
                             }
                         </div>
-                    {/*  Description   */}
+                        {/*  Description   */}
                         <div className="text-slate-600">
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?</p>
                         </div>
-                    {/*   Quantity  , stock and Favorite Item */}
+                        {/*   Quantity  , stock and Favorite Item */}
                         <div className="flex gap-3 pb-10 border-b flex-wrap">
                             {
-                             stock &&   stock ? (
+                                stock && stock ? (
                                         <>
                                             <div className="flex justify-start items-start gap-4 sm:flex-col ">
                                                 <div className="flex bg-slate-200 h-[50px] justify-center items-center text-xl rounded-sm">
@@ -181,17 +182,45 @@ const Details = () => {
                                                 </div>
                                             </div>
                                         </>
-                                 )
-                                 : (
-                                     <div className="text-red-500">Out of Stock</div>
-                                 )
+                                    )
+                                    : null
                             }
                             <div>
-                               <div className="h-[50px] w-[50px] flex justify-center items-center cursor-pointer text-xl hover:shadow-lg hover:shadow-cyan-500/40 bg-cyan-500 text-white">
-                                   <AiFillHeart/>
-                               </div>
+                                <div className="h-[50px] w-[50px] flex justify-center items-center cursor-pointer text-xl hover:shadow-lg hover:shadow-cyan-500/40 bg-cyan-500 text-white">
+                                    <AiFillHeart/>
+                                </div>
                             </div>
                         </div>
+                        
+                        {/* Availability and Share on    */}
+                        <div className="flex flex-col gap-6">
+                            <div className="flex items-center justify-start gap-14">
+                                <span className="text-black font-bold text-xl sm:text-lg">Availability</span>
+                                <span className={`text-${stock ? "green" : "red"}-500`}>
+                                    {
+                                        stock ? `In Stock(${stock})` : "Out of Stock"
+                                    }
+                                  </span>
+                            </div>
+                            <div className="flex items-center justify-start gap-20 md-lg:gap-10 md:gap-20 sm:items-start sm:flex-col sm:gap-5 ">
+                                <span className="text-black font-bold text-xl sm:text-lg">Share on</span>
+                                <ul className="flex justify-start items-center gap-3">
+                                    <li>
+                                        <Link to={"#"} className="w-[38px] h-[38px] hover:bg-[#7fad39] hover:text-white flex justify-center items-center bg-indigo-500 text-white  rounded-full"><FaFacebookF/></Link>
+                                    </li>
+                                    <li>
+                                        <Link to={"#"} className="w-[38px] h-[38px] hover:bg-[#7fad39] hover:text-white flex justify-center items-center bg-cyan-500 text-white rounded-full"><AiOutlineTwitter/></Link>
+                                    </li>
+                                    <li>
+                                        <Link to={"#"} className="w-[38px] h-[38px] hover:bg-[#7fad39] hover:text-white flex justify-center items-center bg-purple-500 text-white rounded-full"><FaLinkedin/></Link>
+                                    </li>
+                                    <li>
+                                        <Link to={"#"} className="w-[38px] h-[38px] hover:bg-[#7fad39] hover:text-white flex justify-center items-center bg-blue-500 text-white rounded-full"><AiFillGithub/></Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    
                     </div>
                 </div>
             </div>
