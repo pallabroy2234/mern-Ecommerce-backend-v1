@@ -7,10 +7,11 @@ import "react-multi-carousel/lib/styles.css";
 import {GoArrowLeft, GoArrowRight} from "react-icons/go";
 import {useState} from "react";
 import Rattings from "../components/Rattings.jsx";
+import {AiFillHeart} from "react-icons/ai";
 
 
 const Details = () => {
-    const images = [2, 3, 4, 2, 5, 7, 8]
+    
     const [image, setImage] = useState("")
     
     const responsive = {
@@ -66,6 +67,9 @@ const Details = () => {
         )
     }
     
+    const images = [2, 3, 4, 2, 5, 7, 8]
+    const discount = 5
+    const stock = 10
 
     return (
         <div>
@@ -131,13 +135,61 @@ const Details = () => {
                     </div>
                     
                     <div className="flex flex-col gap-5">
+                        {/* Product Heading */}
                         <div className="text-3xl md:text-xl  text-slate-600 font-bold">
                             <h2 title="Long Sleeve casua Shirt for man" className="overflow-hidden whitespace-nowrap text-ellipsis">Long Sleeve casua Shirt for man</h2>
                         </div>
                         
+                        {/* Product Ratting */}
                         <div className="flex justify-start items-center gap-4">
                             <div className="flex text-xl">
                                 <Rattings rattings={4.5}/>
+                            </div>
+                            <span className="text-green-500">(23 reviews)</span>
+                        </div>
+                        {/* Discount Section */}
+                        <div className="text-2xl sm:text-xl text-red-500 font-bold flex gap-3">
+                            {
+                                discount ? (
+                                    <>
+                                        <h2 className="line-through">$500</h2>
+                                        <h2>${500 - Math.floor(500*discount)/ 100}(-{discount}%)</h2>
+                                    </>
+                                
+                                ) : (
+                                    <h2>Price : $500</h2>
+                                )
+                            }
+                        </div>
+                    {/*  Description   */}
+                        <div className="text-slate-600">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?</p>
+                        </div>
+                    {/*   Quantity  , stock and Favorite Item */}
+                        <div className="flex gap-3 pb-10 border-b flex-wrap">
+                            {
+                             stock &&   stock ? (
+                                        <>
+                                            <div className="flex justify-start items-start gap-4 sm:flex-col ">
+                                                <div className="flex bg-slate-200 h-[50px] justify-center items-center text-xl rounded-sm">
+                                                    <div className="px-6 cursor-pointer">-</div>
+                                                    <div className="px-5">5</div>
+                                                    <div className="px-6 cursor-pointer">+</div>
+                                                </div>
+                                                <div className="w-full">
+                                                    <button className="px-9 py-3 h-[50px] whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-purple-500/40 bg-purple-500 text-white rounded-sm">Add to Cart</button>
+                                                </div>
+                                            </div>
+                                        </>
+                                 )
+                                 : (
+                                     <div className="text-red-500">Out of Stock</div>
+                                 )
+                            }
+                            <div>
+                               <div className="h-[50px] w-[50px] flex justify-center items-center cursor-pointer text-xl hover:shadow-lg hover:shadow-cyan-500/40 bg-cyan-500 text-white">
+                                   <AiFillHeart/>
+                               </div>
                             </div>
                         </div>
                     </div>
