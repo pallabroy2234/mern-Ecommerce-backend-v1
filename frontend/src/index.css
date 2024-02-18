@@ -44,3 +44,14 @@
 .react-multi-carousel-dot--active button {
     @apply bg-white border-[2px]  border-white ;
 }
+
+
+/* If Swiper bullet style Change  */
+.swiperBullet{
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 8px;
+}

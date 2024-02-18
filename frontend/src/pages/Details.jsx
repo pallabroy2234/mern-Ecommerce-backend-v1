@@ -10,7 +10,10 @@ import Rattings from "../components/Rattings.jsx";
 import {AiFillGithub, AiFillHeart, AiOutlineTwitter} from "react-icons/ai";
 import {FaFacebookF, FaLinkedin} from "react-icons/fa";
 import Review from "../components/Review.jsx";
-import ShopProduct from "../components/products/ShopProduct.jsx";
+import 'swiper/css';
+import 'swiper/css/pagination';
+import {Swiper, SwiperSlide} from "swiper/react";
+import {Pagination} from "swiper/modules";
 
 
 const Details = () => {
@@ -298,6 +301,72 @@ const Details = () => {
                             </div>
                         
                         </div>
+                    </div>
+                </div>
+            </section>
+            
+            {/* Related Product */}
+            <section>
+                <div className="customContainer">
+                    <h2 className="text-2xl py-8 text-slate-600">Related Product</h2>
+                    <div>
+                        <Swiper
+                            slidesPerView={"auto"}
+                            breakpoints={{
+                                1280: {
+                                    slidesPerView: 4
+                                },
+                                1024: {
+                                    slidesPerView: 3
+                                },
+                                768: {
+                                    slidesPerView: 2
+                                },
+                                565: {
+                                    slidesPerView: 2
+                                },
+                            }}
+                            spaceBetween={25}
+                            loop={true}
+                            pagination={{
+                                clickable: true,
+                                el: ".customBullet",
+                                bulletActiveClass:"bg-indigo-500 opacity-100",
+                                // bulletClass: "swiperBullet",
+                            }}
+                            modules={[Pagination]}
+                            className="mySwiper"
+                        >
+                            {
+                                [1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
+                                    return (
+                                        <SwiperSlide key={index}>
+                                            <Link to={"#"} className="block">
+                                                <div className="relative h-[270px]">
+                                                    <div className="w-full h-full">
+                                                        <img className="w-full h-full object-cover" src={`/images/products/${index + 1}.jpg`} alt=""/>
+                                                        <div className="absolute h-full w-full top-0 left-0 bg-[#000] opacity-25 hover:opacity-50 transition-all duration-500"></div>
+                                                    </div>
+                                                    <div className="z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2">6%</div>
+                                                </div>
+                                                <div className="p-4 flex flex-col gap-1">
+                                                    <h2 className="text-slate-600 text-lg font-semibold">Standard dummy text ever since the</h2>
+                                                    <div className="flex justify-start items-center gap-3">
+                                                        <h2 className="text-[#6699ff] text-xl font-bold">$5645</h2>
+                                                        <div className="flex">
+                                                            <Rattings rattings={4.5}/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </SwiperSlide>
+                                    )
+                                })
+                            }
+                        </Swiper>
+                    </div>
+                    <div className="w-full flex justify-center items-center py-10">
+                        <div className="customBullet justify-center gap-3 !w-auto"></div>
                     </div>
                 </div>
             </section>
