@@ -14,7 +14,7 @@ import {FaFacebookF, FaLinkedin} from "react-icons/fa";
 const Details = () => {
     
     const [image, setImage] = useState("")
-    
+    const [state, setState] = useState("reviews")
     const responsive = {
         superLargeDesktop: {
             breakpoint: {max: 4000, min: 3000},
@@ -71,6 +71,7 @@ const Details = () => {
     const images = [2, 3, 4, 2, 5, 7, 8]
     const discount = 5
     const stock = 10
+    
     
     return (
         <div>
@@ -221,8 +222,8 @@ const Details = () => {
                                 </ul>
                             </div>
                         </div>
-                    
-                    {/*  Chatting Option  */}
+                        
+                        {/*  Chatting Option  */}
                         <div className={`flex py-5 gap-3 flex-wrap`}>
                             {
                                 stock ? (
@@ -236,7 +237,32 @@ const Details = () => {
                 </div>
             </section>
             
-            
+            {/* */}
+            <section className="customContainer pb-16">
+                <div className="flex flex-wrap">
+                    {/* Left */}
+                    <div className="w-[72%] md-lg:w-full">
+                        <div className="pr-4 md-lg:pr-0">
+                            <div className="grid grid-cols-2 gap-2">
+                                <button onClick={()=> setState("reviews")}  className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "reviews" ? "bg-green-500 text-white" : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Reviews</button>
+                                <button onClick={()=> setState("description")} className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "description" ? "bg-green-500 text-white " : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Description</button>
+                            </div>
+                            {/* reviews and description */}
+                            <div>
+                                {
+                                    state === "reviews" ? "reviews" : state === "description" ? "description" : null
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    {/* Right */}
+                    <div className="w-[28%] md-lg:w-full">
+                    <div className="pl-4 md-lg:pl-0">
+                        
+                        </div>
+                    </div>
+                </div>
+            </section>
             <Footer/>
         </div>
     )
