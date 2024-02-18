@@ -5,16 +5,20 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import {GoArrowLeft, GoArrowRight} from "react-icons/go";
-import {useState} from "react";
+import React, {useState} from "react";
 import Rattings from "../components/Rattings.jsx";
 import {AiFillGithub, AiFillHeart, AiOutlineTwitter} from "react-icons/ai";
 import {FaFacebookF, FaLinkedin} from "react-icons/fa";
+import Review from "../components/Review.jsx";
+import ShopProduct from "../components/products/ShopProduct.jsx";
 
 
 const Details = () => {
     
     const [image, setImage] = useState("")
     const [state, setState] = useState("reviews")
+    // const [tabActive, setTabActive] = useState()
+    
     const responsive = {
         superLargeDesktop: {
             breakpoint: {max: 4000, min: 3000},
@@ -237,27 +241,61 @@ const Details = () => {
                 </div>
             </section>
             
-            {/* */}
+            {/* Review and Store Product */}
             <section className="customContainer pb-16">
                 <div className="flex flex-wrap">
                     {/* Left */}
                     <div className="w-[72%] md-lg:w-full">
                         <div className="pr-4 md-lg:pr-0">
                             <div className="grid grid-cols-2 gap-2">
-                                <button onClick={()=> setState("reviews")}  className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "reviews" ? "bg-green-500 text-white" : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Reviews</button>
-                                <button onClick={()=> setState("description")} className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "description" ? "bg-green-500 text-white " : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Description</button>
+                                <button onClick={() => setState("reviews")} className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "reviews" ? "bg-green-500 text-white" : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Reviews</button>
+                                <button onClick={() => setState("description")} className={`transition-all duration-300 py-1 px-5 hover:bg-green-500 ${state === "description" ? "bg-green-500 text-white " : "bg-slate-200 text-slate-700 hover:text-white"} rounded-sm`}>Description</button>
                             </div>
                             {/* reviews and description */}
                             <div>
                                 {
-                                    state === "reviews" ? "reviews" : state === "description" ? "description" : null
+                                    state === "reviews" ? (
+                                        <div>
+                                            <Review/>
+                                        </div>
+                                    ) : state === "description" ? (
+                                        <>
+                                            <p className="py-5 text-slate-600">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?</p>
+                                        </>
+                                    ) : null
                                 }
+                            
                             </div>
                         </div>
                     </div>
                     {/* Right */}
                     <div className="w-[28%] md-lg:w-full">
-                    <div className="pl-4 md-lg:pl-0">
+                        
+                        {/*  Shop Related Products   */}
+                        <div className="pl-4 md-lg:pl-0">
+                            <div className="px-3 py-2 text-slate-600 bg-slate-200">
+                                <h2>Pallab's Fashion</h2>
+                            </div>
+                            <div className="flex flex-col p-5 gap-8 mt-3 border">
+                                {
+                                    [1, 2, 3,].map((item, index) => (
+                                        <Link key={index} className="">
+                                            <div className="flex flex-col gap-3 md-lg:flex-row md-lg:items-center sm:flex-col sm:items-start ">
+                                                <div className="relative h-[300px] lg:h-[200px] lg:w-[200px] sm:w-full sm:h-full overflow-hidden">
+                                                    <img className="w-full h-full object-cover" src={`/images/products/${index + 1}.jpg`} alt=""/>
+                                                    <div className="z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2">6%</div>
+                                                </div>
+                                                <div className="">
+                                                    <h2 className="text-slate-600 py-1">Standard dummy text ever since the</h2>
+                                                    <div className="flex items-center gap-2 text-xl">
+                                                        <Rattings rattings={4.5}/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))
+                                }
+                            </div>
                         
                         </div>
                     </div>
