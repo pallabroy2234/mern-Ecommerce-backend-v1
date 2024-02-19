@@ -14,10 +14,10 @@ import Search from "../components/Search.jsx";
 
 const Category = () => {
     const dispatch = useDispatch()
-    const {loader ,successMessage,errorMessage,categories}= useSelector((state)=> state.category)
+    const {loader ,successMessage,errorMessage,categories,totalCategories}= useSelector((state)=> state.category)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState("");
-    const [parPage, setParPage] = useState(5);
+    const [parPage, setParPage] = useState(10);
     const [show, setShow] = useState(false);
    const [imageShow,setImageShow]=useState("");
     
@@ -120,7 +120,7 @@ const Category = () => {
                         
                         {/* pagination */}
                         <div className="w-full flex justify-end mt-4 bottom-4 right-4">
-                            <Pagination pageNumber={currentPage} setPageNumber={setCurrentPage} totalItem={50} parPage={parPage} showItem={3}/>
+                            <Pagination pageNumber={currentPage} setPageNumber={setCurrentPage} totalItem={totalCategories} parPage={parPage} showItem={3}/>
                         </div>
                     </div>
                 </div>
