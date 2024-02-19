@@ -24,7 +24,7 @@ class categoryControllers {
             let imageLink;
             let imageId;
             try {
-                const result = await cloudinary.uploader.upload(image.path, {folder: "categories"})
+                const result = await cloudinary.uploader.upload(image.path, {folder: "multiVendor/categories"})
                 if (!result) {
                     return errorResponse(res, {statusCode: 400, message: "Image upload failed"})
                 }
