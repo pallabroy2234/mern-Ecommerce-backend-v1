@@ -20,7 +20,7 @@ const Details = () => {
     
     const [image, setImage] = useState("")
     const [state, setState] = useState("reviews")
-    // const [tabActive, setTabActive] = useState()
+    
     
     const responsive = {
         superLargeDesktop: {

@@ -1,7 +1,18 @@
 import Rattings from "./Rattings.jsx";
 import RattingTemp from "./RattingTemp.jsx";
+import Pagination from "./Pagination.jsx";
+import {useState} from "react";
+import ReactRatting from "react-rating";
+import {CiStar} from "react-icons/ci";
+import {AiFillStar} from "react-icons/ai";
+import {Link} from "react-router-dom";
 
 const Review = () => {
+    const [pageNumber, setPageNumber] = useState(1)
+    const [parPage, setParPage] = useState(5)
+    const [reactRatting, setReactRatting] = useState()
+    const userInfo = {}
+    
     return (
         <div className="mt-8">
             {/* Ratting */}
@@ -102,8 +113,40 @@ const Review = () => {
                     ))
                 }
             
-            
+             <div className="flex justify-end">
+                 <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={20} parPage={parPage} showItem={Math.floor(20 / 3)}/>
+             </div>
             </div>
+            
+            <div className="md-lg:mb-5 mb-0">
+                {
+                    userInfo ? (
+                        <div className="flex flex-col gap-3">
+                            {/* React Ratting */}
+                            <div className="flex gap-1">
+                                <ReactRatting
+                                    onChange={(e) => setReactRatting(e)}
+                                    initialRating={0}
+                                    emptySymbol={<span className="text-slate-600 text-4xl"><CiStar/></span>}
+                                    fullSymbol={
+                                        <span className="text-ratting text-4xl text-ratting"><AiFillStar/></span>}
+                                />
+                            </div>
+                            <form>
+                                <textarea name="" id="" rows="5" className="border outline-0 p-3 w-full rounded-md"></textarea>
+                                <div className="mt-2">
+                                    <button className="py-2 px-8 bg-indigo-500 text-white rounded-sm">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    ): (
+                        <div>
+                            <Link className="py-2 px-8 bg-indigo-500 text-white rounded-sm" to={"/login"}>Login</Link>
+                        </div>
+                    )
+                }
+            </div>
+        
         
         </div>
     )
