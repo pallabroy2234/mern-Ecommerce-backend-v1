@@ -5,6 +5,7 @@ import Card from "./pages/Card.jsx";
 import Details from "./pages/Details.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Shipping from "./pages/Shipping.jsx";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/shop" element={<Shop/>}/>
                 <Route path="/card" element={<Card/>}/>
+                <Route path="/shipping" element={<Shipping/>}/>
                 <Route path="/product/details/:slug" element={<Details/>}/>
             </Routes>
         </BrowserRouter>

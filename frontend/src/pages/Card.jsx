@@ -1,12 +1,24 @@
 import Headers from "../components/Headers.jsx";
-import {Link} from "react-router-dom";
+import {Link, redirect, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 
 const Card = () => {
+    const navigate = useNavigate();
     const cardProducts = [1, 2];
     const outOfStockProducts = [1, 2];
-    
+    const redirect = ()=> {
+        navigate("/shipping", {
+            state:{
+                products:[],
+                price:232,
+                shippingFee:23,
+                items:3
+            }
+            
+        })
+        
+    }
     return (
         <div>
             <Headers/>
@@ -161,7 +173,7 @@ const Card = () => {
                                                         <span className="capitalize">Total</span>
                                                         <span  className="text-lg text-orange-500 font-medium">$85</span>
                                                     </div>
-                                                    <button className="px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase">Process to checkout 4</button>
+                                                    <button onClick={redirect} className="px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase">Process to checkout 4</button>
                                                 </div>
                                             )
                                         }
