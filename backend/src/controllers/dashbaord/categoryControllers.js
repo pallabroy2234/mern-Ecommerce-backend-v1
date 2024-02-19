@@ -3,7 +3,7 @@ const {successResponse, errorResponse} = require("../../helper/responseHelper");
 const slugify = require("slugify")
 const Category = require("../../models/categoryModal");
 const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
+const {unlinkAllFilesMiddleware} = require("../../utiles/upload");
 
 class categoryControllers {
 // ! add category -> POST
@@ -33,14 +33,6 @@ class categoryControllers {
                 
             } catch (e) {
                 return errorResponse(res, {statusCode: 400, message: "Image upload failed"})
-            } finally {
-                try {
-                    const filepath = image.path;
-                    fs.unlinkSync(filepath);
-                    console.log("Image deleted successfully")
-                } catch (unlinkError) {
-                    console.error("Error unlinking image:", unlinkError);
-                }
             }
             const category = await Category.create({
                 name,
@@ -49,6 +41,7 @@ class categoryControllers {
                 slug,
             })
             
+            unlinkAllFilesMiddleware()
             return successResponse(res, {statusCode: 201, message: "Category added successfully", payload: category})
             
         } catch (e) {
