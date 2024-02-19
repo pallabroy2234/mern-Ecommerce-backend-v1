@@ -3,12 +3,16 @@ import Home from "./pages/Home.jsx";
 import Shop from "./pages/Shop.jsx";
 import Card from "./pages/Card.jsx";
 import Details from "./pages/Details.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/register" element={<Register/>}/>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/shop" element={<Shop/>}/>
                 <Route path="/card" element={<Card/>}/>
