@@ -3,9 +3,29 @@ import Footer from "../components/Footer.jsx";
 import {FaFacebookF} from "react-icons/fa";
 import {AiOutlineGooglePlus} from "react-icons/ai";
 import {Link} from "react-router-dom";
+import {useState} from "react";
 
 
 const Register = () => {
+    
+    const [state, setState] = useState({
+        name: "",
+        email: "",
+        password: ""
+    })
+    
+    const handleChange = (e)=> {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value
+        })
+    }
+    
+    const handleSubmit = (e)=> {
+        e.preventDefault()
+        console.log(state)
+    }
+    
     return (
         <div>
             <Headers/>
@@ -13,24 +33,24 @@ const Register = () => {
             <div className="bg-slate-200 mt-4">
                 <div className="w-full justify-center items-center p-10 sm:p-5">
                     <div className="w-[500px] md:w-auto sm:w-full mx-auto bg-white rounded-md">
-                      <div className="p-8 ">
+                      <div className="p-8 sm:p-5">
                           <h2 className=" text-center w-full text-xl text-slate-600 font-bold">Register</h2>
                           {/* Register Section */}
                           <div>
-                              <form>
+                              <form onSubmit={(e)=> handleSubmit(e)} className="text-slate-600">
                                   <div className="flex flex-col gap-1 mb-2">
                                       <label htmlFor="name">Name</label>
-                                      <input type="text" id="name" name="name" placeholder="Name" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} type="text" id="name" name="name" placeholder="Name" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <div className="flex flex-col gap-1 mb-3">
                                       <label htmlFor="email">Email</label>
-                                      <input type="email" id="email" name="email" placeholder="Email" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} type="email" id="email" name="email" placeholder="Email" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <div className="flex flex-col gap-1 mb-4">
                                       <label htmlFor="password">Password</label>
-                                      <input type="password" id="password" name="password" placeholder="Password" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} type="password" id="password" name="password" placeholder="Password" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <button className="px-8 w-full py-2 bg-purple-500 shadow-lg hover:shadow-purple-500/30 text-white rounded-md">Register</button>
