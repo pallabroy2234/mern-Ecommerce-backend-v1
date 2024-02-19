@@ -10,6 +10,7 @@ export default {
                 "bright-gray": "#eeeeee",
                 "dark-moderate-green": "#7fad39",
                 "white-smoke": "#f5f5f5",
+                "ratting": "#edbb0e",
                 
             }
         },
