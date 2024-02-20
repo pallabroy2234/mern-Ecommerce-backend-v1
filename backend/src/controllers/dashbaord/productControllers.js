@@ -202,7 +202,7 @@ const update_product = async (req, res) => {
                     return errorResponse(res, {statusCode: 400, message: "Image size must be less than 2 MB"});
                 }else {
                     try {
-                        const result = await cloudinary.uploader.upload(image.path, {folder: "products"});
+                        const result = await cloudinary.uploader.upload(image.path, {folder: "multiVendor/products"});
                         if (!result) {
                             return errorResponse(res, {statusCode: 400, message: "Image upload failed"});
                         }
