@@ -6,10 +6,22 @@ export const getCategories = createAsyncThunk("home/getCategories",
     async (_, {rejectWithValue, fulfillWithValue}) => {
         try {
             const {data} = await api.get("/frontend/get-categories")
-            console.log(data, "getCategories")
+            
             return fulfillWithValue(data)
         } catch (e) {
-            console.log(e.response.data, "getCategories")
+        
+            return rejectWithValue(e.response.data)
+        }
+    }
+)
+
+export const getProducts = createAsyncThunk("home/getProducts",
+    async (_, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const {data} = await api.get("/frontend/get-products")
+            return fulfillWithValue(data)
+        } catch (e) {
+            
             return rejectWithValue(e.response.data)
         }
     }

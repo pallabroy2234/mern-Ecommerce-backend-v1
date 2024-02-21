@@ -6,16 +6,21 @@ import Products from "../components/products/Products.jsx";
 import Footer from "../components/Footer.jsx";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getCategories} from "../store/reducers/homeReducer.js";
+import {getCategories, getProducts} from "../store/reducers/homeReducer.js";
 
 const Home = () => {
     const dispatch = useDispatch();
     const {categories} = useSelector(state => state.home)
     
+    
+    //  Fetching Categories
     useEffect(() => {
         dispatch(getCategories())
+        dispatch(getProducts())
     }, []);
 
+    
+    
     
     return (
         <div className="w-full">
