@@ -3,11 +3,12 @@ import Carousel from "react-multi-carousel";
 import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 
 
-const Products = ({title}) => {
-    const products =[
-        [1,2,3],
-        [4,5,6],
-    ]
+const Products = ({title,products }) => {
+    // const products =[
+    //     [1,2,3],
+    //     [4,5,6],
+    // ]
+  
     const responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
@@ -25,6 +26,14 @@ const Products = ({title}) => {
             // optional, default to 1.
         }
     };
+    const truncateName = (name) => {
+        const letter = name.split('');
+        if(letter.length > 35){
+            return letter.slice(0,35).join('') + '...'
+        }
+        return name
+    };
+    
     
     const ButtonGroup = ({next, previous, })=> {
         return (
@@ -42,6 +51,8 @@ const Products = ({title}) => {
         )
     }
     
+    
+    
     return (
         <div className="flex gap-8 flex-col flex-col-reverse">
             <Carousel responsive={responsive}
@@ -55,15 +66,15 @@ const Products = ({title}) => {
                       customButtonGroup={<ButtonGroup/>}
             >
                 {
-                    products.map((item,index)=> (
+                   products && products?.map((items,index)=> (
                         <div key={index} className="flex flex-col justify-start gap-2">
                             {
-                                item.map((items,index)=> (
-                                    <Link key={index} to={"/"} className="flex justify-start">
-                                        <img src={`/images/products/${items}.webp`} className="w-[110px]  h-[110px] object-cover" alt=""/>
+                                items?.map((item,index)=> (
+                                    <Link key={index} to={"#"} className="flex justify-start">
+                                        <img src={item?.images[0]?.url} className="w-[110px]  h-[110px] object-contain" alt={truncateName(item?.name)}/>
                                         <div className="px-3 flex justify-start items-start gap-1 flex-col text-slate-600">
-                                            <h2>HH Fashion Long Sleeve ocean blue Shirt for men</h2>
-                                            <span className="text-lg font-bold">$564</span>
+                                            <h2>{truncateName(item?.name)}</h2>
+                                            <span className="text-lg font-bold">${item?.price}</span>
                                         </div>
                                     </Link>
                                 ))
