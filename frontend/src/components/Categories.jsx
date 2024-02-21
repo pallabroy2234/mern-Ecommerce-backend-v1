@@ -1,6 +1,8 @@
 import Carousel from "react-multi-carousel";
 import {Link} from "react-router-dom";
 import "react-multi-carousel/lib/styles.css";
+import {GoArrowLeft, GoArrowRight} from "react-icons/go";
+import React from "react";
 
 const Categories = ({categories}) => {
     
@@ -41,24 +43,40 @@ const Categories = ({categories}) => {
         
     };
     
-    // const categories = ["clothing", "sports", "phones", "laptops" , "monitors" ,"tablets", "audio" , "bags", "television"]
+    const CustomLeftArrow = ({onClick}) => {
+        return (
+            <button className="bg-transparent border border-black hover:bg-black/50 hover:border-0 hover:text-white text-black w-[40px] h-[40px] text-lg flex justify-center items-center absolute top-1/2 left-2 transform -translate-y-1/2" onClick={() => onClick()}>
+                <GoArrowLeft/>
+            </button>
+        )
+    }
+    
+    const CustomRightArrow = ({onClick}) => {
+        return (
+            <button className="bg-transparent border border-black hover:bg-black/50 hover:border-0 hover:text-white text-black w-[40px] h-[40px] text-lg flex justify-center items-center absolute top-1/2 right-2 transform -translate-y-1/2" onClick={() => onClick()}>
+                <GoArrowRight/>
+            </button>
+        )
+    }
+
     
     return (
         <div className="w-[87%] mx-auto relative">
             <Carousel responsive={responsive}
                       autoPlay={true}
                       infinite={true}
-                      arrows={true}
-                      draggable={false}
                       keyBoardControl={true}
-                      transitionDuration={500}>
+                      transitionDuration={500}
+                      customLeftArrow={<CustomLeftArrow/>}
+                      customRightArrow={<CustomRightArrow/>}
+            >
                 {
-                 categories && categories.map((item,index)=> (
-                        <Link to={"/"} key={index} className="h-[185px] border block">
+                 categories && categories?.map((item,index)=> (
+                        <Link to={"#"} key={index} className="h-[185px] border block">
                             <div className="w-full h-full relative">
-                                <img src={item.image} className="w-full h-full object-contain" alt={item.name}/>
-                                <div className="absolute bottom-6 w-full mx-auto font-bold left-0 flex justify-center items-center">
-                                    <span className="py-[2px] px-6 bg-[#3330305d] text-white">{item.name}</span>
+                                <img src={item?.image} className="w-full h-full object-contain" alt={item?.name}/>
+                                <div className="absolute bottom-6 w-full mx-auto font-bold left-0 flex justify-center items?-center">
+                                    <span className="py-[2px] px-6 bg-[#3330305d] text-white">{item?.name}</span>
                                 </div>
                             </div>
                         </Link>
