@@ -149,10 +149,10 @@ const Shop = () => {
                                 <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
                                     <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
-                                        <select name="" id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
-                                            <option selected value="">Sort By</option>
-                                            <option value="">Low to High Price</option>
-                                            <option value="">High to Low Price</option>
+                                        <select name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
+                                            <option  value="sort by">Sort By</option>
+                                            <option value="low to high price">Low to High Price</option>
+                                            <option value="high to low price">High to Low Price</option>
                                         </select>
                                         {/*  Grid view and List view option   */}
                                         <div className="flex justify-center items-center gap-4 md-lg:hidden">
