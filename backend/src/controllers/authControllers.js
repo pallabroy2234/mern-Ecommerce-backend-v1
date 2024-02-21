@@ -218,6 +218,12 @@ class authControllers {
             }
             const {shopName, division, district, thana} = req.body;
             
+            const shopNameExists = await Seller.exists({"shopInfo.shopName": shopName});
+            
+            if (shopNameExists) {
+                return errorResponse(res, {statusCode: 400, message: "Shop name already exists"})
+            }
+            
             const updateSeller = await Seller.findByIdAndUpdate(id, {
                 shopInfo: {
                     shopName,
@@ -234,7 +240,7 @@ class authControllers {
             return successResponse(res, {
                 statusCode: 200,
                 message: "Profile Info add successfully",
-                payload:updateSeller,
+                payload: updateSeller,
             })
         } catch (e) {
             return errorResponse(res, {statusCode: 500, message: "Internal Server Error"})

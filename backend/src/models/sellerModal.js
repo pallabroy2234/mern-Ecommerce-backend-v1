@@ -38,10 +38,9 @@ const sellerSchema = new Schema({
     },
     shopInfo: {
         type: Object,
-        default: {}
+        default: {},
     },
 }, {timestamps: true})
-
 
 
 const Seller = model("sellers", sellerSchema)

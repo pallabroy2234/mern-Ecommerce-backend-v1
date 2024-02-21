@@ -121,7 +121,8 @@ const AddProduct = () => {
         formData.append("price", state.price);
         formData.append("discount", state.discount);
         formData.append("description", state.description);
-        formData.append("shopName" , "Pallab Fashion");
+        // shop name will be added from backend
+        // formData.append("shopName" , "Pallab Fashion");
         images.forEach((item, i) => {
             formData.append("images", item);
         })

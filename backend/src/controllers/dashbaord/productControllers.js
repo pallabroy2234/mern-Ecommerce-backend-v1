@@ -5,7 +5,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const mongoose = require("mongoose");
 const {unlinkAllFilesMiddleware} = require("../../utiles/upload");
-
+const Seller = require("../../models/sellerModal");
 
 
 // !  ADD PRODUCT -> POST  MULTIPLE IMAGE HANDLE WITH CLOUDINARY
@@ -15,9 +15,16 @@ const add_product = async (req, res, next) => {
         if (!id) {
             return errorResponse(res, {statusCode: 400, message: "Login first"});
         }
-        const {name, brand, category, stock, price, discount, description, shopName} = req.body;
+        const {name, brand, category, stock, price, discount, description} = req.body;
         
         const images = req.files;
+        
+        //  new Added code for shop name
+        
+        const shopInfo = await Seller.findById(id).select("shopInfo.shopName")
+        if(!shopInfo.shopInfo.shopName){
+            return errorResponse(res, {statusCode: 400, message: "Shop name not found.Update your profile first"})
+        }
         
         
         if (!images || images.length === 0) {
@@ -61,9 +68,10 @@ const add_product = async (req, res, next) => {
             category,
             stock: parseInt(stock),
             price: parseInt(price),
+            shopName: shopInfo.shopInfo.shopName,
             discount: parseInt(discount),
             description: description.trim(),
-            shopName,
+            
             images: uploadedImages,
         })
         

@@ -48,7 +48,7 @@ const Banner = () => {
                     <div className="w-full">
                         <div className="my-8">
                             <Carousel responsive={responsive}
-                                      className="group"
+                                      className="group "
                                       autoPlay={true}
                                       infinite={true}
                                       arrows={true}
