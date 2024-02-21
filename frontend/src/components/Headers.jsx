@@ -6,7 +6,7 @@ import {useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
 
-const Headers = () => {
+const Headers = ({categories}) => {
     const {pathname} = useLocation()
     const [showLanguage, setShowLanguage] = useState(false)
     const user = true
@@ -16,7 +16,7 @@ const Headers = () => {
     const [searchValue, setSearchValue] = useState("")
     const [category, setCategory] = useState()
     const wishlist = 4
-    const categories = ["clothing", "sports", "phones", "laptops" , "monitors" ,"tablets", "audio" , "bags", "television"]
+
     
     return (
         <div className="w-full bg-white">
@@ -216,12 +216,13 @@ const Headers = () => {
                                 <span className="pt-1"><MdOutlineKeyboardArrowDown/></span>
                             </div>
                             
-                            <div className={`${showCategory ? "h-0" : "h-[400px]"} overflow-hidden  transition-all md-lg:relative duration-500 absolute z-[999] bg-white w-full border-x`}>
+                            <div className={`${showCategory ? "h-0" : "h-[400px]"} overflow-y-auto  transition-all md-lg:relative duration-500 absolute z-[999] bg-white w-full border-x`}>
                                 <ul className="py-2 text-slate-600 font-medium">
                                     {
-                                        categories.map((item, index) => (
-                                            <li key={index} className="flex justify-start items-center px-[24px] py-[6px] border-b">
-                                            <Link to="/" className="capitalize">{item}</Link>
+                                      categories &&  categories?.map((item, index) => (
+                                            <li key={index} className="flex justify-start items-center px-[24px] py-[6px] border-b gap-5">
+                                                <img src={item?.image} alt={item?.name} className="w-[30px] h-[30px] rounded-full overflow-hidden"/>
+                                            <Link to={`/product/${item?.slug}`} className="capitalize">{item?.name}</Link>
                                          </li>
                                      ))
                                  }
@@ -234,18 +235,18 @@ const Headers = () => {
                     <div className="w-9/12 pl-8 md-lg:pl-0 md-lg:w-full">
                         <div className="flex flex-wrap w-full justify-between items-center md-lg:gap-6">
                             <div className="w-8/12 md-lg:w-full">
-                                <div className="flex border h-[50px] items-center relative gap-5">
+                                <div className="flex border h-[50px] items-center relative gap-5 ">
                                     <div className="relative after:absolute after:h-[25px] after:w-[1px] after:bg-[#afafaf] after:-right-[15px] md:hidden">
-                                        <select  onChange={(e)=> setCategory(e.target.value)} className="w-[170px] capitalize text-slate-600 font-semibold bg-transparent px-2 h-full outline-0 border-none cursor-pointer">
+                                        <select onChange={(e) => setCategory(e.target.value)} className="w-[170px] capitalize text-slate-600 font-semibold bg-transparent px-2 h-full outline-0 border-none cursor-pointer">
                                             <option value="">Select Categories</option>
                                             {
-                                                categories.map((item, index) => (
-                                                    <option key={index} value={item}>{item}</option>
+                                             categories &&   categories.map((item, index) => (
+                                                    <option key={index} value={item?.name}>{item?.name}</option>
                                                 ))
                                             }
                                         </select>
                                     </div>
-                                    <input type="text" onChange={(e)=> setSearchValue(e.target.value)} className="w-full relative bg-transparent text-slate-500 outline-0 px-3 h-full" placeholder="What do you need" />
+                                    <input type="text" onChange={(e) => setSearchValue(e.target.value)} className="w-full relative bg-transparent text-slate-500 outline-0 px-3 md:pr-[130px] h-full" placeholder="What do you need"/>
                                     <button className="bg-violet-400 absolute right-0 px-8 h-full font-semibold uppercase text-white">Search</button>
                                 </div>
                             </div>

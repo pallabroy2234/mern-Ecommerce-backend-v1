@@ -6,7 +6,7 @@ const ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png"];
 
 const UPLOAD_FOLDER = "./public/uploads";
 
-console.log("UPLOAD_FOLDER", UPLOAD_FOLDER);
+
 const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2 MB
 
 const storage = multer.diskStorage({

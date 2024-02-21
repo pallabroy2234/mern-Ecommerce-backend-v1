@@ -4,14 +4,25 @@ import Categories from "../components/Categories.jsx";
 import FeatureProducts from "../components/products/FeatureProducts.jsx";
 import Products from "../components/products/Products.jsx";
 import Footer from "../components/Footer.jsx";
+import {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getCategories} from "../store/reducers/homeReducer.js";
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const {categories} = useSelector(state => state.home)
+    
+    useEffect(() => {
+        dispatch(getCategories())
+    }, []);
+
+    
     return (
         <div className="w-full">
-            <Headers/>
+            <Headers categories={categories}/>
             <Banner/>
             <div className="my-4">
-                <Categories/>
+                <Categories categories={categories}/>
             </div>
             <div className="py-[45px]">
                 <FeatureProducts/>
