@@ -5,8 +5,11 @@ import {MdOutlineKeyboardArrowDown} from "react-icons/md";
 import {useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
+import {useSelector} from "react-redux";
 
-const Headers = ({categories}) => {
+const Headers = () => {
+    const {categories} = useSelector(state => state.home)
+    
     const {pathname} = useLocation()
     const [showLanguage, setShowLanguage] = useState(false)
     const user = true

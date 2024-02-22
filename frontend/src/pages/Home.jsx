@@ -10,12 +10,12 @@ import {getCategories, getHomePageProduct,} from "../store/reducers/homeReducer.
 
 const Home = () => {
     const dispatch = useDispatch();
-    const {categories,featureProducts,topRatedProducts,latestProducts,discountProducts} = useSelector(state => state.home)
+    const {featureProducts,topRatedProducts,latestProducts,discountProducts} = useSelector(state => state.home)
     
     
     //  Fetching Categories
     useEffect(() => {
-        dispatch(getCategories())
+        
         dispatch(getHomePageProduct())
     }, []);
 
@@ -24,10 +24,10 @@ const Home = () => {
     
     return (
         <div className="w-full">
-            <Headers categories={categories}/>
+            <Headers />
             <Banner/>
             <div className="my-4">
-                <Categories categories={categories}/>
+                <Categories />
             </div>
             <div className="py-[45px]">
                 <FeatureProducts featureProducts={featureProducts}/>

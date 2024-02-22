@@ -6,9 +6,18 @@ import Details from "./pages/Details.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Shipping from "./pages/Shipping.jsx";
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
+import {getCategories} from "./store/reducers/homeReducer.js";
 
 
 function App() {
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        dispatch(getCategories())
+    }, []);
+    
     return (
         <BrowserRouter>
             <Routes>

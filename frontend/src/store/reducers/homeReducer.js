@@ -15,6 +15,8 @@ export const getCategories = createAsyncThunk("home/getCategories",
     }
 )
 
+
+
 export const getHomePageProduct = createAsyncThunk("home/getHomePageProduct",
     async (_, {rejectWithValue, fulfillWithValue}) => {
         try {
@@ -26,6 +28,9 @@ export const getHomePageProduct = createAsyncThunk("home/getHomePageProduct",
         }
     }
 )
+
+
+
 
 
 export const homeReducer = createSlice({

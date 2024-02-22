@@ -11,11 +11,14 @@ import {BsFillGridFill} from "react-icons/bs";
 import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
+import {useSelector} from "react-redux";
 
 
 const Shop = () => {
+    const {categories} = useSelector(state => state.home)
+    
     const [filter, setFilter] = useState(true)
-    const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
+    // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
     const [state, setState] = useState({
         values: [50, 2000],
     })
@@ -52,12 +55,12 @@ const Shop = () => {
                         <div className={`w-3/12 md-lg:w-4/12 md:w-full pr-8  ${filter ? 'md:h-0 md:overflow-hidden md:mb-6' : 'md:h-auto  md:overflow-auto md:mb-0'}`}>
                             <h2 className="text-2xl font-bold mb-3 text-slate-600">Category</h2>
                             
-                            <div className="py-2">
+                            <div className="py-2 max-h-[400px] overflow-y-auto mb-2">
                                 {
                                     categories.map((category, index) => (
                                         <div key={index} className="flex justify-start items-center gap-2 py-1">
                                             <input type="checkbox" id={category} className="cursor-pointer"/>
-                                            <label htmlFor={category} className="text-slate-600 block cursor-pointer capitalize">{category}</label>
+                                            <label htmlFor={category} className="text-slate-600 block cursor-pointer capitalize">{category.name}</label>
                                         </div>
                                     ))
                                 }
@@ -137,7 +140,7 @@ const Shop = () => {
                             
                             {/* Latest Product    */}
                             <div className="py-5 flex flex-col gap-4 md-lg:hidden">
-                                <Products title={"Latest Product"}/>
+                                {/*<Products title={"Latest Product"}/>*/}
                             </div>
                         </div>
                         
