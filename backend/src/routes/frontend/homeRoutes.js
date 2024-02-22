@@ -1,6 +1,6 @@
 
 const express = require('express');
-const {getCategories, getHomePageProduct, getPriceRangeLatestProduct, getFeatureProducts} = require("../../controllers/frontend/homeControllers");
+const {getCategories, getHomePageProduct, getPriceRangeLatestProduct, getFeatureProducts, getCarouselLatestProducts} = require("../../controllers/frontend/homeControllers");
 const homeRouter = express.Router();
 
 
@@ -9,6 +9,8 @@ homeRouter.get("/get-categories" , getCategories)
 
 
 homeRouter.get("/get-featureProducts", getFeatureProducts)
+
+homeRouter.get("/get-carouselLatestProducts", getCarouselLatestProducts)
 
 homeRouter.get("/get-homePageProduct", getHomePageProduct)
 

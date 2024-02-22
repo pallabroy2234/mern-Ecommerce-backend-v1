@@ -45,6 +45,24 @@ export const getHomePageProduct = createAsyncThunk("home/getHomePageProduct",
     }
 )
 
+// ! GET CAROUSEL LATEST PRODUCTS
+
+
+export const getCarouselLatestProducts = createAsyncThunk("home/getCarouselLatestProducts",
+    async (_, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const {data} = await api.get("/frontend/get-carouselLatestProducts")
+            return fulfillWithValue(data)
+        } catch (e) {
+            
+            return rejectWithValue(e.response.data)
+        }
+    }
+)
+
+
+
+
 
 //  ! price range and latest Product
 export const getPriceRangeLatestProduct = createAsyncThunk("home/getPriceRangeLatestProduct",
@@ -98,11 +116,14 @@ export const homeReducer = createSlice({
         builder.addCase(getFeatureProducts.pending, (state, _) => {
             state.loading = true;
         });
-        
+        // ! GET CAROUSEL LATEST PRODUCTS
+        builder.addCase(getCarouselLatestProducts.fulfilled, (state, {payload}) => {
+            state.loading = false;
+            state.latestProducts = payload.payload
+        })
         
         // !  getHomePageProduct
         builder.addCase(getHomePageProduct.fulfilled, (state, {payload}) => {
-            state.latestProducts = payload.payload.latestProducts
             state.topRatedProducts = payload.payload.topRatedProducts
             state.discountProducts = payload.payload.discountProducts
             state.loading = false;

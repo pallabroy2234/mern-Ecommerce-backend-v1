@@ -51,11 +51,6 @@ const getFeatureProducts = async (req,res) => {
         })
     }
 }
-
-
-
-
-
 // ! format product function
 //  !  const products =[
 //  !     [1,2,3],
@@ -74,6 +69,39 @@ const formatProduct = (products1) => {
     })
     return products
 }
+
+
+
+
+// ! GET CAROUSEL LATEST PRODUCTS
+
+const getCarouselLatestProducts = async (req,res)=> {
+    try {
+        const products = await Product.find({}).limit(9).sort({createdAt: -1})
+        if (!products) {
+            errorResponse(res, {statusCode: 404, message: "No Latest Product Found"})
+        }
+        const latestProducts = formatProduct(products)
+        
+        
+        return  successResponse(res, {
+            statusCode: 200,
+            message: "Latest Products Fetch Successfully",
+            payload: latestProducts
+        })
+        
+    }catch (e) {
+        return errorResponse(res,{
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
+
+
+
 
 // ! get products function for Feature Products
 const getHomePageProduct = async (req, res) => {
@@ -182,6 +210,7 @@ const getPriceRangeLatestProduct = async (req,res)=> {
 module.exports = {
     getCategories,
     getFeatureProducts,
+    getCarouselLatestProducts,
     getHomePageProduct,
     getPriceRangeLatestProduct
 }
