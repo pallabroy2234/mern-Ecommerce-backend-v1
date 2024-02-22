@@ -82,11 +82,14 @@ export const getPriceRange = createAsyncThunk("home/getPriceRange",
 
 
 
-//  ! price range and latest Product
-export const getPriceRangeLatestProduct = createAsyncThunk("home/getPriceRangeLatestProduct",
-    async (_, {rejectWithValue, fulfillWithValue}) => {
+
+
+
+// !  Query Product
+export const getQueryProducts = createAsyncThunk("home/getQueryProducts",
+    async (query, {rejectWithValue, fulfillWithValue}) => {
         try {
-            const {data} = await api.get("/frontend/get-priceRange-latestProduct")
+            const {data} = await api.get(`/frontend/get-queryProducts?category=${query.category}&&ratting=${query.ratting}&&lowPrice=${query.low}&&highPrice=${query.high}&&sortPrice=${query.sortPrice}&&pageNumber=${query.pageNumber}`)
             return fulfillWithValue(data)
         } catch (e) {
             
@@ -94,6 +97,7 @@ export const getPriceRangeLatestProduct = createAsyncThunk("home/getPriceRangeLa
         }
     }
 )
+
 
 
 export const homeReducer = createSlice({

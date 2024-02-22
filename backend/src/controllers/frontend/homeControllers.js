@@ -177,53 +177,13 @@ const getPriceRange = async(req,res)=> {
 }
 
 
+//  ! GET QUERY PRODUCTS BY CATEGORY, RATINGS, PRICE RANGE, SORT PRICE, PAGE NUMBER
 
-
-// ! get price range and latest product
-
-const getPriceRangeLatestProduct = async (req,res)=> {
-    try {
-     
-        const priceRange = {
-            low  : 0,
-            high:0,
-        }
-        
-        const products =await Product.find({}).limit(9).sort({createdAt:-1})
-        if(!products){
-            return  errorResponse(res, {statusCode: 404, message: "No Products Found"})
-        }
-        const latestProducts = formatProduct(products)
-        
-        const price = await Product.find({}).sort({price:1}).limit(1)
-        priceRange.low = price[0].price
-        
-        const price1 = await Product.find({}).sort({price:-1}).limit(1)
-        priceRange.high = price1[0].price
-        
-        
-        
-        
-        return successResponse(res, {
-            statusCode: 200,
-            message: "Price Range and Latest Product Fetch Successfully",
-            payload: {
-                priceRange: priceRange,
-                latestProducts: latestProducts
-            }
-        })
-        
-        
-        
-        
-    }catch (e) {
-     return errorResponse(res, {
-         statusCode: 500,
-         message: "Internal Server Error"
-     
-     })
-    }
+const getQueryProducts = (req,res)=> {
+    console.log(req.query)
 }
+
+
 
 
 
@@ -233,5 +193,6 @@ module.exports = {
     getCarouselLatestProducts,
     getCarouselProducts,
     getPriceRange,
-    getPriceRangeLatestProduct
+    getQueryProducts,
+    
 }

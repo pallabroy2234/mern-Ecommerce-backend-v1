@@ -6,13 +6,12 @@ import {useEffect, useState} from "react";
 import {Range} from "react-range";
 import {AiFillStar} from "react-icons/ai";
 import {CiStar} from "react-icons/ci";
-import Products from "../components/products/Products.jsx";
 import {BsFillGridFill} from "react-icons/bs";
 import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getCarouselLatestProducts, getPriceRange} from "../store/reducers/homeReducer.js";
+import {getCarouselLatestProducts, getPriceRange, getQueryProducts} from "../store/reducers/homeReducer.js";
 import LatestProduct from "../components/products/LatestProduct.jsx";
 
 
@@ -30,6 +29,9 @@ const Shop = () => {
         values: [50 , 100 ],
     })
     
+
+    const [ratting, setRatting] = useState("")
+    const [sortPrice, setSortPrice] = useState("")
     
     // ! Fetching Price Range and Latest Product
     useEffect(() => {
@@ -45,6 +47,45 @@ const Shop = () => {
             values: [priceRange.low, priceRange.high]
         })
     }, [priceRange])
+    
+    
+    // ! Query Category
+    const [category, setCategory] = useState("")
+    const queryCategory = (e,value)=>{
+        if(e.target.checked){
+            console.log(value.toLowerCase())
+            setCategory(value)
+        }else {
+            setCategory("")
+        }
+    }
+    
+    useEffect(() => {
+        // const obj = {
+        //     low: state.values[0],
+        //     high: state.values[1],
+        //     category: category,
+        //     ratting: ratting,
+        //     sortPrice: sortPrice,
+        //     pageNumber: pageNumber,
+        // }
+        
+        dispatch(getQueryProducts({
+            low: parseInt(state.values[0]),
+            high: parseInt(state.values[1]),
+            category: category,
+            ratting: parseInt(ratting),
+            sortPrice: sortPrice,
+            pageNumber: parseInt(pageNumber),
+        }))
+        
+        
+    }, [state.values[0], state.values[1], category,ratting, pageNumber,sortPrice]);
+    
+    console.log(state.values[0])
+    
+    
+    
     
     return (
         <div className="w-full">
@@ -77,10 +118,10 @@ const Shop = () => {
                             
                             <div className="py-2 max-h-[400px] overflow-y-auto mb-2">
                                 {
-                                    categories && categories.map((category, index) => (
+                                    categories && categories.map((item, index) => (
                                         <div key={index} className="flex justify-start items-center gap-2 py-1">
-                                            <input type="checkbox" id={category.name} className="cursor-pointer"/>
-                                            <label htmlFor={category.name} className="text-slate-600 block cursor-pointer capitalize">{category.name}</label>
+                                            <input checked={category === item.name ? true : false} onChange={(e)=> queryCategory(e,item.name)} type="checkbox" id={item.name} className="cursor-pointer"/>
+                                            <label htmlFor={item.name} className="text-slate-600 block cursor-pointer capitalize">{item.name}</label>
                                         </div>
                                     ))
                                 }
@@ -90,7 +131,7 @@ const Shop = () => {
                             <div className="py-2 flex flex-col gap-3">
                                 <h2 className="text-2xl font-bold mb-3 text-slate-600">Price</h2>
                                 <Range
-                                    step={5}
+                                    step={30}
                                     min={priceRange.low}
                                     max={priceRange.high}
                                     // values={state.values}
@@ -115,42 +156,42 @@ const Shop = () => {
                             <div className="py-3 flex flex-col gap-4">
                                 <h2 className="text-2xl font-bold mb-3 text-slate-600">Ratting</h2>
                                 <div className="flex flex-col gap-3">
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(5))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                     </div>
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(4))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><CiStar/></span>
                                     </div>
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(3))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                     </div>
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(2))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><AiFillStar/></span>
                                         <span><AiFillStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                     </div>
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(1))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><AiFillStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                     </div>
-                                    <div className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
+                                    <div onClick={()=> setRatting(parseInt(0))} className="flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer">
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
                                         <span><CiStar/></span>
@@ -174,10 +215,10 @@ const Shop = () => {
                                 <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
                                     <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
-                                        <select name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
-                                            <option value="sort by">Sort By</option>
-                                            <option value="low to high price">Low to High Price</option>
-                                            <option value="high to low price">High to Low Price</option>
+                                        <select onChange={(e)=> setSortPrice(e.target.value)} name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
+                                            <option value="">Sort By</option>
+                                            <option value="low-to-high-price">Low to High Price</option>
+                                            <option value="high-to-low-price">High to Low Price</option>
                                         </select>
                                         {/*  Grid view and List view option   */}
                                         <div className="flex justify-center items-center gap-4 md-lg:hidden">
