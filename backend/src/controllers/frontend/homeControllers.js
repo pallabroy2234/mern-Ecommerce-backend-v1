@@ -141,52 +141,34 @@ const getCarouselProducts = async (req,res)=> {
 
 
 
-// ! get products function for Feature Products
-const getHomePageProduct = async (req, res) => {
+
+// ! GET PRICE RANGE PRODUCTS
+
+const getPriceRange = async(req,res)=> {
     try {
-        // Feature Products
-        const featureProducts = await Product.find({}).limit(20).sort({createdAt: -1})
-        if (!featureProducts) {
-            return errorResponse(res, {
-                statusCode: 404,
-                message: "No Products Found"
-            })
-        }
+        const priceRange = {low: 0, high: 0}
         
-        //  Latest Product
-        const products1 = await Product.find({}).limit(9).sort({createdAt: -1})
-        if (!products1) {
-            errorResponse(res, {statusCode: 404, message: "No Latest Product Found"})
+        // LOW PRICE
+        const lowPrice = await Product.find({}).sort({price: 1}).limit(1)
+        if (!lowPrice) {
+            return errorResponse(res, {statusCode: 404, message: "No low price product found"})
         }
-        const latestProducts = formatProduct(products1)
+        priceRange.low = lowPrice[0].price
         
-        //  Top Rated Product
-        const products2 =await Product.find({}).limit(9).sort({ratting:-1})
-        if (!products2) {
-            return errorResponse(res, {statusCode: 404, message: "No Top Rated Product Found"})
+        // HIGH PRICE
+        const highPrice = await Product.find({}).sort({price:-1}).limit(1)
+        if (!highPrice) {
+            return errorResponse(res, {statusCode: 404, message: "No high price product found"})
         }
-        const topRatedProducts = formatProduct(products2)
-        
-        // Discount Product
-        const products3 = await Product.find({}).limit(9).sort({discount: -1})
-        if (!products3) {
-            return errorResponse(res, {statusCode: 404, message: "No Discount Product Found"})
-        }
-        const discountProducts = formatProduct(products3)
-        
+        priceRange.high = highPrice[0].price
         
         return successResponse(res, {
             statusCode: 200,
-            message: "Products fetch successfully",
-            payload: {
-                featureProducts: featureProducts,
-                latestProducts: latestProducts,
-                topRatedProducts: topRatedProducts,
-                discountProducts: discountProducts
-            }
+            message: "Price Range Fetch Successfully",
+            payload: priceRange
         })
         
-    } catch (e) {
+    }catch (e) {
         return errorResponse(res, {
             statusCode: 500,
             message: "Internal Server Error"
@@ -250,6 +232,6 @@ module.exports = {
     getFeatureProducts,
     getCarouselLatestProducts,
     getCarouselProducts,
-    getHomePageProduct,
+    getPriceRange,
     getPriceRangeLatestProduct
 }

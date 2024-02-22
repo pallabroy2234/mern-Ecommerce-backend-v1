@@ -23,9 +23,14 @@ const Shop = () => {
     
     const [filter, setFilter] = useState(true)
     // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
-    const [state, setState] = useState({
+    // const [state, setState] = useState({
+    //     values: [50, 2000],
+    // })
+    
+    const [priceRange, setPriceRange] = useState({
         values: [50, 2000],
     })
+    
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
     const [parPage, setParPage] = useState(3)
@@ -69,10 +74,10 @@ const Shop = () => {
                             
                             <div className="py-2 max-h-[400px] overflow-y-auto mb-2">
                                 {
-                                    categories.map((category, index) => (
+                                  categories &&  categories.map((category, index) => (
                                         <div key={index} className="flex justify-start items-center gap-2 py-1">
-                                            <input type="checkbox" id={category} className="cursor-pointer"/>
-                                            <label htmlFor={category} className="text-slate-600 block cursor-pointer capitalize">{category.name}</label>
+                                            <input type="checkbox" id={category.name} className="cursor-pointer"/>
+                                            <label htmlFor={category.name} className="text-slate-600 block cursor-pointer capitalize">{category.name}</label>
                                         </div>
                                     ))
                                 }

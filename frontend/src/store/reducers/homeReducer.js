@@ -32,18 +32,7 @@ export const getFeatureProducts = createAsyncThunk("home/getFeatureProducts",
 )
 
 
-// ! getHomePageProduct
-export const getHomePageProduct = createAsyncThunk("home/getHomePageProduct",
-    async (_, {rejectWithValue, fulfillWithValue}) => {
-        try {
-            const {data} = await api.get("/frontend/get-homePageProduct")
-            return fulfillWithValue(data)
-        } catch (e) {
-            
-            return rejectWithValue(e.response.data)
-        }
-    }
-)
+
 
 // ! GET CAROUSEL LATEST PRODUCTS
 
@@ -61,6 +50,19 @@ export const getCarouselLatestProducts = createAsyncThunk("home/getCarouselLates
 )
 
 
+// ! GET CAROUSEL PRODUCTS
+
+export const getCarouselProducts = createAsyncThunk("home/getCarouselProducts",
+    async (_, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const {data} = await api.get("/frontend/get-carouselProducts")
+            return fulfillWithValue(data)
+        } catch (e) {
+            
+            return rejectWithValue(e.response.data)
+        }
+    }
+)
 
 
 
@@ -129,19 +131,21 @@ export const homeReducer = createSlice({
             state.loading = true;
         });
         
-        // !  getHomePageProduct
-        builder.addCase(getHomePageProduct.fulfilled, (state, {payload}) => {
+        // ! GET CAROUSEL PRODUCTS
+        builder.addCase(getCarouselProducts.fulfilled, (state, {payload}) => {
+            state.loading = false;
             state.topRatedProducts = payload.payload.topRatedProducts
             state.discountProducts = payload.payload.discountProducts
-            state.loading = false;
+            state.successMessage = payload.message
+        });
+        builder.addCase(getCarouselProducts.rejected, (state, {payload}) => {
+               state.loading = false;
+                state.errorMessage = payload.message
         })
-        builder.addCase(getHomePageProduct.rejected, (state, {payload}) => {
-            state.loading = false;
-            state.errorMessage = payload.message
-        })
-        builder.addCase(getHomePageProduct.pending, (state, _) => {
+        builder.addCase(getCarouselProducts.pending, (state, _) => {
             state.loading = true;
         })
+        
         
         
     }
