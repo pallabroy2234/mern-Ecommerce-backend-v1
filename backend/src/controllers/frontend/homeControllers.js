@@ -101,6 +101,44 @@ const getCarouselLatestProducts = async (req,res)=> {
 
 
 
+//  ! GET CAROUSEL PRODUCTS
+
+const getCarouselProducts = async (req,res)=> {
+    try {
+        
+        //  TOP RATED PRODUCTS
+        const products =await Product.find({}).limit(9).sort({ratting:-1})
+        if (!products) {
+            return errorResponse(res, {statusCode: 404, message: "No Top Rated Product Found"})
+        }
+        const topRatedProducts = formatProduct(products)
+        
+        
+        //  DISCOUNT PRODUCTS
+        const products1 = await Product.find({}).limit(9).sort({discount: -1})
+        if (!products1) {
+            return errorResponse(res, {statusCode: 404, message: "No Discount Product Found"})
+        }
+        const discountProducts = formatProduct(products1)
+        
+        
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Carousel Products Fetch Successfully",
+            payload: {
+                topRatedProducts: topRatedProducts,
+                discountProducts: discountProducts
+            }
+        })
+        
+    }catch (e) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
 
 
 // ! get products function for Feature Products
@@ -211,6 +249,7 @@ module.exports = {
     getCategories,
     getFeatureProducts,
     getCarouselLatestProducts,
+    getCarouselProducts,
     getHomePageProduct,
     getPriceRangeLatestProduct
 }

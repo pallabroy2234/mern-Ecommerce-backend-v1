@@ -120,7 +120,14 @@ export const homeReducer = createSlice({
         builder.addCase(getCarouselLatestProducts.fulfilled, (state, {payload}) => {
             state.loading = false;
             state.latestProducts = payload.payload
-        })
+        });
+        builder.addCase(getCarouselLatestProducts.rejected, (state, {payload}) => {
+            state.loading = false;
+            state.errorMessage = payload.message
+        });
+        builder.addCase(getCarouselLatestProducts.pending, (state, _) => {
+            state.loading = true;
+        });
         
         // !  getHomePageProduct
         builder.addCase(getHomePageProduct.fulfilled, (state, {payload}) => {
