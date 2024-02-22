@@ -65,6 +65,22 @@ export const getCarouselProducts = createAsyncThunk("home/getCarouselProducts",
 )
 
 
+//  ! GET PRICE RANGE PRODUCT : LOW AND HIGH
+
+export const getPriceRange = createAsyncThunk("home/getPriceRange",
+    async (_, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const {data} = await api.get("/frontend/get-priceRange")
+            return fulfillWithValue(data)
+        } catch (e) {
+            
+            return rejectWithValue(e.response.data)
+        }
+    }
+)
+
+
+
 
 //  ! price range and latest Product
 export const getPriceRangeLatestProduct = createAsyncThunk("home/getPriceRangeLatestProduct",
@@ -91,6 +107,7 @@ export const homeReducer = createSlice({
         latestProducts: [],
         topRatedProducts: [],
         discountProducts: [],
+        priceRange: {low:50, high:100}
         
     },
     reducers: {},
@@ -145,8 +162,18 @@ export const homeReducer = createSlice({
         builder.addCase(getCarouselProducts.pending, (state, _) => {
             state.loading = true;
         })
-        
-        
+        //   ! GET PRICE RANGE PRODUCT : LOW AND HIGH
+        builder.addCase(getPriceRange.fulfilled, (state,{payload})=> {
+            state.priceRange = payload.payload
+            state.loading = false;
+        })
+        builder.addCase(getPriceRange.rejected, (state, {payload}) => {
+            state.loading = false;
+            state.errorMessage = payload.message
+        })
+        builder.addCase(getPriceRange.pending, (state, _) => {
+            state.loading = true;
+        })
         
     }
 })

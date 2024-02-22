@@ -12,36 +12,36 @@ import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getPriceRangeLatestProduct} from "../store/reducers/homeReducer.js";
+import {getPriceRange, getPriceRangeLatestProduct} from "../store/reducers/homeReducer.js";
 
 
 const Shop = () => {
-    const {categories} = useSelector(state => state.home)
+    const {categories, priceRange} = useSelector(state => state.home)
     const dispatch = useDispatch();
-    
-    
-    
-    const [filter, setFilter] = useState(true)
-    // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
-    // const [state, setState] = useState({
-    //     values: [50, 2000],
-    // })
-    
-    const [priceRange, setPriceRange] = useState({
-        values: [50, 2000],
-    })
     
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
     const [parPage, setParPage] = useState(3)
     
+    const [filter, setFilter] = useState(true)
+    // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
+    const [state, setState] = useState({
+        values: [50 , 100 ],
+    })
+    
     
     // ! Fetching Price Range and Latest Product
     useEffect(() => {
         dispatch(getPriceRangeLatestProduct())
+        dispatch(getPriceRange())
     }, []);
     
-    
+    // ! Set Price Range
+    useEffect(() => {
+        setState({
+            values: [priceRange.low, priceRange.high]
+        })
+    }, [priceRange])
     
     return (
         <div className="w-full">
@@ -74,7 +74,7 @@ const Shop = () => {
                             
                             <div className="py-2 max-h-[400px] overflow-y-auto mb-2">
                                 {
-                                  categories &&  categories.map((category, index) => (
+                                    categories && categories.map((category, index) => (
                                         <div key={index} className="flex justify-start items-center gap-2 py-1">
                                             <input type="checkbox" id={category.name} className="cursor-pointer"/>
                                             <label htmlFor={category.name} className="text-slate-600 block cursor-pointer capitalize">{category.name}</label>
@@ -88,10 +88,12 @@ const Shop = () => {
                                 <h2 className="text-2xl font-bold mb-3 text-slate-600">Price</h2>
                                 <Range
                                     step={5}
-                                    min={50}
-                                    max={2000}
-                                    values={state.values}
+                                    min={priceRange.low}
+                                    max={priceRange.high}
+                                    // values={state.values}
+                                    values={state.values.sort((a, b) => a - b)}
                                     onChange={values => setState({values})}
+                                
                                     renderTrack={({props, children}) => (
                                         <div {...props} className="w-full h-[6px] bg-slate-200 rounded-full cursor-pointer">
                                             {children}
@@ -170,7 +172,7 @@ const Shop = () => {
                                     <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
                                         <select name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
-                                            <option  value="sort by">Sort By</option>
+                                            <option value="sort by">Sort By</option>
                                             <option value="low to high price">Low to High Price</option>
                                             <option value="high to low price">High to Low Price</option>
                                         </select>
