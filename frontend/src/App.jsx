@@ -13,7 +13,7 @@ import {getCategories} from "./store/reducers/homeReducer.js";
 
 function App() {
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         dispatch(getCategories())
     }, []);

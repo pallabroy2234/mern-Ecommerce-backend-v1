@@ -4,11 +4,7 @@ import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 
 
 const Products = ({title,products }) => {
-    // const products =[
-    //     [1,2,3],
-    //     [4,5,6],
-    // ]
-  
+   
     const responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },

@@ -2,7 +2,7 @@ import Headers from "../components/Headers.jsx";
 import {Link} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Range} from "react-range";
 import {AiFillStar} from "react-icons/ai";
 import {CiStar} from "react-icons/ci";
@@ -11,11 +11,15 @@ import {BsFillGridFill} from "react-icons/bs";
 import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getPriceRangeLatestProduct} from "../store/reducers/homeReducer.js";
 
 
 const Shop = () => {
     const {categories} = useSelector(state => state.home)
+    const dispatch = useDispatch();
+    
+    
     
     const [filter, setFilter] = useState(true)
     // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
@@ -23,9 +27,17 @@ const Shop = () => {
         values: [50, 2000],
     })
     const [style, setStyle] = useState("grid")
-    
     const [pageNumber, setPageNumber] = useState(1)
     const [parPage, setParPage] = useState(3)
+    
+    
+    // ! Fetching Price Range and Latest Product
+    useEffect(() => {
+        dispatch(getPriceRangeLatestProduct())
+    }, []);
+    
+    
+    
     return (
         <div className="w-full">
             <Headers/>

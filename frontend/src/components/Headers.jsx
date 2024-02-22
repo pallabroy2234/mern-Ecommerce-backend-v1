@@ -2,13 +2,17 @@ import {GrMail} from "react-icons/gr";
 import {FaFacebook, FaLinkedin, FaList, FaLock, FaUser} from "react-icons/fa";
 import {AiFillGithub, AiFillHeart, AiFillShopping, AiOutlineTwitter} from "react-icons/ai";
 import {MdOutlineKeyboardArrowDown} from "react-icons/md";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getCategories} from "../store/reducers/homeReducer.js";
 
 const Headers = () => {
     const {categories} = useSelector(state => state.home)
+ 
+
+    
     
     const {pathname} = useLocation()
     const [showLanguage, setShowLanguage] = useState(false)

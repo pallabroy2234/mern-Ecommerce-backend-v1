@@ -26,6 +26,36 @@ const getCategories = async (req, res) => {
 }
 
 
+
+//  ! GET FEATURE PRODUCTS
+
+const getFeatureProducts = async (req,res) => {
+    try {
+        const featureProducts =await Product.find({}).limit(20).sort({createdAt:-1})
+        if(!featureProducts){
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "No Feature Products Found"
+            })
+        }
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Feature Products Fetch Successfully",
+            payload: featureProducts
+        })
+    
+    }catch (e) {
+        return errorResponse(res, {
+            statusCode:500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
+
+
+
 // ! format product function
 //  !  const products =[
 //  !     [1,2,3],
@@ -99,7 +129,59 @@ const getHomePageProduct = async (req, res) => {
 }
 
 
+
+
+// ! get price range and latest product
+
+const getPriceRangeLatestProduct = async (req,res)=> {
+    try {
+     
+        const priceRange = {
+            low  : 0,
+            high:0,
+        }
+        
+        const products =await Product.find({}).limit(9).sort({createdAt:-1})
+        if(!products){
+            return  errorResponse(res, {statusCode: 404, message: "No Products Found"})
+        }
+        const latestProducts = formatProduct(products)
+        
+        const price = await Product.find({}).sort({price:1}).limit(1)
+        priceRange.low = price[0].price
+        
+        const price1 = await Product.find({}).sort({price:-1}).limit(1)
+        priceRange.high = price1[0].price
+        
+        
+        
+        
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Price Range and Latest Product Fetch Successfully",
+            payload: {
+                priceRange: priceRange,
+                latestProducts: latestProducts
+            }
+        })
+        
+        
+        
+        
+    }catch (e) {
+     return errorResponse(res, {
+         statusCode: 500,
+         message: "Internal Server Error"
+     
+     })
+    }
+}
+
+
+
 module.exports = {
     getCategories,
+    getFeatureProducts,
     getHomePageProduct,
+    getPriceRangeLatestProduct
 }

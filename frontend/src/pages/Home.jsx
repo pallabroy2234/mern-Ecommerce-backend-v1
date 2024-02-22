@@ -6,17 +6,17 @@ import Products from "../components/products/Products.jsx";
 import Footer from "../components/Footer.jsx";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getCategories, getHomePageProduct,} from "../store/reducers/homeReducer.js";
+import {getFeatureProducts, getHomePageProduct,} from "../store/reducers/homeReducer.js";
 
 const Home = () => {
     const dispatch = useDispatch();
-    const {featureProducts,topRatedProducts,latestProducts,discountProducts} = useSelector(state => state.home)
+    const {featureProducts, topRatedProducts,latestProducts,discountProducts} = useSelector(state => state.home)
     
     
     //  Fetching Categories
     useEffect(() => {
-        
         dispatch(getHomePageProduct())
+        dispatch(getFeatureProducts())
     }, []);
 
     
