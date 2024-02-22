@@ -12,11 +12,12 @@ import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getPriceRange, getPriceRangeLatestProduct} from "../store/reducers/homeReducer.js";
+import {getCarouselLatestProducts, getPriceRange} from "../store/reducers/homeReducer.js";
+import LatestProduct from "../components/products/LatestProduct.jsx";
 
 
 const Shop = () => {
-    const {categories, priceRange} = useSelector(state => state.home)
+    const {categories, priceRange, latestProducts} = useSelector(state => state.home)
     const dispatch = useDispatch();
     
     const [style, setStyle] = useState("grid")
@@ -32,9 +33,11 @@ const Shop = () => {
     
     // ! Fetching Price Range and Latest Product
     useEffect(() => {
-        dispatch(getPriceRangeLatestProduct())
         dispatch(getPriceRange())
+        dispatch(getCarouselLatestProducts())
     }, []);
+    
+    
     
     // ! Set Price Range
     useEffect(() => {
@@ -158,8 +161,8 @@ const Shop = () => {
                             </div>
                             
                             {/* Latest Product    */}
-                            <div className="py-5 flex flex-col gap-4 md-lg:hidden">
-                                {/*<Products title={"Latest Product"}/>*/}
+                            <div className="py-5 flex flex-col gap-4">
+                              <LatestProduct title={"Latest Product"} products={latestProducts}/>
                             </div>
                         </div>
                         
