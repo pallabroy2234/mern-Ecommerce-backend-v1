@@ -11,12 +11,18 @@ import {FaThList} from "react-icons/fa";
 import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getCarouselLatestProducts, getPriceRange, getQueryProducts} from "../store/reducers/homeReducer.js";
+import {
+    getCarouselLatestProducts,
+    getPriceRange,
+    getQueryProducts,
+    messageClear
+} from "../store/reducers/homeReducer.js";
 import LatestProduct from "../components/products/LatestProduct.jsx";
+import toast from "react-hot-toast";
 
 
 const Shop = () => {
-    const {categories,products,pagination, priceRange, latestProducts} = useSelector(state => state.home)
+    const {categories,products,pagination, priceRange, latestProducts ,errorMessage} = useSelector(state => state.home)
     const dispatch = useDispatch();
     
     const [style, setStyle] = useState("grid")
@@ -76,6 +82,14 @@ const Shop = () => {
     }, [state.values[0], state.values[1], category,ratting, pageNumber,sortPrice ]);
     
 
+    
+    useEffect(() => {
+        if (errorMessage){
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+        
+    },[errorMessage])
     
     
     
@@ -225,15 +239,17 @@ const Shop = () => {
                                 
                                 {/*  Product Grid and list view   */}
                                 <div className="pb-8">
+                                    
+                                    
                                     {products.length > 0 ? (
                                         <ShopProduct style={style} products={products}/>
                                     ) : (
                                         <div className="text-xl font-bold text-center">No Product Found</div>
                                     )}
                                 </div>
-                                <div className="my-3">
+                                <div className={`my-3 ${pagination.totalProduct ? "visible" : "hidden"}`}>
                                     {
-                                        pagination.totalProduct <= parPage ? "": (
+                                     pagination.totalProduct &&  pagination.totalProduct <= parPage ? "": (
                                             <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber}  totalItem={pagination.totalProduct} parPage={parPage}  showItem={parPage}/>
                                         )
                                     }

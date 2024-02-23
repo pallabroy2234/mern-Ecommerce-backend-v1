@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <App/>
             <Toaster
                 toastOptions={{
-                    position: "top-right",
+                    position: "bottom-center",
                     style: {
                         background: "white",
                         color: "black",

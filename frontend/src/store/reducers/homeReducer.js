@@ -107,7 +107,12 @@ export const homeReducer = createSlice({
         pagination: {}
         
     },
-    reducers: {},
+    reducers: {
+        messageClear: (state) => {
+            state.successMessage = "";
+            state.errorMessage = "";
+        },
+    },
     extraReducers: builder => {
         // ! getCategories
         builder.addCase(getCategories.fulfilled, (state, {payload}) => {
@@ -183,7 +188,10 @@ export const homeReducer = createSlice({
         builder.addCase(getQueryProducts.rejected, (state, {payload}) => {
             state.loading = false;
             state.errorMessage = payload.message
-            state.products =  []
+            state.products = []
+            state.pagination = {}
+            
+            
         })
         builder.addCase(getQueryProducts.pending, (state, _) => {
             state.loading = true;
@@ -191,4 +199,5 @@ export const homeReducer = createSlice({
     }
 })
 
+export const {messageClear} = homeReducer.actions;
 export default homeReducer.reducer;
