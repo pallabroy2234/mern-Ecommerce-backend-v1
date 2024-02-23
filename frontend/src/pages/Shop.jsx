@@ -21,7 +21,7 @@ const Shop = () => {
     
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
-    const [parPage, setParPage] = useState(3)
+    const [parPage, setParPage] = useState(10)
     
     const [filter, setFilter] = useState(true)
     // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
@@ -77,12 +77,13 @@ const Shop = () => {
             ratting: parseInt(ratting),
             sortPrice: sortPrice,
             pageNumber: parseInt(pageNumber),
+            parPage:parseInt(parPage)
         }))
         
         
     }, [state.values[0], state.values[1], category,ratting, pageNumber,sortPrice]);
     
-    console.log(state.values[0])
+
     
     
     
@@ -217,8 +218,8 @@ const Shop = () => {
                                     <div className="flex justify-center items-center gap-3">
                                         <select onChange={(e)=> setSortPrice(e.target.value)} name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
                                             <option value="">Sort By</option>
-                                            <option value="low-to-high-price">Low to High Price</option>
-                                            <option value="high-to-low-price">High to Low Price</option>
+                                            <option value="low">Low to High Price</option>
+                                            <option value="high">High to Low Price</option>
                                         </select>
                                         {/*  Grid view and List view option   */}
                                         <div className="flex justify-center items-center gap-4 md-lg:hidden">

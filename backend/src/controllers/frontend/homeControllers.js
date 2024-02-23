@@ -1,7 +1,8 @@
 const Category = require("../../models/categoryModal")
 const Product = require("../../models/productModal")
 const {successResponse, errorResponse} = require("../../helper/responseHelper");
-
+const queryProducts = require("../../utiles/queryProducts")
+const {isHexColor} = require("validator");
 
 // ! getCategories function for frontend
 const getCategories = async (req, res) => {
@@ -26,13 +27,12 @@ const getCategories = async (req, res) => {
 }
 
 
-
 //  ! GET FEATURE PRODUCTS
 
-const getFeatureProducts = async (req,res) => {
+const getFeatureProducts = async (req, res) => {
     try {
-        const featureProducts =await Product.find({}).limit(20).sort({createdAt:-1})
-        if(!featureProducts){
+        const featureProducts = await Product.find({}).limit(20).sort({createdAt: -1})
+        if (!featureProducts) {
             return errorResponse(res, {
                 statusCode: 404,
                 message: "No Feature Products Found"
@@ -43,10 +43,10 @@ const getFeatureProducts = async (req,res) => {
             message: "Feature Products Fetch Successfully",
             payload: featureProducts
         })
-    
-    }catch (e) {
+        
+    } catch (e) {
         return errorResponse(res, {
-            statusCode:500,
+            statusCode: 500,
             message: "Internal Server Error"
         })
     }
@@ -71,11 +71,9 @@ const formatProduct = (products1) => {
 }
 
 
-
-
 // ! GET CAROUSEL LATEST PRODUCTS
 
-const getCarouselLatestProducts = async (req,res)=> {
+const getCarouselLatestProducts = async (req, res) => {
     try {
         const products = await Product.find({}).limit(9).sort({createdAt: -1})
         if (!products) {
@@ -84,14 +82,14 @@ const getCarouselLatestProducts = async (req,res)=> {
         const latestProducts = formatProduct(products)
         
         
-        return  successResponse(res, {
+        return successResponse(res, {
             statusCode: 200,
             message: "Latest Products Fetch Successfully",
             payload: latestProducts
         })
         
-    }catch (e) {
-        return errorResponse(res,{
+    } catch (e) {
+        return errorResponse(res, {
             statusCode: 500,
             message: "Internal Server Error"
         })
@@ -99,15 +97,13 @@ const getCarouselLatestProducts = async (req,res)=> {
 }
 
 
-
-
 //  ! GET CAROUSEL PRODUCTS
 
-const getCarouselProducts = async (req,res)=> {
+const getCarouselProducts = async (req, res) => {
     try {
         
         //  TOP RATED PRODUCTS
-        const products =await Product.find({}).limit(9).sort({ratting:-1})
+        const products = await Product.find({}).limit(9).sort({ratting: -1})
         if (!products) {
             return errorResponse(res, {statusCode: 404, message: "No Top Rated Product Found"})
         }
@@ -131,7 +127,7 @@ const getCarouselProducts = async (req,res)=> {
             }
         })
         
-    }catch (e) {
+    } catch (e) {
         return errorResponse(res, {
             statusCode: 500,
             message: "Internal Server Error"
@@ -140,11 +136,9 @@ const getCarouselProducts = async (req,res)=> {
 }
 
 
-
-
 // ! GET PRICE RANGE PRODUCTS
 
-const getPriceRange = async(req,res)=> {
+const getPriceRange = async (req, res) => {
     try {
         const priceRange = {low: 0, high: 0}
         
@@ -156,7 +150,7 @@ const getPriceRange = async(req,res)=> {
         priceRange.low = lowPrice[0].price
         
         // HIGH PRICE
-        const highPrice = await Product.find({}).sort({price:-1}).limit(1)
+        const highPrice = await Product.find({}).sort({price: -1}).limit(1)
         if (!highPrice) {
             return errorResponse(res, {statusCode: 404, message: "No high price product found"})
         }
@@ -168,7 +162,7 @@ const getPriceRange = async(req,res)=> {
             payload: priceRange
         })
         
-    }catch (e) {
+    } catch (e) {
         return errorResponse(res, {
             statusCode: 500,
             message: "Internal Server Error"
@@ -179,12 +173,66 @@ const getPriceRange = async(req,res)=> {
 
 //  ! GET QUERY PRODUCTS BY CATEGORY, RATINGS, PRICE RANGE, SORT PRICE, PAGE NUMBER
 
-const getQueryProducts = (req,res)=> {
-    console.log(req.query)
+const getQueryProducts = async (req, res) => {
+    try {
+        // const {category,ratting ,lowPrice, highPrice, sortPrice, pageNumber, parPage} = req.query
+        
+        const products = await Product.find({}).sort({createdAt: -1})
+        if (!products) {
+            return errorResponse(res, {statusCode: 404, message: "No Products Found"})
+        }
+        
+        req.query.parPage = parseInt(req.query.parPage) || 10
+        
+        
+        const totalProduct = new queryProducts(products, req.query).categoryQuery().priceRangeQuery().rattingQuery().sortByPrice().countProducts().getProducts()
+        
+        if (totalProduct === 0) {
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "No Products Found"
+            })
+        }
+        
+
+        
+        const result = new queryProducts(products, req.query).categoryQuery().rattingQuery().priceRangeQuery().sortByPrice().skipQuery().limit().getProducts()
+        
+        if (!result) {
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "No Products Found"
+            })
+        }
+        
+        // PAGINATION
+        const totalPages = Math.ceil(totalProduct / parseInt(req.query.parPage));
+        const currentPage = parseInt(req.query.pageNumber) || 1;
+        const previousPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+        const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+        
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Query Products Fetch Successfully",
+            payload: {
+                products: result,
+                pagination: {
+                    totalProduct: totalProduct,
+                    totalPages: totalPages,
+                    currentPage: currentPage,
+                    previousPage: previousPage,
+                    nextPage: nextPage
+                }
+            }
+        })
+        
+    } catch (e) {
+        errorResponse(res, {
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
 }
-
-
-
 
 
 module.exports = {
