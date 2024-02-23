@@ -2,7 +2,6 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-
 //  ! getCategories
 export const getCategories = createAsyncThunk("home/getCategories",
     async (_, {rejectWithValue, fulfillWithValue}) => {
@@ -30,8 +29,6 @@ export const getFeatureProducts = createAsyncThunk("home/getFeatureProducts",
         }
     }
 )
-
-
 
 
 // ! GET CAROUSEL LATEST PRODUCTS
@@ -80,11 +77,6 @@ export const getPriceRange = createAsyncThunk("home/getPriceRange",
 )
 
 
-
-
-
-
-
 // !  Query Product
 export const getQueryProducts = createAsyncThunk("home/getQueryProducts",
     async (query, {rejectWithValue, fulfillWithValue}) => {
@@ -99,7 +91,6 @@ export const getQueryProducts = createAsyncThunk("home/getQueryProducts",
 )
 
 
-
 export const homeReducer = createSlice({
     name: "home",
     initialState: {
@@ -111,7 +102,9 @@ export const homeReducer = createSlice({
         latestProducts: [],
         topRatedProducts: [],
         discountProducts: [],
-        priceRange: {low:50, high:100}
+        priceRange: {low: 50, high: 100},
+        products: [],
+        pagination: {}
         
     },
     reducers: {},
@@ -128,7 +121,7 @@ export const homeReducer = createSlice({
             state.loading = true;
         });
         // ! GET FEATURE PRODUCTS
-        builder.addCase(getFeatureProducts.fulfilled, (state,{payload})=> {
+        builder.addCase(getFeatureProducts.fulfilled, (state, {payload}) => {
             state.featureProducts = payload.payload
             state.loading = false;
         });
@@ -150,6 +143,7 @@ export const homeReducer = createSlice({
         });
         builder.addCase(getCarouselLatestProducts.pending, (state, _) => {
             state.loading = true;
+            
         });
         
         // ! GET CAROUSEL PRODUCTS
@@ -160,14 +154,14 @@ export const homeReducer = createSlice({
             state.successMessage = payload.message
         });
         builder.addCase(getCarouselProducts.rejected, (state, {payload}) => {
-               state.loading = false;
-                state.errorMessage = payload.message
+            state.loading = false;
+            state.errorMessage = payload.message
         })
         builder.addCase(getCarouselProducts.pending, (state, _) => {
             state.loading = true;
         })
         //   ! GET PRICE RANGE PRODUCT : LOW AND HIGH
-        builder.addCase(getPriceRange.fulfilled, (state,{payload})=> {
+        builder.addCase(getPriceRange.fulfilled, (state, {payload}) => {
             state.priceRange = payload.payload
             state.loading = false;
         })
@@ -179,6 +173,21 @@ export const homeReducer = createSlice({
             state.loading = true;
         })
         
+        //     !  Query Product
+        
+        builder.addCase(getQueryProducts.fulfilled, (state, {payload}) => {
+            state.loading = false;
+            state.products = payload.payload.products
+            state.pagination = payload.payload.pagination
+        })
+        builder.addCase(getQueryProducts.rejected, (state, {payload}) => {
+            state.loading = false;
+            state.errorMessage = payload.message
+            state.products =  []
+        })
+        builder.addCase(getQueryProducts.pending, (state, _) => {
+            state.loading = true;
+        })
     }
 })
 

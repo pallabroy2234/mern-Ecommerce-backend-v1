@@ -23,7 +23,7 @@ class queryProducts {
     }
     
     // ! PRICE RANGE QUERY
-    priceRangeQuery = ()=> {
+    priceRangeQuery = () => {
         this.products = this.products.filter(product => product.price >= parseInt(this.query.lowPrice) && product.price <= parseInt(this.query.highPrice))
         return this;
     }
@@ -31,49 +31,48 @@ class queryProducts {
     
     // ! SORT PRICE QUERY
     
-    sortByPrice = ()=> {
-        if (this.query.sortPrice){
-            if (this.query.sortPrice === "low"){
-                this.products = this.products.sort((a,b)=> parseInt(a.price) - parseInt(b.price))
-            }else if (this.query.sortPrice === "high"){
-                this.products = this.products.sort((a,b)=> parseInt(b.price) - parseInt(a.price))
+    sortByPrice = () => {
+        if (this.query.sortPrice) {
+            if (this.query.sortPrice === "low") {
+                this.products = this.products.sort((a, b) => parseInt(a.price) - parseInt(b.price))
+            } else if (this.query.sortPrice === "high") {
+                this.products = this.products.sort((a, b) => parseInt(b.price) - parseInt(a.price))
             }
         }
         return this;
     }
     
     
-    
     // ! Skip Query
     
-    skipQuery = ()=> {
+    skipQuery = () => {
         let {pageNumber, parPage} = this.query
         const skipPage = (parseInt(pageNumber) - 1) * parseInt(parPage)
         let skipProducts = []
-        for (let i = skipPage; i < skipPage + parseInt(parPage); i++){
-               if (this.products[i]){
-                    skipProducts.push(this.products[i])
-                }
+        for (let i = skipPage; i < skipPage + parseInt(parPage); i++) {
+            if (this.products[i]) {
+                skipProducts.push(this.products[i])
+            }
         }
         this.products = skipProducts
         return this;
     }
     
     // ! Limit Product
-    limit = ()=> {
+    limit = () => {
         let temp = []
-        if (this.products.length > parseInt(this.query.parPage)){
-            for (let i = 0; i < parseInt(this.query.parPage); i++){
+        if (this.products.length > parseInt(this.query.parPage)) {
+            for (let i = 0; i < parseInt(this.query.parPage); i++) {
                 temp.push(this.products[i])
             }
-        }else {
+        } else {
             temp = this.products
         }
         this.products = temp
         return this;
     }
     
-    countProducts = ()=> {
+    countProducts = () => {
         this.products = this.products.length
         return this;
     }

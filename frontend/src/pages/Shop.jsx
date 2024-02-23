@@ -16,7 +16,7 @@ import LatestProduct from "../components/products/LatestProduct.jsx";
 
 
 const Shop = () => {
-    const {categories, priceRange, latestProducts} = useSelector(state => state.home)
+    const {categories,products,pagination, priceRange, latestProducts} = useSelector(state => state.home)
     const dispatch = useDispatch();
     
     const [style, setStyle] = useState("grid")
@@ -29,9 +29,10 @@ const Shop = () => {
         values: [50 , 100 ],
     })
     
-
+    console.log(pagination.totalProduct)
     const [ratting, setRatting] = useState("")
     const [sortPrice, setSortPrice] = useState("")
+    
     
     // ! Fetching Price Range and Latest Product
     useEffect(() => {
@@ -61,15 +62,6 @@ const Shop = () => {
     }
     
     useEffect(() => {
-        // const obj = {
-        //     low: state.values[0],
-        //     high: state.values[1],
-        //     category: category,
-        //     ratting: ratting,
-        //     sortPrice: sortPrice,
-        //     pageNumber: pageNumber,
-        // }
-        
         dispatch(getQueryProducts({
             low: parseInt(state.values[0]),
             high: parseInt(state.values[1]),
@@ -81,7 +73,7 @@ const Shop = () => {
         }))
         
         
-    }, [state.values[0], state.values[1], category,ratting, pageNumber,sortPrice]);
+    }, [state.values[0], state.values[1], category,ratting, pageNumber,sortPrice ]);
     
 
     
@@ -216,7 +208,7 @@ const Shop = () => {
                                 <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
                                     <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
                                     <div className="flex justify-center items-center gap-3">
-                                        <select onChange={(e)=> setSortPrice(e.target.value)} name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
+                                        <select onChange={(e) => setSortPrice(e.target.value)} name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
                                             <option value="">Sort By</option>
                                             <option value="low">Low to High Price</option>
                                             <option value="high">High to Low Price</option>
@@ -233,10 +225,18 @@ const Shop = () => {
                                 
                                 {/*  Product Grid and list view   */}
                                 <div className="pb-8">
-                                    <ShopProduct style={style}/>
+                                    {products.length > 0 ? (
+                                        <ShopProduct style={style} products={products}/>
+                                    ) : (
+                                        <div className="text-xl font-bold text-center">No Product Found</div>
+                                    )}
                                 </div>
                                 <div className="my-3">
-                                    <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={20} parPage={parPage} showItem={Math.floor(20 / 3)}/>
+                                    {
+                                        pagination.totalProduct <= parPage ? "": (
+                                            <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber}  totalItem={pagination.totalProduct} parPage={parPage}  showItem={parPage}/>
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -250,3 +250,12 @@ const Shop = () => {
     )
 }
 export default Shop
+
+
+// {
+//     totalProducts <= parPage ? "": (
+//         <div className="w-full flex justify-end mt-4 bottom-4 right-4">
+//             <Pagination pageNumber={currentPage} setPageNumber={setCurrentPage} totalItem={totalProducts} parPage={parPage} showItem={5}/>
+//         </div>
+//     )
+// }
