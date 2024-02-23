@@ -38,11 +38,6 @@ const ShopProduct = ({style ,products}) => {
     
     return (
         <>
-            {
-                loading ? (
-                    <div className="text-xl font-bold">Loading...</div>
-                ) : ""
-            }
       <div className={`grid ${style === "grid" ? "3xl:grid-cols-4 2xl:grid-cols-4 xl:grid-cols-3 md-lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 grid-cols-1  gap-4" : "grid-cols-1 md-lg:grid-cols-2 sm:grid-cols-1  gap-3"}`}>
           {
               products ? (
