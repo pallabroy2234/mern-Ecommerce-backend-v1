@@ -1,5 +1,5 @@
 import Headers from "../components/Headers.jsx";
-import {Link} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 import {useEffect, useState} from "react";
@@ -23,9 +23,8 @@ import {BeatLoader} from "react-spinners";
 
 
 
-const Shop = () => {
+const CategoryShop = () => {
     const {
-        categories,
         products,
         pagination,
         priceRange,
@@ -34,6 +33,14 @@ const Shop = () => {
         loading,
     } = useSelector(state => state.home)
     const dispatch = useDispatch();
+    
+    //  search params
+    const [searchParams, setSearchParams] = useSearchParams()
+    
+    const category = searchParams.get("category")
+    
+    console.log(category)
+
     
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
@@ -65,21 +72,14 @@ const Shop = () => {
     }, [priceRange])
     
     
-    // ! Query Category
-    const [category, setCategory] = useState("")
-    const queryCategory = (e, value) => {
-        if (e.target.checked) {
-            console.log(value.toLowerCase())
-            setCategory(value)
-        } else {
-            setCategory("")
-        }
-    }
+
+ 
+
     
     useEffect(() => {
         dispatch(getQueryProducts({
-            low: parseInt(state.values[0]),
-            high: parseInt(state.values[1]),
+            low: parseInt(state.values[0]) || "",
+            high: parseInt(state.values[1]) || "",
             category: category,
             ratting: parseInt(ratting),
             sortPrice: sortPrice,
@@ -113,9 +113,12 @@ const Shop = () => {
         
     }, [errorMessage])
     
-
-
-
+    
+    
+    
+    
+    
+    
     
     return (
         <div className="w-full">
@@ -151,18 +154,6 @@ const Shop = () => {
                         <div className="w-full flex flex-wrap">
                             {/* Category  */}
                             <div className={`w-3/12 md-lg:w-4/12 md:w-full pr-8  ${filter ? 'md:h-0 md:overflow-hidden md:mb-6' : 'md:h-auto  md:overflow-auto md:mb-0'}]`}>
-                                <h2 className="text-2xl font-bold mb-3 text-slate-600">Category</h2>
-                                
-                                <div className="py-2 max-h-[400px] overflow-y-auto mb-2">
-                                    {
-                                        categories && categories.map((item, index) => (
-                                            <div key={index} className="flex justify-start items-center gap-2 py-1">
-                                                <input checked={category === item.name ? true : false} onChange={(e) => queryCategory(e, item.name)} type="checkbox" id={item.name} className="cursor-pointer"/>
-                                                <label htmlFor={item.name} className="text-slate-600 block cursor-pointer capitalize">{item.name}</label>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
                                 
                                 {/* Range */}
                                 <div className="py-2 flex flex-col gap-3">
@@ -191,69 +182,50 @@ const Shop = () => {
                                 
                                 {/* Ratting   */}
                                 
-                                {/*<div className="py-3 flex flex-col gap-4">*/}
-                                {/* <h2 className="text-2xl font-bold mb-3 text-slate-600">Ratting</h2>*/}
-                                {/*    <div className="flex flex-col gap-3">*/}
-                                {/*        {*/}
-                                {/*            [5, 4, 3, 2, 1].map((num, index) => (*/}
-                                {/*                <div key={index} onClick={()=> handleClick(num)}  className={`${rating >= num ? "bg-slate-300/50 pl-4" : "bg-transparent" } flex gap-2 text-xl pr-4 py-2 transition-all duration-300 cursor-pointer hover:pl-4 hover:bg-slate-300/50`}>*/}
-                                {/*                    {[...Array(num)].map((_, index) => (*/}
-                                {/*                        <span   key={index}><AiFillStar/></span>*/}
-                                {/*                    ))}*/}
-                                {/*                    {[...Array(5 - num)].map((_, index) => (*/}
-                                {/*                        <span  key={index}><CiStar/></span>*/}
-                                {/*                    ))}*/}
-                                {/*                </div>*/}
-                                {/*                )*/}
-                                {/*            )*/}
-                                {/*        }*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-                                
                                 <div className="py-3 flex flex-col gap-4">
                                     <h2 className="text-2xl font-bold mb-3 text-slate-600">Ratting</h2>
                                     <div className="flex flex-col gap-3 ">
                                         <div onClick={() => setRatting(parseInt(5))} className={`${ratting === 5 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 rounded-sm flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer`}>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
                                         </div>
                                         <div onClick={() => setRatting(parseInt(4))} className={`${ratting === 4 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><CiStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><CiStar/></span>
                                         </div>
                                         <div onClick={()=> setRatting(3)} className={`${ratting === 3 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
                                         </div>
                                         <div onClick={() => setRatting(parseInt(2))} className={`${ratting === 2 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
-                                                <span><AiFillStar/></span>
-                                                <span><AiFillStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
                                         </div>
                                         <div onClick={()=> setRatting(parseInt(1))} className={`${ratting === 1 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
-                                                <span><AiFillStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
+                                            <span><AiFillStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
                                         </div>
                                         <div onClick={resetRatting} className={`${ratting === 0 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
-                                                <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
+                                            <span><CiStar/></span>
                                         </div>
                                     </div>
                                 </div>
@@ -316,4 +288,4 @@ const Shop = () => {
     
     )
 }
-export default Shop
+export default CategoryShop;

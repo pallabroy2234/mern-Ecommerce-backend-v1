@@ -229,7 +229,7 @@ const Headers = () => {
                                       categories &&  categories?.map((item, index) => (
                                             <li key={index} className="flex justify-start items-center px-[24px] py-[6px] border-b gap-5">
                                                 <img src={item?.image} alt={item?.name} className="w-[30px] h-[30px] rounded-full overflow-hidden"/>
-                                            <Link to={`/product/${item?.slug}`} className="capitalize">{item?.name}</Link>
+                                            <Link to={`/products?category=${item?.name}`} className="capitalize">{item?.name}</Link>
                                          </li>
                                      ))
                                  }
