@@ -2,6 +2,10 @@ const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const User = require("../../models/userModal")
 const SellerCustomer = require("../../models/chat/sellerCustomerModal")
 const {createToken} = require("../../utiles/jsonWebToken");
+const bcrypt = require('bcrypt');
+
+
+//  ! HANDLE USER REGISTER
 const handleUserRegister = async (req, res) => {
     try {
         const {name, email, password} = req.body;
@@ -37,29 +41,11 @@ const handleUserRegister = async (req, res) => {
             return errorResponse(res, {statusCode: 500, message: "User registration failed"})
             
         }
-        const token = await createToken({
-            id: newUser._id,
-            name: newUser.name,
-            email: newUser.email,
-            method: newUser.method
-        })
-        if (!token) {
-            return errorResponse(res, {statusCode: 500, message: "User registration failed"})
-        }
         
-        res.cookie("userAuthorization", token, {
-            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict"
-        })
-        
-       
         
         return successResponse(res, {
             statusCode: 201,
             message: "Registration success",
-            payload: token
         })
         
     } catch (e) {
@@ -71,6 +57,58 @@ const handleUserRegister = async (req, res) => {
 }
 
 
+const handleUserLogin = async (req, res) => {
+    try {
+        const {email, password} = req.body;
+        
+        const userExists = await User.findOne({email}).select("+password")
+        
+        
+        if (!userExists) {
+            return errorResponse(res, {statusCode: 404, message: "Register first"})
+        }
+        
+        const isPasswordMatch = await bcrypt.compare(password, userExists.password);
+        
+        if (!isPasswordMatch) {
+            return errorResponse(res, {statusCode: 404, message: "Wrong password"})
+        }
+        
+        const token = await createToken({
+            id: userExists._id,
+            name: userExists.name,
+            email: userExists.email,
+            role: userExists.role
+        })
+        
+        if (!token) {
+            return errorResponse(res, {statusCode: 400, message: "Login failed"})
+        }
+        
+        res.cookie("userAuthorization", token, {
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict"
+        })
+        
+        
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Login success",
+            payload: token
+        })
+        
+    } catch (e) {
+        return errorResponse(res, {
+            status: 500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
 module.exports = {
-    handleUserRegister
+    handleUserRegister,
+    handleUserLogin
 }

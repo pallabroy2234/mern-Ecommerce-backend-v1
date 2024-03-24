@@ -15,12 +15,24 @@ export const userRegister = createAsyncThunk("auth/userRegister", async (info, {
 })
 
 
+export const userLogin = createAsyncThunk("auth/userLogin", async (info, {rejectWithValue, fulfillWithValue}) => {
+    try {
+        const {data} = await api.post("frontend/user/user-login", info)
+        localStorage.setItem("userAuthorization", data.payload)
+       
+        return fulfillWithValue(data)
+    } catch (e) {
+        return rejectWithValue(e.response.data)
+    }
+})
+
 export const authReducer = createSlice({
     name: "auth", initialState: {
-        loader: false, userInfo: {}, successMessage: "", errorMessage: "",
-        
+        loader: false,
+        userInfo: {},
+        successMessage: "",
+        errorMessage: "",
     },
-    
     reducers: {
         messageClear: (state, _) => {
             state.successMessage = "";

@@ -85,6 +85,7 @@ class authControllers {
                 id: seller._id,
                 role: seller.role,
             })
+            
             if (!token) {
                 throw createError(400, "Seller register failed")
             }
