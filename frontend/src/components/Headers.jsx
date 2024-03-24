@@ -10,8 +10,8 @@ import {getCategories} from "../store/reducers/homeReducer.js";
 
 const Headers = () => {
     const {categories} = useSelector(state => state.home)
+    const {userInfo} = useSelector(state => state.auth)
     const navigate = useNavigate()
-
     
     
     const {pathname} = useLocation()
@@ -62,11 +62,11 @@ const Headers = () => {
                                     </ul>
                                 </div>
                                 {
-                                    user ?
-                                        <Link className="flex cursor-pointer justify-center items-center gap-2 text-sm" to="/dashboard">
+                                    userInfo ?
+                                        <div className="flex cursor-pointer justify-center items-center gap-2 text-sm" to="/dashboard">
                                             <span><FaUser/></span>
-                                            <span>Pallab Roy Tushar</span>
-                                        </Link> :
+                                            <span>{userInfo?.name}</span>
+                                        </div> :
                                         <Link to={"/login"} className="flex cursor-pointer justify-center items-center gap-2 text-sm">
                                             <span><FaLock/></span>
                                             <span>Login</span>
@@ -159,11 +159,11 @@ const Headers = () => {
                                 </ul>
                             </div>
                             {
-                                user ?
-                                    <Link className="flex cursor-pointer justify-center items-center gap-2 text-sm" to="#">
+                                userInfo ?
+                                    <div className="flex cursor-pointer justify-center items-center gap-2 text-sm" to="#">
                                         <span><FaUser/></span>
-                                        <span className="text-sm text-nowrap text-ellipsis">Pallab Roy Tushar</span>
-                                    </Link> :
+                                        <span className="text-sm text-nowrap text-ellipsis">{userInfo?.name}</span>
+                                    </div> :
                                     <Link to="/login" className="flex cursor-pointer justify-center  items-center gap-2 text-sm">
                                         <span><FaLock/></span>
                                         <span>Login</span>
@@ -260,7 +260,7 @@ const Headers = () => {
                                             }
                                         </select>
                                     </div>
-                                    <input  type="text" onChange={(e) => setSearchValue(e.target.value)} className="w-full relative bg-transparent text-slate-500 outline-0 px-3 md:pr-[130px] h-full" placeholder="What do you need"/>
+                                    <input type="text" onChange={(e) => setSearchValue(e.target.value)} className="w-full relative bg-transparent text-slate-500 outline-0 px-3 md:pr-[130px] h-full" placeholder="What do you need"/>
                                     <button onClick={(e) => search(e)} className="bg-violet-400 absolute right-0 px-8 h-full font-semibold uppercase text-white">Search</button>
                                 </div>
                             </div>

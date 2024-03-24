@@ -2,7 +2,7 @@ import Headers from "../components/Headers.jsx";
 import Footer from "../components/Footer.jsx";
 import {FaFacebookF} from "react-icons/fa";
 import {AiOutlineGooglePlus} from "react-icons/ai";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {messageClear, userLogin} from "../store/reducers/authReducer.js";
@@ -12,7 +12,8 @@ import toast from "react-hot-toast";
 
 const Login = () => {
     const dispatch = useDispatch()
-    const {loader, successMessage, errorMessage} = useSelector(state => state.auth)
+    const navigate = useNavigate()
+    const {loader, successMessage, userInfo, errorMessage} = useSelector(state => state.auth)
     
     const [state, setState] = useState({
         email: "",
@@ -36,12 +37,16 @@ const Login = () => {
         if (successMessage) {
             toast.success(successMessage)
             dispatch(messageClear())
+            navigate("/")
         }
         if (errorMessage) {
             toast.error(errorMessage)
-           dispatch(messageClear())
+            dispatch(messageClear())
         }
-    }, [successMessage, errorMessage, messageClear]);
+        if (userInfo) {
+            navigate("/")
+        }
+    }, [successMessage, errorMessage]);
     
     
     return (

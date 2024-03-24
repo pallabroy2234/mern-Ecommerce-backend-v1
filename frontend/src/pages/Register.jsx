@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const Register = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {loader, successMessage, errorMessage} = useSelector(state => state.auth)
+    const {loader, successMessage, userInfo, errorMessage} = useSelector(state => state.auth)
     
     const [state, setState] = useState({
         name: "",
@@ -38,7 +38,10 @@ const Register = () => {
             toast.error(errorMessage)
             dispatch(messageClear())
         }
-    }, [successMessage, errorMessage, messageClear]);
+        if (userInfo) {
+            navigate("/")
+        }
+    }, [successMessage, errorMessage]);
     
     
     const handleSubmit = (e) => {
