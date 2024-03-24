@@ -10,6 +10,8 @@ const Pagination = ({ pageNumber, setPageNumber, parPage, showItem, totalItem })
     if (endPage - startPage < showItem - 1) {
         startPage = Math.max(1, endPage - showItem + 1);
     }
+
+    
     
     const createButton = () => {
         const buttons = [];

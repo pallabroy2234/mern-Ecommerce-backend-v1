@@ -47,7 +47,7 @@ const CategoryShop = () => {
     const [parPage, setParPage] = useState(12)
     
     const [filter, setFilter] = useState(true)
-    // const categories = ["clothing", "sports", "phones", "laptops", "monitors", "tablets", "audio", "bags", "television"]
+
     const [state, setState] = useState({
         values: [50, 100],
     })
@@ -103,11 +103,6 @@ const CategoryShop = () => {
             parPage: parseInt(parPage)
         }))
     }
-    
-    
-    
-    
-    
     
     
     
@@ -233,7 +228,9 @@ const CategoryShop = () => {
                                 <div className="pl-8 md:pl-0">
                                     {/* All Product Heading */}
                                     <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-center border">
-                                        <h2 className="text-lg sm:text-sm font-medium  text-slate-600">All Product</h2>
+                                        <h2 className="text-lg sm:text-sm font-medium  text-slate-600">
+                                            {pagination.totalProduct > 0 ? `${pagination.totalProduct} Products` : "No Product Found"}
+                                        </h2>
                                         <div className="flex justify-center items-center gap-3">
                                             <select onChange={(e) => setSortPrice(e.target.value)} name="" defaultValue={"sort by"} id="" className="p-1 border sm:text-sm outline-0 text-slate-600 font-semibold ">
                                                 <option value="">Sort By</option>

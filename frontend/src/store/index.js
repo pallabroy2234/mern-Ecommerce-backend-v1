@@ -6,8 +6,10 @@ const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware)=> getDefaultMiddleware({
         serializableCheck:false,
-    }).concat(logger),
+    }),
     devTools:true,
     
 })
 export default store;
+
+// .concat(logger),
