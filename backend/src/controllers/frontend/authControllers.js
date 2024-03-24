@@ -47,14 +47,14 @@ const handleUserRegister = async (req, res) => {
             return errorResponse(res, {statusCode: 500, message: "User registration failed"})
         }
         
-        res.cookie("userToken", token, {
+        res.cookie("userAuthorization", token, {
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: true,
             sameSite: "strict"
         })
         
-        console.log(newUser)
+       
         
         return successResponse(res, {
             statusCode: 201,
