@@ -29,6 +29,13 @@ class queryProducts {
     }
     
     
+    //   !  SEARCH QUERY
+    
+    searchQuery = () => {
+        this.products = this.query.search ? this.products.filter(product => product.name.toLowerCase().indexOf(this.query.search.toLowerCase()) > -1) : this.products
+        return this;
+    }
+    
     // ! SORT PRICE QUERY
     
     sortByPrice = () => {

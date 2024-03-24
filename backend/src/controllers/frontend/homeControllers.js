@@ -184,8 +184,9 @@ const getQueryProducts = async (req, res) => {
         
         req.query.parPage = parseInt(req.query.parPage) || 10
         
+    
         
-        const totalProduct = new queryProducts(products, req.query).categoryQuery().priceRangeQuery().rattingQuery().sortByPrice().countProducts().getProducts()
+        const totalProduct = new queryProducts(products, req.query).categoryQuery().searchQuery().priceRangeQuery().rattingQuery().sortByPrice().countProducts().getProducts()
         
         if (totalProduct === 0) {
             return errorResponse(res, {
@@ -196,7 +197,7 @@ const getQueryProducts = async (req, res) => {
         
 
         
-        const result = new queryProducts(products, req.query).categoryQuery().rattingQuery().priceRangeQuery().sortByPrice().skipQuery().limit().getProducts()
+        const result = new queryProducts(products, req.query).categoryQuery().searchQuery().rattingQuery().priceRangeQuery().sortByPrice().skipQuery().limit().getProducts()
         
         if (!result) {
             return errorResponse(res, {

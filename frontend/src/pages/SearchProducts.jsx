@@ -23,7 +23,7 @@ import {BeatLoader} from "react-spinners";
 
 
 
-const CategoryShop = () => {
+const SearchProducts = () => {
     const {
         products,
         pagination,
@@ -38,16 +38,17 @@ const CategoryShop = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     
     const category = searchParams.get("category")
+    const search = searchParams.get("search")
     
     
-
+    
     
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
     const [parPage, setParPage] = useState(12)
     
     const [filter, setFilter] = useState(true)
-
+    
     const [state, setState] = useState({
         values: [50, 100],
     })
@@ -72,9 +73,9 @@ const CategoryShop = () => {
     }, [priceRange])
     
     
-
- 
-
+    
+    
+    
     
     useEffect(() => {
         dispatch(getQueryProducts({
@@ -84,11 +85,12 @@ const CategoryShop = () => {
             ratting: parseInt(ratting),
             sortPrice: sortPrice,
             pageNumber: parseInt(pageNumber),
-            parPage: parseInt(parPage)
+            parPage: parseInt(parPage),
+            search:search,
         }))
         
         
-    }, [state.values[0], state.values[1], category, ratting, pageNumber, sortPrice]);
+    }, [state.values[0], state.values[1], category, ratting, pageNumber, sortPrice,search]);
     
     
     const resetRatting = ()=> {
@@ -276,4 +278,4 @@ const CategoryShop = () => {
     
     )
 }
-export default CategoryShop;
+export default SearchProducts;

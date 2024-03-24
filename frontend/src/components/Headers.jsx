@@ -3,15 +3,14 @@ import {FaFacebook, FaLinkedin, FaList, FaLock, FaUser} from "react-icons/fa";
 import {AiFillGithub, AiFillHeart, AiFillShopping, AiOutlineTwitter} from "react-icons/ai";
 import {MdOutlineKeyboardArrowDown} from "react-icons/md";
 import {useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
 import {useDispatch, useSelector} from "react-redux";
 import {getCategories} from "../store/reducers/homeReducer.js";
 
 const Headers = () => {
     const {categories} = useSelector(state => state.home)
- 
-
+    const navigate = useNavigate()
     
     
     const {pathname} = useLocation()
@@ -24,6 +23,10 @@ const Headers = () => {
     const [category, setCategory] = useState()
     const wishlist = 4
 
+    
+    const search = (e)=> {
+      navigate(`/products/search?category=${category ? category : "" }&&search=${searchValue ? searchValue : ""}`)
+    }
     
     return (
         <div className="w-full bg-white">
@@ -253,8 +256,8 @@ const Headers = () => {
                                             }
                                         </select>
                                     </div>
-                                    <input type="text" onChange={(e) => setSearchValue(e.target.value)} className="w-full relative bg-transparent text-slate-500 outline-0 px-3 md:pr-[130px] h-full" placeholder="What do you need"/>
-                                    <button className="bg-violet-400 absolute right-0 px-8 h-full font-semibold uppercase text-white">Search</button>
+                                    <input type="text" onChange={(e) => setSearchValue(e.target.value)}    className="w-full relative bg-transparent text-slate-500 outline-0 px-3 md:pr-[130px] h-full" placeholder="What do you need"/>
+                                    <button onClick={(e) => search(e)} className="bg-violet-400 absolute right-0 px-8 h-full font-semibold uppercase text-white">Search</button>
                                 </div>
                             </div>
                             
