@@ -94,7 +94,6 @@ class authControllers {
                 httpOnly: true,
                 secure: true,
                 sameSite: "none",
-                
             })
             
             return successResponse(res, {

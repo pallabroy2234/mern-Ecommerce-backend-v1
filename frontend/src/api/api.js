@@ -8,6 +8,7 @@ const local = "http://localhost:3000"
 
 const api = axios.create({
     baseURL: `${local}/api/`,
+    withCredentials: true
 })
 
 export default api

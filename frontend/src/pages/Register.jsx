@@ -4,9 +4,14 @@ import {FaFacebookF} from "react-icons/fa";
 import {AiOutlineGooglePlus} from "react-icons/ai";
 import {Link} from "react-router-dom";
 import {useState} from "react";
+import {useDispatch} from "react-redux";
+import {userRegister} from "../store/reducers/authReducer.js";
 
 
 const Register = () => {
+    
+    const dispatch = useDispatch()
+   
     
     const [state, setState] = useState({
         name: "",
@@ -23,7 +28,7 @@ const Register = () => {
     
     const handleSubmit = (e)=> {
         e.preventDefault()
-        console.log(state)
+        dispatch(userRegister(state))
     }
     
     return (
@@ -40,17 +45,17 @@ const Register = () => {
                               <form onSubmit={(e)=> handleSubmit(e)} className="text-slate-600">
                                   <div className="flex flex-col gap-1 mb-2">
                                       <label htmlFor="name">Name</label>
-                                      <input onChange={(e)=> handleChange(e)} type="text" id="name" name="name" placeholder="Name" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} required type="text" id="name" name="name" placeholder="Name" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <div className="flex flex-col gap-1 mb-3">
                                       <label htmlFor="email">Email</label>
-                                      <input onChange={(e)=> handleChange(e)} type="email" id="email" name="email" placeholder="Email" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} required type="email" id="email" name="email" placeholder="Email" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <div className="flex flex-col gap-1 mb-4">
                                       <label htmlFor="password">Password</label>
-                                      <input onChange={(e)=> handleChange(e)} type="password" id="password" name="password" placeholder="Password" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
+                                      <input onChange={(e)=> handleChange(e)} required type="password" id="password" name="password" placeholder="Password" className="w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md"/>
                                   </div>
                                   
                                   <button className="px-8 w-full py-2 bg-purple-500 shadow-lg hover:shadow-purple-500/30 text-white rounded-md">Register</button>

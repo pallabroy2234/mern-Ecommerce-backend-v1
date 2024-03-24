@@ -31,6 +31,7 @@ app.use("/api", sellerRouter);
 //  Frontend route
 
 app.use("/api/frontend", require("./routes/frontend/homeRoutes"))
+app.use("/api/frontend/user", require("./routes/frontend/authRoutes"))
 
 
 cloudinary.config({
