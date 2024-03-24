@@ -177,27 +177,18 @@ const getQueryProducts = async (req, res) => {
     try {
         // const {category,ratting ,lowPrice, highPrice, sortPrice, pageNumber, parPage} = req.query
         
+        req.query.parPage = parseInt(req.query.parPage) || 12
+        
         const products = await Product.find({}).sort({createdAt: -1})
+        
         if (!products) {
             return errorResponse(res, {statusCode: 404, message: "No Products Found"})
         }
         
-        req.query.parPage = parseInt(req.query.parPage) || 10
         
-    
+        const result = new queryProducts(products, req.query).categoryQuery().rattingQuery().priceRangeQuery().searchQuery().sortByPrice().skipQuery().limit().getProducts()
         
-        const totalProduct = new queryProducts(products, req.query).categoryQuery().searchQuery().priceRangeQuery().rattingQuery().sortByPrice().countProducts().getProducts()
-        
-        if (totalProduct === 0) {
-            return errorResponse(res, {
-                statusCode: 404,
-                message: "No Products Found"
-            })
-        }
-        
-
-        
-        const result = new queryProducts(products, req.query).categoryQuery().searchQuery().rattingQuery().priceRangeQuery().sortByPrice().skipQuery().limit().getProducts()
+        // ! Here some bug NO Products Found
         
         if (!result) {
             return errorResponse(res, {
@@ -205,6 +196,17 @@ const getQueryProducts = async (req, res) => {
                 message: "No Products Found"
             })
         }
+        
+        
+        const totalProduct = new queryProducts(products, req.query).categoryQuery().priceRangeQuery().rattingQuery().searchQuery().sortByPrice().countProducts().getProducts()
+        
+        if (totalProduct < 0) {
+            return errorResponse(res, {
+                statusCode: 404,
+                message: "No Products Found"
+            })
+        }
+        
         
         // PAGINATION
         const totalPages = Math.ceil(totalProduct / parseInt(req.query.parPage));

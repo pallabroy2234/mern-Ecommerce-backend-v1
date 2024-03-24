@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
 import {useDispatch, useSelector} from "react-redux";
-import {getCategories} from "../store/reducers/homeReducer.js";
+
 
 const Headers = () => {
     const {categories} = useSelector(state => state.home)

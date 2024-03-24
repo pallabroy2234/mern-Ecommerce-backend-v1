@@ -19,7 +19,7 @@ import {
 } from "../store/reducers/homeReducer.js";
 import LatestProduct from "../components/products/LatestProduct.jsx";
 import toast from "react-hot-toast";
-import {BeatLoader} from "react-spinners";
+import {BeatLoader, FadeLoader} from "react-spinners";
 
 
 const Shop = () => {
@@ -68,7 +68,6 @@ const Shop = () => {
     const [category, setCategory] = useState("")
     const queryCategory = (e, value) => {
         if (e.target.checked) {
-            console.log(value.toLowerCase())
             setCategory(value)
         } else {
             setCategory("")
@@ -104,21 +103,12 @@ const Shop = () => {
     }
     
     
-    useEffect(() => {
-        if (errorMessage) {
-            toast.error(errorMessage)
-            dispatch(messageClear())
-        }
-        
-    }, [errorMessage])
-    
-    
     return (
         <div className="w-full">
             {
                 loading &&
-                <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[200]">
-                    <BeatLoader color={"#36d7b7"} loading={true} size={20}/>
+                <div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]">
+                    <FadeLoader/>
                 </div>
             }
             <Headers/>

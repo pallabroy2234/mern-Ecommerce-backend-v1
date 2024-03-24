@@ -12,26 +12,15 @@ import ShopProduct from "../components/products/ShopProduct.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getCarouselLatestProducts,
-    getPriceRange,
-    getQueryProducts,
-    messageClear
+    getCarouselLatestProducts, getPriceRange, getQueryProducts, messageClear
 } from "../store/reducers/homeReducer.js";
 import LatestProduct from "../components/products/LatestProduct.jsx";
 import toast from "react-hot-toast";
-import {BeatLoader} from "react-spinners";
-
+import {BeatLoader, FadeLoader} from "react-spinners";
 
 
 const CategoryShop = () => {
-    const {
-        products,
-        pagination,
-        priceRange,
-        latestProducts,
-        errorMessage,
-        loading,
-    } = useSelector(state => state.home)
+    const {products, pagination, priceRange, latestProducts, loading,} = useSelector(state => state.home)
     const dispatch = useDispatch();
     
     //  search params
@@ -40,14 +29,12 @@ const CategoryShop = () => {
     const category = searchParams.get("category")
     
     
-
-    
     const [style, setStyle] = useState("grid")
     const [pageNumber, setPageNumber] = useState(1)
     const [parPage, setParPage] = useState(12)
     
     const [filter, setFilter] = useState(true)
-
+    
     const [state, setState] = useState({
         values: [50, 100],
     })
@@ -56,6 +43,19 @@ const CategoryShop = () => {
     const [ratting, setRatting] = useState("")
     const [sortPrice, setSortPrice] = useState("")
     
+    
+    useEffect(() => {
+        dispatch(getQueryProducts({
+            low: parseInt(state.values[0]),
+            high: parseInt(state.values[1]),
+            category: category,
+            ratting: parseInt(ratting),
+            sortPrice: sortPrice,
+            pageNumber: parseInt(pageNumber),
+            parPage: parseInt(parPage)
+        }))
+        
+    }, [state.values[0], state.values[1], category, ratting, pageNumber, sortPrice]);
     
     // ! Fetching Price Range and Latest Product
     useEffect(() => {
@@ -72,26 +72,7 @@ const CategoryShop = () => {
     }, [priceRange])
     
     
-
- 
-
-    
-    useEffect(() => {
-        dispatch(getQueryProducts({
-            low: parseInt(state.values[0]) || "",
-            high: parseInt(state.values[1]) || "",
-            category: category,
-            ratting: parseInt(ratting),
-            sortPrice: sortPrice,
-            pageNumber: parseInt(pageNumber),
-            parPage: parseInt(parPage)
-        }))
-        
-        
-    }, [state.values[0], state.values[1], category, ratting, pageNumber, sortPrice]);
-    
-    
-    const resetRatting = ()=> {
+    const resetRatting = () => {
         setRatting("")
         dispatch(getQueryProducts({
             low: parseInt(state.values[0]),
@@ -105,13 +86,12 @@ const CategoryShop = () => {
     }
     
     
-    
     return (
         <div className="w-full">
             {
                 loading &&
-                <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[200]">
-                    <BeatLoader color={"#36d7b7"} loading={true} size={20}/>
+                <div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]">
+                    <FadeLoader/>
                 </div>
             }
             <Headers/>
@@ -155,11 +135,9 @@ const CategoryShop = () => {
                                         renderTrack={({props, children}) => (
                                             <div {...props} className="w-full h-[6px] bg-slate-200 rounded-full cursor-pointer">
                                                 {children}
-                                            </div>
-                                        )}
+                                            </div>)}
                                         renderThumb={({props}) => (
-                                            <div {...props} className="w-5 h-5 bg-indigo-500 rounded-full cursor-pointer focus:outline-0"/>
-                                        )}
+                                            <div {...props} className="w-5 h-5 bg-indigo-500 rounded-full cursor-pointer focus:outline-0"/>)}
                                     />
                                     <div>
                                         <span className=" font-bold text-lg">${Math.floor(state.values[0])} - ${Math.floor(state.values[1])}</span>
@@ -171,42 +149,42 @@ const CategoryShop = () => {
                                 <div className="py-3 flex flex-col gap-4">
                                     <h2 className="text-2xl font-bold mb-3 text-slate-600">Ratting</h2>
                                     <div className="flex flex-col gap-3 ">
-                                        <div onClick={() => setRatting(parseInt(5))} className={`${ratting === 5 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 rounded-sm flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer`}>
+                                        <div onClick={() => setRatting(parseInt(5))} className={`${ratting === 5 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 rounded-sm flex flex-row text-orange-500 justify-start items-center gap-2 text-xl cursor-pointer`}>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                         </div>
-                                        <div onClick={() => setRatting(parseInt(4))} className={`${ratting === 4 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
+                                        <div onClick={() => setRatting(parseInt(4))} className={`${ratting === 4 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><CiStar/></span>
                                         </div>
-                                        <div onClick={()=> setRatting(3)} className={`${ratting === 3 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
+                                        <div onClick={() => setRatting(3)} className={`${ratting === 3 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                         </div>
-                                        <div onClick={() => setRatting(parseInt(2))} className={`${ratting === 2 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
+                                        <div onClick={() => setRatting(parseInt(2))} className={`${ratting === 2 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
                                             <span><AiFillStar/></span>
                                             <span><AiFillStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                         </div>
-                                        <div onClick={()=> setRatting(parseInt(1))} className={`${ratting === 1 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
+                                        <div onClick={() => setRatting(parseInt(1))} className={`${ratting === 1 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer  flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
                                             <span><AiFillStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                         </div>
-                                        <div onClick={resetRatting} className={`${ratting === 0 ? "bg-slate-300/50 px-4 " :  "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
+                                        <div onClick={resetRatting} className={`${ratting === 0 ? "bg-slate-300/50 px-4 " : "bg-transparent"} pr-4 hover:pl-4 py-2 hover:bg-slate-300/50 transition-all duration-300 cursor-pointer flex flex-row text-orange-500 justify-start items-center gap-2 text-xl`}>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
                                             <span><CiStar/></span>
@@ -251,18 +229,12 @@ const CategoryShop = () => {
                                     <div className="pb-8">
                                         
                                         
-                                        {products.length > 0 ? (
-                                            <ShopProduct style={style} products={products}/>
-                                        ) : (
-                                            <div className="text-xl font-bold text-center">No Product Found</div>
-                                        )}
+                                        {products.length > 0 ? (<ShopProduct style={style} products={products}/>) : (
+                                            <div className="text-xl font-bold text-center">No Product Found</div>)}
                                     </div>
                                     <div className={`my-3 ${pagination.totalProduct ? "visible" : "hidden"}`}>
-                                        {
-                                            pagination.totalProduct && pagination.totalProduct <= parPage ? "" : (
-                                                <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={pagination.totalProduct} parPage={parPage} showItem={Math.floor(pagination.totalProduct / parPage)}/>
-                                            )
-                                        }
+                                        {pagination.totalProduct && pagination.totalProduct <= parPage ? "" : (
+                                            <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={pagination.totalProduct} parPage={parPage} showItem={Math.floor(pagination.totalProduct / parPage)}/>)}
                                     </div>
                                 </div>
                             </div>
