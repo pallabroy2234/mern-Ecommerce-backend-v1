@@ -105,15 +105,6 @@ const CategoryShop = () => {
     }
     
     
-    useEffect(() => {
-        if (errorMessage) {
-            toast.error(errorMessage)
-            dispatch(messageClear())
-        }
-        
-    }, [errorMessage])
-    
-    
     
     
     

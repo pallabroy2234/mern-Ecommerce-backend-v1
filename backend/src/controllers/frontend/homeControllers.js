@@ -217,6 +217,7 @@ const getQueryProducts = async (req, res) => {
             payload: {
                 products: result,
                 pagination: {
+                    parPage: parseInt(req.query.parPage),
                     totalProduct: totalProduct,
                     totalPages: totalPages,
                     currentPage: currentPage,
