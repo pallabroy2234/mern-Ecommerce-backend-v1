@@ -21,7 +21,11 @@ const FeatureProducts = ({featureProducts}) => {
     
     const handleAddToCart = (id) => {
         if (userInfo) {
-            dispatch()
+            dispatch(addToCart({
+                userId: userInfo.id,
+                quantity: 1,
+                productId: id
+            }))
         } else {
             navigate("/login")
         }

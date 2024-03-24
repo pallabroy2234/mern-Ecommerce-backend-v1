@@ -58,6 +58,23 @@ const isUser = async (req, res, next) => {
     }
 };
 
+const isLoggedIn = async (req, res, next) => {
+    try {
+        const userAuthorization = req.cookies.userAuthorization;
+        if (!userAuthorization) {
+            return errorResponse(res, {
+                statusCode: 401,
+                message: "Please login first"
+            })
+        }
+        next();
+    } catch (e) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
+};
 
 
 const isLoggedOut = async (req, res, next) => {
@@ -81,5 +98,6 @@ const isLoggedOut = async (req, res, next) => {
 module.exports = {
     authMiddleware,
     isUser,
-    isLoggedOut
+    isLoggedOut,
+    isLoggedIn
 }

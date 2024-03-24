@@ -2,10 +2,9 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-export const userLogin = createAsyncThunk("auth/userLogin", async (info, {rejectWithValue, fulfillWithValue}) => {
+export const addToCart = createAsyncThunk("cart/addToCart", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
-        const {data} = await api.post("frontend/user/user-login", info)
-        localStorage.setItem("userAuthorization", data.payload)
+        const {data} = await api.post("frontend/product/add-to-cart", info)
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
