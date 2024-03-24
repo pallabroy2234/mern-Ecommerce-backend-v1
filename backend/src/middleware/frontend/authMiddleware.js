@@ -7,7 +7,6 @@ const {errorResponse} = require("../../helper/responseHelper");
 //  ! AUTH MIDDLEWARE -> CHECKS IF USER IS LOGGED IN OR NOT AND REQUEST TO SET THE ROLE AND ID IN REQ OBJECT
 const authMiddleware = async (req, res, next) => {
     const cookies = req.cookies;
-    
     if (cookies.userAuthorization) {
         try {
             const decodeToken = await jwt.verify(cookies.userAuthorization, process.env.SECRET_KEY);
@@ -40,6 +39,7 @@ const authMiddleware = async (req, res, next) => {
 };
 
 // ! IS USER MIDDLEWARE -> CHECKS IF USER IS USER OR NOT
+
 const isUser = async (req, res, next) => {
     try {
         if (req.role === "user") {
@@ -57,7 +57,6 @@ const isUser = async (req, res, next) => {
         })
     }
 };
-
 
 
 

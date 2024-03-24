@@ -12,6 +12,14 @@ const userRegisterValidator = [
         .withMessage("Please enter strong password"),
     body("name").trim().notEmpty().withMessage("Name is required").isLength({min: 3}).withMessage("Name must be at least 3 characters").matches(/^[a-zA-Z ]+$/).withMessage("Name must be alphabets only")
 ];
+
+
+const userLoginValidator = [
+    body("email").trim().notEmpty().withMessage("Enter your email address").isEmail().withMessage("Invalid email address"),
+];
+
+
 module.exports = {
-    userRegisterValidator
+    userRegisterValidator,
+    userLoginValidator
 }

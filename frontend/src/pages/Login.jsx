@@ -3,9 +3,11 @@ import Footer from "../components/Footer.jsx";
 import {FaFacebookF} from "react-icons/fa";
 import {AiOutlineGooglePlus} from "react-icons/ai";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {userLogin} from "../store/reducers/authReducer.js";
+import {messageClear, userLogin} from "../store/reducers/authReducer.js";
+import {FadeLoader} from "react-spinners";
+import toast from "react-hot-toast";
 
 
 const Login = () => {
@@ -30,9 +32,26 @@ const Login = () => {
         
     }
     
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+           dispatch(messageClear())
+        }
+    }, [successMessage, errorMessage, messageClear]);
+    
     
     return (
         <div>
+            {
+                loader &&
+                <div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]">
+                    <FadeLoader/>
+                </div>
+            }
             <Headers/>
             {/* Register */}
             <div className="bg-slate-200 mt-4">

@@ -15,11 +15,11 @@ export const userRegister = createAsyncThunk("auth/userRegister", async (info, {
 })
 
 
+//  ! USER LOGIN
 export const userLogin = createAsyncThunk("auth/userLogin", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
         const {data} = await api.post("frontend/user/user-login", info)
         localStorage.setItem("userAuthorization", data.payload)
-       
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
@@ -28,12 +28,8 @@ export const userLogin = createAsyncThunk("auth/userLogin", async (info, {reject
 
 export const authReducer = createSlice({
     name: "auth", initialState: {
-        loader: false,
-        userInfo: {},
-        successMessage: "",
-        errorMessage: "",
-    },
-    reducers: {
+        loader: false, userInfo: {}, successMessage: "", errorMessage: "",
+    }, reducers: {
         messageClear: (state, _) => {
             state.successMessage = "";
             state.errorMessage = "";
@@ -48,6 +44,19 @@ export const authReducer = createSlice({
             state.errorMessage = payload.message
         });
         builder.addCase(userRegister.fulfilled, (state, {payload}) => {
+            state.loader = false;
+            state.successMessage = payload.message
+        });
+        
+        //  ! USER LOGIN
+        builder.addCase(userLogin.pending, (state, _) => {
+            state.loader = true
+        });
+        builder.addCase(userLogin.rejected, (state, {payload}) => {
+            state.loader = false;
+            state.errorMessage = payload.message
+        });
+        builder.addCase(userLogin.fulfilled, (state, {payload}) => {
             state.loader = false;
             state.successMessage = payload.message
         })
