@@ -3,7 +3,7 @@ import {Link, redirect, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 
-const Card = () => {
+const Cart = () => {
     const navigate = useNavigate();
     const cardProducts = [1, 2];
     const outOfStockProducts = [1, 2];
@@ -194,4 +194,4 @@ const Card = () => {
         </div>
     )
 }
-export default Card
+export default Cart

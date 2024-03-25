@@ -1,14 +1,17 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Link, useNavigate} from "react-router-dom";
 import {AiFillHeart, AiOutlineShoppingCart} from "react-icons/ai";
 import {FaEye} from "react-icons/fa";
 import Rattings from "../Rattings.jsx";
 import {useDispatch, useSelector} from "react-redux";
+import {addToCart, messageClear} from "../../store/reducers/cartReducer.js";
+import toast from "react-hot-toast";
+import {FadeLoader} from "react-spinners";
 
 const FeatureProducts = ({featureProducts}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {} = useSelector(state => state.cart)
+    const {successMessage, errorMessage, loader} = useSelector(state => state.cart)
     const {userInfo} = useSelector(state => state.auth)
     const truncateName = (name) => {
         const letter = name.split('');
@@ -20,6 +23,7 @@ const FeatureProducts = ({featureProducts}) => {
     
     
     const handleAddToCart = (id) => {
+        console.log(id)
         if (userInfo) {
             dispatch(addToCart({
                 userId: userInfo.id,
@@ -30,10 +34,28 @@ const FeatureProducts = ({featureProducts}) => {
             navigate("/login")
         }
     }
+   
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+        
+    }, [successMessage, errorMessage]);
     
     
     return (
         <div className="customContainer">
+            {
+                loader &&
+                <div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]">
+                    <FadeLoader/>
+                </div>
+            }
             <div className="w-full">
                 <div className="text-center flex justify-center items-center flex-col text-4xl text-slate-600 font-bold relative pb-[45px]">
                     <h2>Feature Products</h2>

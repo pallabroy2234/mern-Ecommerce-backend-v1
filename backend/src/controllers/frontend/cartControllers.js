@@ -7,9 +7,7 @@ const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const handleAddToCart = async (req, res) => {
     try {
         const {userId, productId, quantity} = req.body;
-        if (!userId || !productId || !quantity) {
-            return res.status(400).json({errorMessage: "Something went wrong!"})
-        }
+        
         
         const product = await CartProducts.findOne({
             $and: [
@@ -46,12 +44,10 @@ const handleAddToCart = async (req, res) => {
             })
         }
         
-        console.log(addToCart)
         
         return successResponse(res, {
             statusCode: 201,
-            message: "Successfully added to cart",
-            payload: addToCart
+            message: "Successfully add to cart",
         })
         
     } catch (e) {
@@ -62,6 +58,37 @@ const handleAddToCart = async (req, res) => {
     }
 }
 
+
+const handleTotalCartProducts = async (req, res) => {
+    try {
+        const {userId} = req.body;
+        
+        if (!userId) {
+            return errorResponse(res, {
+                statusCode: 400,
+                message: "Please login first"
+            })
+        }
+        
+        const totalCartProduct = await CartProducts.countDocuments({userId: userId})
+        
+        
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Total Cart Products",
+            payload: totalCartProduct
+        })
+        
+    } catch (e) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
 module.exports = {
-    handleAddToCart
+    handleAddToCart,
+    handleTotalCartProducts
 }
