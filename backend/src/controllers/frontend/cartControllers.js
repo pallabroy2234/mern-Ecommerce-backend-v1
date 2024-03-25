@@ -59,6 +59,7 @@ const handleAddToCart = async (req, res) => {
 }
 
 
+// ! HANDLE TOTAL CART PRODUCTS
 const handleTotalCartProducts = async (req, res) => {
     try {
         const {userId} = req.body;
@@ -87,8 +88,23 @@ const handleTotalCartProducts = async (req, res) => {
     }
 }
 
+// ! HANDLE GET CART PRODUCTS
+
+const handleGetCartProducts = async (req, res) => {
+    try {
+        const {userId} = req.params
+        console.log(userId)
+    } catch (e) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: "Internal Server Error"
+        })
+    }
+}
+
 
 module.exports = {
     handleAddToCart,
-    handleTotalCartProducts
+    handleTotalCartProducts,
+    handleGetCartProducts
 }

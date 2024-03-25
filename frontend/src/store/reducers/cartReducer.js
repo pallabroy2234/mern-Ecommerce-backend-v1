@@ -2,6 +2,8 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
+
+// ! ADD TO CART
 export const addToCart = createAsyncThunk("cart/addToCart", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
         const {data} = await api.post("frontend/product/add-to-cart", info)
@@ -19,6 +21,21 @@ export const totalCartProducts = createAsyncThunk("cart/totalCartProducts", asyn
 }) => {
     try {
         const {data} = await api.post("frontend/product/total-cartProducts", info)
+        return fulfillWithValue(data)
+    } catch (e) {
+        return rejectWithValue(e.response.data)
+    }
+})
+
+
+// ! GET CART PRODUCT
+
+export const getCartProducts = createAsyncThunk("cart/getCartProducts",
+    async (userId, {
+    rejectWithValue, fulfillWithValue
+}) => {
+    try {
+        const {data} = await api.get(`frontend/product/get-cart-product/${userId}`)
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
@@ -64,9 +81,6 @@ export const cartReducer = createSlice({
         builder.addCase(totalCartProducts.rejected, (state, {payload}) => {
             state.errorMessage = payload.message
         })
-        // builder.addCase(totalCartProducts.pending, (state, _) => {
-        //     state.loader = true
-        // })
     }
     
 })

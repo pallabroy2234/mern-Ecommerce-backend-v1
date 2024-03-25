@@ -2,23 +2,38 @@ import Headers from "../components/Headers.jsx";
 import {Link, redirect, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getCartProducts} from "../store/reducers/cartReducer.js";
 
 const Cart = () => {
+    const dispatch = useDispatch();
+    const {} = useSelector(state => state.cart)
+    const {userInfo} = useSelector(state => state.auth)
+    
     const navigate = useNavigate();
     const cardProducts = [1, 2];
     const outOfStockProducts = [1, 2];
-    const redirect = ()=> {
+    const redirect = () => {
         navigate("/shipping", {
-            state:{
-                products:[],
-                price:232,
-                shippingFee:23,
-                items:3
+            state: {
+                products: [],
+                price: 232,
+                shippingFee: 23,
+                items: 3
             }
             
         })
-        
     }
+    
+    
+    useEffect(() => {
+        dispatch(getCartProducts({
+            userId: userInfo.id
+        }))
+    }, []);
+    
+    
     return (
         <div>
             <Headers/>
@@ -34,7 +49,7 @@ const Cart = () => {
                                 <span>Card</span>
                             </div>
                         </div>
-                        
+                    
                     </div>
                 </div>
             </div>
@@ -171,7 +186,7 @@ const Cart = () => {
                                                     
                                                     <div className="flex justify-between items-center">
                                                         <span className="capitalize">Total</span>
-                                                        <span  className="text-lg text-orange-500 font-medium">$85</span>
+                                                        <span className="text-lg text-orange-500 font-medium">$85</span>
                                                     </div>
                                                     <button onClick={redirect} className="px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase">Process to checkout 4</button>
                                                 </div>
