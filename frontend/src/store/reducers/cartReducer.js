@@ -50,6 +50,7 @@ export const cartReducer = createSlice({
         cartProducts: [],
         totalCartProductsCount: 0,
         cartProductCount: 0,
+        buyProductItem: 0,
         wishListProducts: [],
         wishListCount: 0,
         price: 0,
@@ -91,6 +92,7 @@ export const cartReducer = createSlice({
             state.cartProductCount = payload.payload.cartProductCount
             state.shippingFee = payload.payload.shippingFee
             state.outOfStockProducts = payload.payload.outOfStockProducts
+            state.buyProductItem = payload.payload.buyProductItem
         })
         builder.addCase(getCartProducts.rejected, (state, {payload}) => {
             state.loader = false

@@ -102,6 +102,7 @@ const handleGetCartProducts = async (req, res) => {
         
         let calculatePrice = 0;
         let cartProductCount = 0;
+        let buyProductItem = 0;
         const outOfStockProducts = cartProducts.filter(product => product.products[0].stock < product.quantity)
         
         for (let i = 0; i < outOfStockProducts.length; i++) {
@@ -113,12 +114,15 @@ const handleGetCartProducts = async (req, res) => {
         for (let i = 0; i < stockProduct.length; i++) {
             const {quantity} = stockProduct[i]
             cartProductCount = cartProductCount + quantity
+            buyProductItem = buyProductItem + quantity
             const {price, discount} = stockProduct[i].products[0]
             
             if (discount !== 0) {
-                calculatePrice += Math.floor((price * (100 - discount) / 100)) * quantity;
+                // calculatePrice += Math.floor((price * (100 - discount)) / 100) * quantity;
+                calculatePrice = calculatePrice + (price - Math.floor(price * discount / 100)) * quantity
             } else {
-                calculatePrice += price * quantity;
+                // calculatePrice += price * quantity;
+                calculatePrice = calculatePrice + price * quantity
             }
         }
         
@@ -168,6 +172,7 @@ const handleGetCartProducts = async (req, res) => {
                 cartProductCount,
                 shippingFee: 85 * sellerProducts.length,
                 outOfStockProducts,
+                buyProductItem,
             }
         })
         

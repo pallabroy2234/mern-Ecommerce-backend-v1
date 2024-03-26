@@ -5,6 +5,7 @@ import Footer from "../components/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getCartProducts} from "../store/reducers/cartReducer.js";
+import {FadeLoader} from "react-spinners";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Cart = () => {
         cartProductCount,
         price,
         shippingFee,
+        buyProductItem,
         outOfStockProducts
     } = useSelector(state => state.cart)
     const {userInfo} = useSelector(state => state.auth)
@@ -49,6 +51,12 @@ const Cart = () => {
     
     return (
         <div>
+            {
+                loader &&
+                <div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]">
+                    <FadeLoader/>
+                </div>
+            }
             <Headers/>
             {/* Banner Section */}
             <div className="bg-[url('/images/banner/card.jpg')] h-[220px] mt-6 bg-cover bg-no-repeat relative bg-left">
@@ -78,7 +86,7 @@ const Cart = () => {
                                     <div className="pr-3 md-lg:pr-0">
                                         <div className="flex flex-col gap-3">
                                             <div className="bg-white p-4 ">
-                                                <h2 className="text-md text-green-500 font-semibold">Stock Products {cardProducts.length - outOfStockProducts.length}</h2>
+                                                <h2 className="text-md text-green-500 font-semibold">Stock Products {cartProducts.length}</h2>
                                             </div>
                                             {
                                                 cartProducts && cartProducts?.map((product, index) => (
@@ -183,13 +191,13 @@ const Cart = () => {
                                                 <div className="bg-white p-3 text-slate-600 flex flex-col gap-3">
                                                     <h2 className="text-xl font-bold capitalize">Order Summary</h2>
                                                     <div className="flex justify-between items-center">
-                                                        <span>4 Item</span>
-                                                        <span>$655</span>
+                                                        <span>{buyProductItem} Item</span>
+                                                        <span>${price}</span>
                                                     </div>
                                                     
                                                     <div className="flex justify-between items-center">
                                                         <span>Shipping Fee</span>
-                                                        <span>$85</span>
+                                                        <span>${shippingFee}</span>
                                                     </div>
                                                     
                                                     <div className="flex gap-2">
