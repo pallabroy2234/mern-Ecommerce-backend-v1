@@ -8,12 +8,19 @@ import {getCartProducts} from "../store/reducers/cartReducer.js";
 
 const Cart = () => {
     const dispatch = useDispatch();
-    const {} = useSelector(state => state.cart)
+    const {
+        cartProducts,
+        loader,
+        cartProductCount,
+        price,
+        shippingFee,
+        outOfStockProducts
+    } = useSelector(state => state.cart)
     const {userInfo} = useSelector(state => state.auth)
     
     const navigate = useNavigate();
     const cardProducts = [1, 2];
-    const outOfStockProducts = [1, 2];
+    // const outOfStockProducts = [1, 2];
     const redirect = () => {
         navigate("/shipping", {
             state: {
@@ -27,10 +34,16 @@ const Cart = () => {
     }
     
     
+    const truncateName = (name) => {
+        const letter = name.split('');
+        if (letter.length > 70) {
+            return letter.slice(0, 70).join('') + '...'
+        }
+        return name
+    };
+    
     useEffect(() => {
-        dispatch(getCartProducts({
-            userId: userInfo.id
-        }))
+        dispatch(getCartProducts(userInfo.id))
     }, []);
     
     
@@ -68,21 +81,21 @@ const Cart = () => {
                                                 <h2 className="text-md text-green-500 font-semibold">Stock Products {cardProducts.length - outOfStockProducts.length}</h2>
                                             </div>
                                             {
-                                                cardProducts.map((product, index) => (
+                                                cartProducts && cartProducts?.map((product, index) => (
                                                     <div key={index} className="flex bg-white p-4 flex-col gap-2">
                                                         <div className="flex justify-start items-center">
                                                             {/* Shop Name */}
-                                                            <h2 className="text-md text-slate-600">Pallab's Fashion</h2>
+                                                            <h2 className="text-md text-slate-600">{product?.shopName}</h2>
                                                         </div>
                                                         {
-                                                            [1, 2].map((item, index) => (
+                                                            product?.products.map((item, index) => (
                                                                 <div key={index} className="w-full flex flex-wrap  sm:mb-10">
                                                                     <div className="flex sm:w-full gap-2 w-7/12">
-                                                                        <div className="flex gap-2 justify-start items-center">
-                                                                            <img className="w-[80px] h-[80px] object-cover" src={`/images/products/${index + 1}.webp`} alt="product image"/>
-                                                                            <div className="pr-4 text-slate-600">
-                                                                                <h2 className="text-md">Long Sleeve casua Shirt for Man</h2>
-                                                                                <span className="text-sm">Brand : Eazy</span>
+                                                                        <div className="flex gap-4 justify-start items-center">
+                                                                            <img className="w-[80px] h-[80px] object-contain" src={item?.productInfo?.images[0].url} alt={item?.productInfo?.name}/>
+                                                                            <div className="pr-4 text-slate-600 flex flex-col  gap-2 justify-between">
+                                                                                <h2 className="text-md">{truncateName(item?.productInfo?.name)}</h2>
+                                                                                <span className="text-sm">Brand : {item?.productInfo?.brand}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -90,15 +103,15 @@ const Cart = () => {
                                                                     <div className="flex justify-between w-5/12 sm:w-full sm:mt-3">
                                                                         {/*  Price */}
                                                                         <div className="pl-4 sm:pl-0">
-                                                                            <h2 className="text-lg text-orange-500">$12341</h2>
-                                                                            <p className="line-through">$12131</p>
-                                                                            <p>-10%</p>
+                                                                            <h2 className="text-lg text-orange-500">${item?.productInfo?.price - Math.floor((item?.productInfo?.price * item?.productInfo?.discount) / 100)}</h2>
+                                                                            <p className="line-through">${item?.productInfo?.price}</p>
+                                                                            <p>-{item?.productInfo?.discount}%</p>
                                                                         </div>
                                                                         {/* Quantity */}
                                                                         <div className="flex gap-2 flex-col">
                                                                             <div className="flex bg-slate-200 h-[30px] justify-center items-center text-xl">
                                                                                 <div className="px-3 cursor-pointer">-</div>
-                                                                                <div className="px-3">5</div>
+                                                                                <div className="px-3 text-[14px] flex justify-center items-center pt-1">{item?.quantity}</div>
                                                                                 <div className="px-3 cursor-pointer">+</div>
                                                                             </div>
                                                                             <button className="px-5 py-[3px] bg-red-500 text-white">Delete</button>
@@ -119,14 +132,14 @@ const Cart = () => {
                                                         </div>
                                                         <div className="bg-white p-4">
                                                             {
-                                                                [1, 2].map((item, index) => (
+                                                                outOfStockProducts && outOfStockProducts?.map((item, index) => (
                                                                     <div key={index} className="w-full flex flex-wrap">
                                                                         <div className="flex sm:w-full gap-2 w-7/12">
                                                                             <div className="flex gap-2 justify-start items-center">
-                                                                                <img className="w-[80px] h-[80px] object-cover" src={`/images/products/${index + 1}.webp`} alt="product image"/>
-                                                                                <div className="pr-4 text-slate-600">
-                                                                                    <h2 className="text-md">Long Sleeve casua Shirt for Man</h2>
-                                                                                    <span className="text-sm">Brand : Eazy</span>
+                                                                                <img className="w-[80px] h-[80px] object-cover" src={item?.products[0]?.images[0]?.url} alt={item?.products[0]?.name}/>
+                                                                                <div className="pr-4 text-slate-600 flex flex-col gap-2">
+                                                                                    <h2 className="text-md">{truncateName(item?.products[0]?.name)}</h2>
+                                                                                    <span className="text-sm">Brand : {item?.products[0]?.brand}</span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -134,15 +147,15 @@ const Cart = () => {
                                                                         <div className="flex justify-between w-5/12 sm:w-full sm:mt-3">
                                                                             {/*  Price */}
                                                                             <div className="pl-4 sm:pl-0">
-                                                                                <h2 className="text-lg text-orange-500">$12341</h2>
-                                                                                <p className="line-through">$12131</p>
-                                                                                <p>-10%</p>
+                                                                                <h2 className="text-lg text-orange-500">${item?.products[0].price - Math.floor((item?.products[0].price * item?.products[0]?.discount) / 100)}</h2>
+                                                                                <p className="line-through">${item?.products[0]?.price}</p>
+                                                                                <p>-{item?.products[0]?.discount}%</p>
                                                                             </div>
                                                                             {/* Quantity */}
                                                                             <div className="flex gap-2 flex-col">
                                                                                 <div className="flex bg-slate-200 h-[30px] justify-center items-center text-xl">
                                                                                     <div className="px-3 cursor-pointer">-</div>
-                                                                                    <div className="px-3">5</div>
+                                                                                    <div className="px-3 text-[14px] flex justify-center items-center pt-1">{item?.quantity}</div>
                                                                                     <div className="px-3 cursor-pointer">+</div>
                                                                                 </div>
                                                                                 <button className="px-5 py-[3px] bg-red-500 text-white">Delete</button>

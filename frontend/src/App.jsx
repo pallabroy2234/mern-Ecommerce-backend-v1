@@ -16,20 +16,20 @@ import {totalCartProducts} from "./store/reducers/cartReducer.js";
 
 function App() {
     const dispatch = useDispatch();
-    const {userInfo} = useSelector(state => state.auth)
-    const {totalCartProductsCount} = useSelector(state => state.cart)
+    // const {userInfo} = useSelector(state => state.auth)
+    // const {totalCartProductsCount} = useSelector(state => state.cart)
+    
+    // useEffect(() => {
+    //     if (userInfo) {
+    //         dispatch(totalCartProducts({
+    //             userId: userInfo.id
+    //         }))
+    //     }
+    // }, [totalCartProductsCount, userInfo]);
+    
     
     useEffect(() => {
-        if (userInfo) {
-            dispatch(totalCartProducts({
-                userId: userInfo.id
-            }))
-        }
-    }, [totalCartProductsCount, userInfo]);
-    
-    
-    useEffect(() => {
-    
+        dispatch(getCategories())
     }, []);
     
     

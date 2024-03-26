@@ -2,7 +2,6 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-
 // ! ADD TO CART
 export const addToCart = createAsyncThunk("cart/addToCart", async (info, {rejectWithValue, fulfillWithValue}) => {
     try {
@@ -21,6 +20,7 @@ export const totalCartProducts = createAsyncThunk("cart/totalCartProducts", asyn
 }) => {
     try {
         const {data} = await api.post("frontend/product/total-cartProducts", info)
+        
         return fulfillWithValue(data)
     } catch (e) {
         return rejectWithValue(e.response.data)
@@ -30,14 +30,15 @@ export const totalCartProducts = createAsyncThunk("cart/totalCartProducts", asyn
 
 // ! GET CART PRODUCT
 
-export const getCartProducts = createAsyncThunk("cart/getCartProducts",
-    async (userId, {
+export const getCartProducts = createAsyncThunk("cart/getCartProducts", async (userId, {
     rejectWithValue, fulfillWithValue
 }) => {
     try {
-        const {data} = await api.get(`frontend/product/get-cart-product/${userId}`)
+        const {data} = await api.get(`frontend/product/get-cart-products/${userId}`)
+        console.log(data)
         return fulfillWithValue(data)
     } catch (e) {
+        console.log(e.response.data)
         return rejectWithValue(e.response.data)
     }
 })
@@ -70,7 +71,8 @@ export const cartReducer = createSlice({
         builder.addCase(addToCart.fulfilled, (state, {payload}) => {
             state.successMessage = payload.message
             state.loader = false
-            state.totalCartProductsCount = state.totalCartProductsCount + 1
+            // state.totalCartProductsCount = state.totalCartProductsCount + 1
+            state.cartProductCount = state.cartProductCount + 1
         });
         builder.addCase(addToCart.pending, (state, {payload}) => {
             state.loader = true
@@ -80,6 +82,22 @@ export const cartReducer = createSlice({
         })
         builder.addCase(totalCartProducts.rejected, (state, {payload}) => {
             state.errorMessage = payload.message
+        })
+        // ! GET CART PRODUCTS
+        builder.addCase(getCartProducts.fulfilled, (state, {payload}) => {
+            state.loader = false
+            state.price = payload.payload.price
+            state.cartProducts = payload.payload.cartProducts
+            state.cartProductCount = payload.payload.cartProductCount
+            state.shippingFee = payload.payload.shippingFee
+            state.outOfStockProducts = payload.payload.outOfStockProducts
+        })
+        builder.addCase(getCartProducts.rejected, (state, {payload}) => {
+            state.loader = false
+            state.errorMessage = payload.message
+        })
+        builder.addCase(getCartProducts.pending, (state, _) => {
+            state.loader = true
         })
     }
     

@@ -114,6 +114,7 @@ export const homeReducer = createSlice({
         // ! getCategories
         builder.addCase(getCategories.fulfilled, (state, {payload}) => {
             state.categories = payload.payload
+            state.loading = false;
         });
         builder.addCase(getCategories.rejected, (state, {payload}) => {
             state.loading = false;

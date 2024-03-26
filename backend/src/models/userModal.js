@@ -28,6 +28,7 @@ const userSchema = new Schema({
         default: "manually"
     },
     
+    
 }, {timestamps: true})
 
 
