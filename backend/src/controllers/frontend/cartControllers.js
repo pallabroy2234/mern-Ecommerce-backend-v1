@@ -350,8 +350,8 @@ const handleQuantityDecrement = async (req, res) => {
 
 		let decrementQuantity;
 
-		if (quantity >= 1) {
-			const decrementQuantity = await CartProducts.findByIdAndUpdate(
+		if (quantity >= 0) {
+			decrementQuantity = await CartProducts.findByIdAndUpdate(
 				cartId,
 				{
 					quantity: quantity - 1,

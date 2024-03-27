@@ -41,7 +41,6 @@ export const deleteCartProduct = createAsyncThunk("cart/deleteCartProduct", asyn
 		const {data} = await api.delete(`frontend/product/delete-cartProduct/${cartId}`);
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
@@ -52,7 +51,6 @@ export const quantityIncrement = createAsyncThunk("cart/quantityIncrement", asyn
 		const {data} = await api.put(`frontend/product/quantity-increment/${cartId}`);
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
@@ -154,6 +152,21 @@ export const cartReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(quantityIncrement.pending, (state, _) => {
+			state.loader = true;
+		});
+
+		// * QUANTITY DECREMENT
+
+		builder.addCase(quantityDecrement.fulfilled, (state, {payload}) => {
+			state.successMessage = payload.message;
+			state.loader = false;
+			state.cartProductCount = state.cartProductCount - 1;
+		});
+		builder.addCase(quantityDecrement.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(quantityDecrement.pending, (state, _) => {
 			state.loader = true;
 		});
 	},

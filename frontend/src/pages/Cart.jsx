@@ -58,15 +58,15 @@ const Cart = () => {
 
 	const handleQuantityIncrement = (quantity, stock, cartId) => {
 		const temp = quantity + 1;
-		if (temp <= stock) {
+		if (temp <= stock + 1) {
 			dispatch(quantityIncrement(cartId));
 		}
 	};
 
 	const handleQuantityDecrement = (quantity, cartId) => {
+		console.log(quantity, cartId);
 		const temp = quantity - 1;
-		console.log(cartId);
-		if (temp >= 1) {
+		if (temp >= 0) {
 			dispatch(quantityDecrement(cartId));
 		}
 	};
@@ -124,7 +124,7 @@ const Cart = () => {
 																		<h2 className='text-md'>{truncateName(item?.productInfo?.name)}</h2>
 																		<div className='flex flex-row gap-5'>
 																			<span className='text-sm'>Brand : {item?.productInfo?.brand}</span>
-																			{item?.quantity === item?.productInfo?.stock ? <span className='text-red-500 text-sm'>Out of Stock</span> : <span className='text-green-500 text-sm'>Stock: {item?.productInfo?.stock}</span>}
+																			{item?.quantity === item?.productInfo?.stock ? <span className='text-red-500 text-sm'>Stock: {item?.productInfo?.stock}</span> : <span className='text-green-500 text-sm'>Stock: {item?.productInfo?.stock}</span>}
 																		</div>
 																	</div>
 																</div>
@@ -140,11 +140,11 @@ const Cart = () => {
 																{/* Quantity */}
 																<div className='flex gap-2 flex-col'>
 																	<div className='flex bg-slate-200 h-[30px] justify-center items-center text-xl'>
-																		<button onClick={() => handleQuantityDecrement(item?.quantity, item?.cartId)} className='px-3 cursor-pointer'>
+																		<button onClick={() => handleQuantityDecrement(item?.quantity, item?.cartId)} disabled={item?.quantity === 0} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
 																			-
 																		</button>
 																		<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
-																		<button onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} disabled={item?.quantity === item?.productInfo?.stock} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
+																		<button onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} disabled={item?.quantity >= item?.productInfo?.stock + 1} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
 																			+
 																		</button>
 																	</div>
@@ -171,7 +171,10 @@ const Cart = () => {
 																		<img className='w-[80px] h-[80px] object-cover' src={item?.products[0]?.images[0]?.url} alt={item?.products[0]?.name} />
 																		<div className='pr-4 text-slate-600 flex flex-col gap-2'>
 																			<h2 className='text-md'>{truncateName(item?.products[0]?.name)}</h2>
-																			<span className='text-sm'>Brand : {item?.products[0]?.brand}</span>
+																			<div className='flex flex-row justify-start items-center gap-3'>
+																				<span className='text-sm'>Brand : {item?.products[0]?.brand}</span>
+																				<span className='text-sm text-red-500'>Stock: {item?.products[0]?.stock}</span>
+																			</div>
 																		</div>
 																	</div>
 																</div>
@@ -186,9 +189,13 @@ const Cart = () => {
 																	{/* Quantity */}
 																	<div className='flex gap-2 flex-col'>
 																		<div className='flex bg-slate-200 h-[30px] justify-center items-center text-xl'>
-																			<div className='px-3 cursor-pointer'>-</div>
+																			<button onClick={() => handleQuantityDecrement(item?.quantity, item?._id)} className='px-3 cursor-pointer'>
+																				-
+																			</button>
 																			<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
-																			<div className='px-3 cursor-pointer'>+</div>
+																			<button disabled={true} className='px-3  disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
+																				+
+																			</button>
 																		</div>
 																		<button onClick={() => handleCartProductDelete(item?._id)} className='px-5 py-[3px] bg-red-500 text-white'>
 																			Delete
