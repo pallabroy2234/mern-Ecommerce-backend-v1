@@ -4,7 +4,7 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {deleteCartProduct, getCartProducts, messageClear, quantityIncrement} from "../store/reducers/cartReducer.js";
+import {deleteCartProduct, getCartProducts, messageClear, quantityDecrement, quantityIncrement} from "../store/reducers/cartReducer.js";
 import {FadeLoader} from "react-spinners";
 import toast from "react-hot-toast";
 
@@ -60,6 +60,14 @@ const Cart = () => {
 		const temp = quantity + 1;
 		if (temp <= stock) {
 			dispatch(quantityIncrement(cartId));
+		}
+	};
+
+	const handleQuantityDecrement = (quantity, cartId) => {
+		const temp = quantity - 1;
+		console.log(cartId);
+		if (temp >= 1) {
+			dispatch(quantityDecrement(cartId));
 		}
 	};
 
@@ -132,7 +140,9 @@ const Cart = () => {
 																{/* Quantity */}
 																<div className='flex gap-2 flex-col'>
 																	<div className='flex bg-slate-200 h-[30px] justify-center items-center text-xl'>
-																		<div className='px-3 cursor-pointer'>-</div>
+																		<button onClick={() => handleQuantityDecrement(item?.quantity, item?.cartId)} className='px-3 cursor-pointer'>
+																			-
+																		</button>
 																		<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
 																		<button onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} disabled={item?.quantity === item?.productInfo?.stock} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
 																			+

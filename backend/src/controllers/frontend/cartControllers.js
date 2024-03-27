@@ -320,10 +320,73 @@ const handleQuantityIncrement = async (req, res) => {
 	}
 };
 
+// * HANDLE QUANTITY DECREMENT
+const handleQuantityDecrement = async (req, res) => {
+	try {
+		const {cartId} = req.params;
+
+		if (!ObjectId.isValid(cartId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid cart id",
+			});
+		}
+
+		if (!cartId) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Cart id is required",
+			});
+		}
+
+		const cartProduct = await CartProducts.findById(cartId);
+		if (!cartProduct) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Cart product not found",
+			});
+		}
+		const {quantity} = cartProduct;
+
+		let decrementQuantity;
+
+		if (quantity >= 1) {
+			const decrementQuantity = await CartProducts.findByIdAndUpdate(
+				cartId,
+				{
+					quantity: quantity - 1,
+				},
+				{
+					new: true,
+				},
+			);
+		}
+
+		if (!decrementQuantity) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Failed to decrement quantity",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Decrement successfully",
+			payload: decrementQuantity,
+		});
+	} catch (e) {
+		return errorResponse(res, {
+			statusCode: 500,
+			message: "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
 	handleGetCartProducts,
 	handleDeleteCartProduct,
 	handleQuantityIncrement,
+	handleQuantityDecrement,
 };
