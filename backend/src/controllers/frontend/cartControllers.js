@@ -5,7 +5,7 @@ const {
 } = require("mongoose");
 const {mongoose} = require("mongoose");
 
-// ! HANDLE ADD TO CART
+// * HANDLE ADD TO CART
 
 const handleAddToCart = async (req, res) => {
 	try {
@@ -56,7 +56,7 @@ const handleAddToCart = async (req, res) => {
 	}
 };
 
-// ! HANDLE TOTAL CART PRODUCTS
+// * HANDLE TOTAL CART PRODUCTS
 const handleTotalCartProducts = async (req, res) => {
 	try {
 		const {userId} = req.body;
@@ -85,12 +85,19 @@ const handleTotalCartProducts = async (req, res) => {
 	}
 };
 
-// ! HANDLE GET CART PRODUCTS
+// * HANDLE GET CART PRODUCTS
 
 const handleGetCartProducts = async (req, res) => {
 	try {
 		const {userId} = req.params;
 		const engineerCommission = 5;
+
+		if (!ObjectId.isValid(userId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid user id",
+			});
+		}
 
 		const cartProducts = await CartProducts.aggregate([
 			{
@@ -213,8 +220,48 @@ const handleGetCartProducts = async (req, res) => {
 	}
 };
 
+// * HANDLE DELETE CART PRODUCT
+const handleDeleteCartProduct = async (req, res) => {
+	try {
+		const {cartId} = req.params;
+
+		if (!ObjectId.isValid(cartId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid cart id",
+			});
+		}
+		if (!cartId) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Cart id is required",
+			});
+		}
+
+		const deleteCartProduct = await CartProducts.findByIdAndDelete(cartId);
+
+		if (!deleteCartProduct) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Cart product not found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Cart product deleted successfully",
+		});
+	} catch (e) {
+		return errorResponse(res, {
+			statusCode: 500,
+			message: "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
 	handleGetCartProducts,
+	handleDeleteCartProduct,
 };
