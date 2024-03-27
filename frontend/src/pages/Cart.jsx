@@ -4,15 +4,46 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {getCartProducts} from "../store/reducers/cartReducer.js";
+import {deleteCartProduct, getCartProducts, messageClear} from "../store/reducers/cartReducer.js";
 import {FadeLoader} from "react-spinners";
+import toast from "react-hot-toast";
 
 const Cart = () => {
 	const dispatch = useDispatch();
-	const {cartProducts, loader, cartProductCount, price, shippingFee, buyProductItem, outOfStockProducts} = useSelector((state) => state.cart);
+	const {cartProducts, loader, cartProductCount, price, shippingFee, buyProductItem, outOfStockProducts, successMessage, errorMessage} = useSelector((state) => state.cart);
 	const {userInfo} = useSelector((state) => state.auth);
 	const navigate = useNavigate();
 	const cardProducts = [1, 2];
+
+	// Get Cart Products
+	useEffect(() => {
+		dispatch(getCartProducts(userInfo.id));
+	}, []);
+
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+			dispatch(getCartProducts(userInfo.id));
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, errorMessage]);
+
+	// * Delete Cart Product
+	const handleCartProductDelete = (cartId) => {
+		dispatch(deleteCartProduct(cartId));
+	};
+
+	const truncateName = (name) => {
+		const letter = name.split("");
+		if (letter.length > 70) {
+			return letter.slice(0, 70).join("") + "...";
+		}
+		return name;
+	};
 
 	const redirect = () => {
 		navigate("/shipping", {
@@ -24,24 +55,6 @@ const Cart = () => {
 			},
 		});
 	};
-
-	const truncateName = (name) => {
-		const letter = name.split("");
-		if (letter.length > 70) {
-			return letter.slice(0, 70).join("") + "...";
-		}
-		return name;
-	};
-
-	// Delete Cart Product
-	const handleCartProductDelete = (cartId) => {
-		console.log(cartId);
-	};
-
-	// Get Cart Products
-	useEffect(() => {
-		dispatch(getCartProducts(userInfo.id));
-	}, []);
 
 	return (
 		<div>

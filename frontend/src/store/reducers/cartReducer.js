@@ -35,9 +35,10 @@ export const getCartProducts = createAsyncThunk("cart/getCartProducts", async (u
 	}
 });
 
-export const deleteCartProduct = createAsyncThunk("cart/getCartProducts", async (cartId, {rejectWithValue, fulfillWithValue}) => {
+export const deleteCartProduct = createAsyncThunk("cart/deleteCartProduct", async (cartId, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		const {data} = await api.delete(`frontend/product/delete-cartProduct/${userId}`);
+		const {data} = await api.delete(`frontend/product/delete-cartProduct/${cartId}`);
+		console.log(cartId);
 		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
@@ -69,6 +70,7 @@ export const cartReducer = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
+		// * ADD TO CART
 		builder.addCase(addToCart.rejected, (state, {payload}) => {
 			state.errorMessage = payload.message;
 			state.loader = false;
@@ -88,7 +90,7 @@ export const cartReducer = createSlice({
 		builder.addCase(totalCartProducts.rejected, (state, {payload}) => {
 			state.errorMessage = payload.message;
 		});
-		// ! GET CART PRODUCTS
+		// * GET CART PRODUCTS
 		builder.addCase(getCartProducts.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.price = payload.payload.price;
@@ -103,6 +105,19 @@ export const cartReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(getCartProducts.pending, (state, _) => {
+			state.loader = true;
+		});
+
+		// * DELETE CART PRODUCT
+		builder.addCase(deleteCartProduct.fulfilled, (state, {payload}) => {
+			state.successMessage = payload.message;
+			state.loader = false;
+		});
+		builder.addCase(deleteCartProduct.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(deleteCartProduct.pending, (state, _) => {
 			state.loader = true;
 		});
 	},

@@ -177,7 +177,7 @@ const handleGetCartProducts = async (req, res) => {
 							? [
 									...sellerProducts[i].products,
 									{
-										cartId: stockProduct[j]._id, // ! cart product id
+										cartId: stockProduct[j]._id, // * cart product id
 										quantity: stockProduct[j].quantity,
 										productInfo: tempProduct,
 									},
@@ -231,6 +231,7 @@ const handleDeleteCartProduct = async (req, res) => {
 				message: "Invalid cart id",
 			});
 		}
+
 		if (!cartId) {
 			return errorResponse(res, {
 				statusCode: 400,
@@ -247,11 +248,14 @@ const handleDeleteCartProduct = async (req, res) => {
 			});
 		}
 
+		console.log(deleteCartProduct);
+
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Cart product deleted successfully",
+			message: "Deleted successfully",
 		});
 	} catch (e) {
+		console.log(e.message);
 		return errorResponse(res, {
 			statusCode: 500,
 			message: "Internal Server Error",
