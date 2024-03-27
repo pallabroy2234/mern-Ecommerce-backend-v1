@@ -1,0 +1,9 @@
+{
+  "printWidth": 500,
+  "tabWidth": 4,
+  "bracketSpacing": false,
+  "semi": true,
+  "useTabs": true,
+  "singleAttributePerLine": false,
+  "jsxSingleQuote": true
+}
