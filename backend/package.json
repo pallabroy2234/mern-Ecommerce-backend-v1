@@ -29,5 +29,8 @@
     "socket.io": "^4.7.2",
     "stripe": "^14.4.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
   }
 }

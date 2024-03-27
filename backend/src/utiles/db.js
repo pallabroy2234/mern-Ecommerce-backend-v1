@@ -1,5 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+const {errors} = require("formidable");
 
 
 const connectDatabase = async (options = {}) => {
@@ -12,7 +13,7 @@ const connectDatabase = async (options = {}) => {
             console.error("Mongodb connection error", error);
         });
     } catch (e) {
-        console.error("Could not connect to DB", error);
+        console.error("Could not connect to DB", e);
     }
 };
 
