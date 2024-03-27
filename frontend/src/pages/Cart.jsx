@@ -45,13 +45,13 @@ const Cart = () => {
 		return name;
 	};
 
-	const redirect = () => {
+	const handleRedirect = () => {
 		navigate("/shipping", {
 			state: {
-				products: [],
-				price: 232,
-				shippingFee: 23,
-				items: 3,
+				products: cartProducts,
+				price: price,
+				shippingFee: shippingFee,
+				items: buyProductItem,
 			},
 		});
 	};
@@ -237,7 +237,7 @@ const Cart = () => {
 												<span className='capitalize'>Total</span>
 												<span className='text-lg text-orange-500 font-medium'>${price + shippingFee}</span>
 											</div>
-											<button onClick={redirect} className='px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase'>
+											<button onClick={handleRedirect} className='px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-sm text-white uppercase'>
 												Process to checkout {buyProductItem}
 											</button>
 										</div>
