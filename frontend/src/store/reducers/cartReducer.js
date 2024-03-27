@@ -35,11 +35,21 @@ export const getCartProducts = createAsyncThunk("cart/getCartProducts", async (u
 	}
 });
 
+// * DELETE CART PRODUCT
 export const deleteCartProduct = createAsyncThunk("cart/deleteCartProduct", async (cartId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.delete(`frontend/product/delete-cartProduct/${cartId}`);
-		console.log(cartId);
-		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		console.log(e.response.data);
+		return rejectWithValue(e.response.data);
+	}
+});
+
+// * QUANTITY INCREMENT
+export const quantityIncrement = createAsyncThunk("cart/quantityIncrement", async (cartId, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.put(`frontend/product/quantity-increment/${cartId}`);
 		return fulfillWithValue(data);
 	} catch (e) {
 		console.log(e.response.data);
@@ -112,6 +122,7 @@ export const cartReducer = createSlice({
 		builder.addCase(deleteCartProduct.fulfilled, (state, {payload}) => {
 			state.successMessage = payload.message;
 			state.loader = false;
+			state.cartProductCount = state.cartProductCount - 1;
 		});
 		builder.addCase(deleteCartProduct.rejected, (state, {payload}) => {
 			state.loader = false;

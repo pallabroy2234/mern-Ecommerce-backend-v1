@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct} = require("../../controllers/frontend/cartControllers");
+const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct, handleQuantityIncrement} = require("../../controllers/frontend/cartControllers");
 const {isLoggedIn} = require("../../middleware/frontend/authMiddleware");
 const {cartValidator} = require("../../validator/dashboard/cartValidator");
 const {runValidation} = require("../../validator");
@@ -12,7 +12,10 @@ cartRoutes.post("/total-cartProducts", isLoggedIn, handleTotalCartProducts);
 
 cartRoutes.get("/get-cart-products/:userId", isLoggedIn, handleGetCartProducts);
 
-// DELETE CART PRODUCT
+// * DELETE CART PRODUCT
 cartRoutes.delete("/delete-cartProduct/:cartId", isLoggedIn, handleDeleteCartProduct);
+
+// * QUANTITY INCREMENT
+cartRoutes.put("/quantity-increment/:cartId", isLoggedIn, handleQuantityIncrement);
 
 module.exports = cartRoutes;

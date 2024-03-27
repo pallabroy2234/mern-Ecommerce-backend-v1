@@ -248,8 +248,6 @@ const handleDeleteCartProduct = async (req, res) => {
 			});
 		}
 
-		console.log(deleteCartProduct);
-
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Deleted successfully",
@@ -263,9 +261,69 @@ const handleDeleteCartProduct = async (req, res) => {
 	}
 };
 
+// * HANDLE QUANTITY INCREMENT
+
+const handleQuantityIncrement = async (req, res) => {
+	try {
+		const {cartId} = req.params;
+
+		if (!ObjectId.isValid(cartId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid cart id",
+			});
+		}
+
+		if (!cartId) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Cart id is required",
+			});
+		}
+
+		const cartProduct = await CartProducts.findById(cartId);
+		if (!cartProduct) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Cart product not found",
+			});
+		}
+		const {quantity} = cartProduct;
+
+		const incrementQuantity = await CartProducts.findByIdAndUpdate(
+			cartId,
+			{
+				quantity: quantity + 1,
+			},
+			{
+				new: true,
+			},
+		);
+
+		if (!incrementQuantity) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Failed to increment quantity",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Quantity incremented successfully",
+			payload: incrementQuantity,
+		});
+	} catch (e) {
+		return errorResponse(res, {
+			statusCode: 500,
+			message: "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
 	handleGetCartProducts,
 	handleDeleteCartProduct,
+	handleQuantityIncrement,
 };

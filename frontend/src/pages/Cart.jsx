@@ -4,7 +4,7 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {deleteCartProduct, getCartProducts, messageClear} from "../store/reducers/cartReducer.js";
+import {deleteCartProduct, getCartProducts, messageClear, quantityIncrement} from "../store/reducers/cartReducer.js";
 import {FadeLoader} from "react-spinners";
 import toast from "react-hot-toast";
 
@@ -54,6 +54,14 @@ const Cart = () => {
 				items: 3,
 			},
 		});
+	};
+
+	const handleQuantityIncrement = (quantity, stock, cartId) => {
+		console.log(quantity, stock, cartId);
+		const temp = quantity + 1;
+		if (temp <= stock) {
+			dispatch(quantityIncrement(cartId));
+		}
 	};
 
 	return (
@@ -124,7 +132,9 @@ const Cart = () => {
 																	<div className='flex bg-slate-200 h-[30px] justify-center items-center text-xl'>
 																		<div className='px-3 cursor-pointer'>-</div>
 																		<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
-																		<div className='px-3 cursor-pointer'>+</div>
+																		<div onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} className='px-3 cursor-pointer'>
+																			+
+																		</div>
 																	</div>
 																	<button onClick={() => handleCartProductDelete(item?.cartId)} className='px-5 py-[3px] bg-red-500 text-white'>
 																		Delete
@@ -140,7 +150,7 @@ const Cart = () => {
 												<div className='bg-white p-4 '>
 													<h2 className='text-md text-red-500 font-semibold'>Out Of Stock {outOfStockProducts.length}</h2>
 												</div>
-												<div className='bg-white p-4'>
+												<div className='bg-white flex flex-col gap-4 p-4'>
 													{outOfStockProducts &&
 														outOfStockProducts?.map((item, index) => (
 															<div key={index} className='w-full flex flex-wrap'>
