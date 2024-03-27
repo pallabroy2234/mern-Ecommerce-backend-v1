@@ -309,7 +309,7 @@ const handleQuantityIncrement = async (req, res) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Quantity incremented successfully",
+			message: "Increment successfully",
 			payload: incrementQuantity,
 		});
 	} catch (e) {

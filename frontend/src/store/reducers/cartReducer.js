@@ -131,6 +131,19 @@ export const cartReducer = createSlice({
 		builder.addCase(deleteCartProduct.pending, (state, _) => {
 			state.loader = true;
 		});
+
+		// * QUANTITY INCREMENT
+		builder.addCase(quantityIncrement.fulfilled, (state, {payload}) => {
+			state.successMessage = payload.message;
+			state.loader = false;
+		});
+		builder.addCase(quantityIncrement.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(quantityIncrement.pending, (state, _) => {
+			state.loader = true;
+		});
 	},
 });
 

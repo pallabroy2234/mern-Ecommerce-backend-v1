@@ -57,7 +57,6 @@ const Cart = () => {
 	};
 
 	const handleQuantityIncrement = (quantity, stock, cartId) => {
-		console.log(quantity, stock, cartId);
 		const temp = quantity + 1;
 		if (temp <= stock) {
 			dispatch(quantityIncrement(cartId));
@@ -115,7 +114,10 @@ const Cart = () => {
 																	<img className='w-[80px] h-[80px] object-contain' src={item?.productInfo?.images[0].url} alt={item?.productInfo?.name} />
 																	<div className='pr-4 text-slate-600 flex flex-col  gap-2 justify-between'>
 																		<h2 className='text-md'>{truncateName(item?.productInfo?.name)}</h2>
-																		<span className='text-sm'>Brand : {item?.productInfo?.brand}</span>
+																		<div className='flex flex-row gap-5'>
+																			<span className='text-sm'>Brand : {item?.productInfo?.brand}</span>
+																			{item?.quantity === item?.productInfo?.stock ? <span className='text-red-500 text-sm'>Out of Stock</span> : <span className='text-green-500 text-sm'>Stock: {item?.productInfo?.stock}</span>}
+																		</div>
 																	</div>
 																</div>
 															</div>
@@ -132,9 +134,9 @@ const Cart = () => {
 																	<div className='flex bg-slate-200 h-[30px] justify-center items-center text-xl'>
 																		<div className='px-3 cursor-pointer'>-</div>
 																		<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
-																		<div onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} className='px-3 cursor-pointer'>
+																		<button onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} disabled={item?.quantity === item?.productInfo?.stock} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
 																			+
-																		</div>
+																		</button>
 																	</div>
 																	<button onClick={() => handleCartProductDelete(item?.cartId)} className='px-5 py-[3px] bg-red-500 text-white'>
 																		Delete
