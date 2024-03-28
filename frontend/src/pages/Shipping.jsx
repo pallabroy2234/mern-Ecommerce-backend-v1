@@ -5,6 +5,7 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {placeOrder} from "../store/reducers/orderReducer.js";
+import toast from "react-hot-toast";
 
 const Shipping = () => {
 	const dispatch = useDispatch();
@@ -40,9 +41,8 @@ const Shipping = () => {
 		const {name, address, phone, post, province, city, area} = formData;
 		if (name && address && phone && post && province && city && area) {
 			setRes(true);
-			console.log(formData);
 		} else {
-			alert("Please fill all the fields");
+			toast.error("Please fill all the fields");
 		}
 	};
 
@@ -57,8 +57,6 @@ const Shipping = () => {
 
 	// * Place Order Handler
 	const handlePlaceOrder = () => {
-		console.log(formData, price, products, shippingFee, userInfo.id);
-
 		dispatch(
 			placeOrder({
 				price,
@@ -155,11 +153,10 @@ const Shipping = () => {
 														{formData.address} {formData.province} {formData.city} {formData.area}
 													</span>
 													<span onClick={() => setRes(false)} className='text-indigo-500 cursor-pointer'>
-														{" "}
 														Change
 													</span>
 												</p>
-												<p className='text-slate-600 text-sm'>Email to pallabroy@gmail.com</p>
+												<p className='text-slate-600 text-sm'>Email to {userInfo?.email}</p>
 											</div>
 										</>
 									)}

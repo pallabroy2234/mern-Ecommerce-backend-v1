@@ -1,29 +1,10 @@
 const {body} = require("express-validator");
 
-// const placeOrderValidator = [
-// 	body("userId").isString().notEmpty().withMessage("User Id is required"),
-// 	body("price").isNumeric().notEmpty().withMessage("Price is required"),
-// body("products.*.sellerId").isString().notEmpty().withMessage("Seller Id is required"),
-// body("products.*.shopName").isString().notEmpty().withMessage("Shop Name is required"),
-// body("products.*.price").isNumeric().notEmpty().withMessage("Price is required"),
-// body("products.*.products.*.cartId").isString().notEmpty().withMessage("Cart Id is required"),
-// body("products.*.products.*.quantity").isInt({min: 1}).withMessage("Quantity is required"),
-// body("products.*.products.*.productInfo._id").isString().notEmpty().withMessage("Product Id is required"),
-// body("products.*.products.*.productInfo.name").isString().notEmpty().withMessage("Product Name is required"),
-// body("shippingFee").isNumeric().notEmpty().withMessage("Shipping Fee is required"),
-// body("shippingInfo.name").isString().notEmpty().withMessage("Name is required"),
-// body("shippingInfo.address").isString().notEmpty().withMessage("Address is required"),
-// body("shippingInfo.phone").isNumeric().notEmpty().withMessage("Phone number is required"),
-// body("shippingInfo.post").isNumeric().notEmpty().withMessage("Post code is required"),
-// body("shippingInfo.province").isString().notEmpty().withMessage("Province is required"),
-// body("shippingInfo.city").isString().notEmpty().withMessage("City is required"),
-// body("shippingInfo.area").isString().notEmpty().withMessage("Area is required"),
-// ];
-
 const placeOrderValidator = [
 	body("userId").notEmpty().withMessage("User Id is required"),
 	body("price").trim().notEmpty().withMessage("Price is required").isNumeric().withMessage("Price should be a number"),
 	body("shippingFee").trim().notEmpty().withMessage("Shipping Fee is required").isNumeric().withMessage("Shipping Fee should be a number"),
+
 	// * Shipping Info
 	body("shippingInfo").notEmpty().withMessage("Shipping Info is required").isObject().withMessage("Shipping Info should be an object"),
 	body("shippingInfo.name").trim().notEmpty().withMessage("Name is required").isLength({min: 3}).withMessage("Name should be at least 3 characters").isString().withMessage("Name should be a string"),

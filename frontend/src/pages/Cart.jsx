@@ -99,7 +99,7 @@ const Cart = () => {
 
 			<div className='bg-bright-gray'>
 				<div className='customContainer py-16'>
-					{cardProducts.length > 0 || outOfStockProducts.length > 0 ? (
+					{cartProducts.length > 0 || outOfStockProducts.length > 0 ? (
 						<div className='flex flex-wrap'>
 							{/* Left Section */}
 							<div className='w-[67%] md-lg:w-full'>
