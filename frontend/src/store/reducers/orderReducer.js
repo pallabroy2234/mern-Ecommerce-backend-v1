@@ -1,10 +1,18 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
-// * QUANTITY DECREMENT
-export const quantityDecrement = createAsyncThunk("cart/quantityDecrement", async (cartId, {rejectWithValue, fulfillWithValue}) => {
+export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, products, shippingFee, shippingInfo, userId, navigate, items}, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		const {data} = await api.put(`frontend/product/`);
+		const {data} = await api.post(`frontend/product/order/place-order`, {
+			price,
+			products,
+			shippingFee,
+			shippingInfo,
+			userId,
+			navigate,
+			items,
+		});
+		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
 		console.log(e.response.data);

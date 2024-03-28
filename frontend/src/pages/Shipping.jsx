@@ -1,16 +1,19 @@
 import Headers from "../components/Headers.jsx";
 import Footer from "../components/Footer.jsx";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {placeOrder} from "../store/reducers/orderReducer.js";
 
 const Shipping = () => {
 	const dispatch = useDispatch();
-
+	const navigate = useNavigate();
+	const {userInfo} = useSelector((state) => state.auth);
 	const {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
+
 	const [res, setRes] = useState(false);
 
 	const [formData, setFormData] = useState({
@@ -23,6 +26,7 @@ const Shipping = () => {
 		area: "",
 	});
 
+	// * Form Change Handler
 	const handleChange = (e) => {
 		setFormData({
 			...formData,
@@ -30,6 +34,7 @@ const Shipping = () => {
 		});
 	};
 
+	// * Form Submit Handler
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const {name, address, phone, post, province, city, area} = formData;
@@ -41,6 +46,7 @@ const Shipping = () => {
 		}
 	};
 
+	// * Truncate Product Name Handler
 	const truncateName = (name) => {
 		const letter = name.split("");
 		if (letter.length > 70) {
@@ -49,8 +55,20 @@ const Shipping = () => {
 		return name;
 	};
 
-	console.log(products);
-	const handlePlaceOrder = () => {};
+	// * Place Order Handler
+	const handlePlaceOrder = () => {
+		console.log(formData, price, products, shippingFee, userInfo.id);
+
+		dispatch(
+			placeOrder({
+				price,
+				products,
+				shippingFee,
+				shippingInfo: formData,
+				userId: userInfo.id,
+			}),
+		);
+	};
 
 	return (
 		<div>
@@ -98,11 +116,11 @@ const Shipping = () => {
 												<div className='flex md:flex-col md:gap-2 w-full gap-5 text-slate-600'>
 													<div className='flex flex-col gap-1 mb-3 w-full'>
 														<label htmlFor='phone'>Phone</label>
-														<input onChange={(e) => handleChange(e)} type='text' name='phone' id='phone' placeholder='Phone' className='w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md' />
+														<input onChange={(e) => handleChange(e)} type='number' name='phone' id='phone' placeholder='Phone' className='w-full px-3  py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md' />
 													</div>
 													<div className='flex flex-col gap-1 mb-3 w-full'>
 														<label htmlFor='post'>Post</label>
-														<input onChange={(e) => handleChange(e)} type='text' name='post' id='post' placeholder='Post' className='w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md' />
+														<input onChange={(e) => handleChange(e)} type='number' name='post' id='post' placeholder='Post' className='w-full px-3 py-2 border border-slate-200 outline-0 focus:border-indigo-500 rounded-md' />
 													</div>
 												</div>
 												<div className='flex md:flex-col md:gap-2 w-full gap-5 text-slate-600'>
