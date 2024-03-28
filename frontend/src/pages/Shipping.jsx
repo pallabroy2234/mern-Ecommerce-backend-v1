@@ -2,18 +2,21 @@ import Headers from "../components/Headers.jsx";
 import Footer from "../components/Footer.jsx";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {placeOrder} from "../store/reducers/orderReducer.js";
+import {messageClear, placeOrder} from "../store/reducers/orderReducer.js";
 import toast from "react-hot-toast";
+import {FadeLoader} from "react-spinners";
 
 const Shipping = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const {userInfo} = useSelector((state) => state.auth);
+
 	const {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
+	const {userInfo} = useSelector((state) => state.auth);
+	const {successMessage, errorMessage, loader, orderId} = useSelector((state) => state.order);
 
 	const [res, setRes] = useState(false);
 
@@ -68,8 +71,33 @@ const Shipping = () => {
 		);
 	};
 
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+			navigate("/payment", {
+				state: {
+					price: price + shippingFee,
+					userId: userInfo.id,
+					items,
+					orderId,
+				},
+			});
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+			navigate("/");
+		}
+	}, [successMessage, errorMessage]);
+
 	return (
 		<div>
+			{loader && (
+				<div className='w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]'>
+					<FadeLoader />
+				</div>
+			)}
 			<Headers />
 			{/* Banner Section */}
 			<section className="bg-[url('/images/banner/order.jpg')] h-[220px] mt-6 bg-cover bg-no-repeat relative bg-left">

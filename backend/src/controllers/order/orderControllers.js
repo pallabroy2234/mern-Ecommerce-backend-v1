@@ -133,9 +133,7 @@ const handlePlaceOrder = async (req, res) => {
 		return successResponse(res, {
 			status: 200,
 			message: "Order Placed Successfully",
-			payload: {
-				orderId: userOrderData._id,
-			},
+			payload: userOrderData,
 		});
 	} catch (e) {
 		console.log(e.message);

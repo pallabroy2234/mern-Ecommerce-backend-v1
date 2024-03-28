@@ -12,43 +12,41 @@ import {getCategories} from "./store/reducers/homeReducer.js";
 import CategoryShop from "./pages/CategoryShop.jsx";
 import SearchProducts from "./pages/SearchProducts.jsx";
 import {totalCartProducts} from "./store/reducers/cartReducer.js";
-
+import Payment from "./pages/payment.jsx";
 
 function App() {
-    const dispatch = useDispatch();
-    // const {userInfo} = useSelector(state => state.auth)
-    // const {totalCartProductsCount} = useSelector(state => state.cart)
-    
-    // useEffect(() => {
-    //     if (userInfo) {
-    //         dispatch(totalCartProducts({
-    //             userId: userInfo.id
-    //         }))
-    //     }
-    // }, [totalCartProductsCount, userInfo]);
-    
-    
-    useEffect(() => {
-        dispatch(getCategories())
-    }, []);
-    
-    
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/register" element={<Register/>}/>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/shop" element={<Shop/>}/>
-                <Route path="/products?" element={<CategoryShop/>}/>
-                <Route path="/products/search?" element={<SearchProducts/>}/>
-                <Route path="/cart" element={<Cart/>}/>
-                <Route path="/shipping" element={<Shipping/>}/>
-                <Route path="/product/details/:slug" element={<Details/>}/>
-            </Routes>
-        </BrowserRouter>
-    )
+	const dispatch = useDispatch();
+	// const {userInfo} = useSelector(state => state.auth)
+	// const {totalCartProductsCount} = useSelector(state => state.cart)
+
+	// useEffect(() => {
+	//     if (userInfo) {
+	//         dispatch(totalCartProducts({
+	//             userId: userInfo.id
+	//         }))
+	//     }
+	// }, [totalCartProductsCount, userInfo]);
+
+	useEffect(() => {
+		dispatch(getCategories());
+	}, []);
+
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path='/login' element={<Login />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/' element={<Home />} />
+				<Route path='/shop' element={<Shop />} />
+				<Route path='/products?' element={<CategoryShop />} />
+				<Route path='/products/search?' element={<SearchProducts />} />
+				<Route path='/cart' element={<Cart />} />
+				<Route path='/shipping' element={<Shipping />} />
+				<Route path='/payment' element={<Payment />} />
+				<Route path='/product/details/:slug' element={<Details />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
-export default App
-
+export default App;
