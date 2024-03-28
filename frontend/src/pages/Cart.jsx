@@ -1,5 +1,5 @@
 import Headers from "../components/Headers.jsx";
-import {Link, redirect, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Footer from "../components/Footer.jsx";
 import {useDispatch, useSelector} from "react-redux";

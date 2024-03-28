@@ -3,13 +3,14 @@ import Footer from "../components/Footer.jsx";
 import {Link, useLocation} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {useState} from "react";
+import {useDispatch} from "react-redux";
 
 const Shipping = () => {
+	const dispatch = useDispatch();
+
 	const {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
-
-	console.log(items, products, price, shippingFee);
 	const [res, setRes] = useState(false);
 
 	const [formData, setFormData] = useState({
@@ -39,6 +40,17 @@ const Shipping = () => {
 			alert("Please fill all the fields");
 		}
 	};
+
+	const truncateName = (name) => {
+		const letter = name.split("");
+		if (letter.length > 70) {
+			return letter.slice(0, 70).join("") + "...";
+		}
+		return name;
+	};
+
+	console.log(products);
+	const handlePlaceOrder = () => {};
 
 	return (
 		<div>
@@ -136,35 +148,37 @@ const Shipping = () => {
 								</div>
 
 								{/*  Buy Product Section   */}
-								{[1, 2].map((product, index) => (
-									<div key={index} className='flex bg-white p-4 flex-col gap-2'>
-										<div className='flex justify-start items-center'>
-											{/* Shop Name */}
-											<h2 className='text-md text-slate-600'>Pallab's Fashion</h2>
-										</div>
-										{[1, 2].map((item, index) => (
-											<div key={index} className='w-full flex flex-wrap  sm:mb-10'>
-												<div className='flex sm:w-full gap-2 w-7/12'>
-													<div className='flex gap-2 justify-start items-center'>
-														<img className='w-[80px] h-[80px] object-cover' src={`/images/products/${index + 1}.webp`} alt='product image' />
-														<div className='pr-4 text-slate-600'>
-															<h2 className='text-md'>Long Sleeve casua Shirt for Man</h2>
-															<span className='text-sm'>Brand : Eazy</span>
+								{products &&
+									products.map((product, index) => (
+										<div key={index} className='flex bg-white p-4 flex-col gap-2'>
+											<div className='flex justify-start items-center'>
+												{/* Shop Name */}
+												<h2 className='text-md text-slate-600'>{product?.shopName}</h2>
+											</div>
+											{product.products &&
+												product.products.map((item, index) => (
+													<div key={index} className='w-full flex flex-wrap  sm:mb-10'>
+														<div className='flex sm:w-full gap-2 w-7/12'>
+															<div className='flex gap-2 justify-start items-center'>
+																<img className='w-[80px] h-[80px] object-cover' src={item?.productInfo?.images[0].url} alt={item?.productInfo?.name} />
+																<div className='pr-4 text-slate-600'>
+																	<h2 className='text-md'>{truncateName(item?.productInfo?.name)}</h2>
+																	<span className='text-sm'>Brand : {item?.productInfo?.stock}</span>
+																</div>
+															</div>
+														</div>
+														<div className='flex justify-end w-5/12 sm:w-full sm:mt-3'>
+															{/*  Price */}
+															<div className='pl-4 sm:pl-0'>
+																<h2 className='text-lg text-orange-500'>${item?.productInfo?.price - Math.floor((item?.productInfo?.price * item?.productInfo?.discount) / 100)}</h2>
+																<p className='line-through'>${item?.productInfo?.price}</p>
+																<p>-{item?.productInfo?.discount}%</p>
+															</div>
 														</div>
 													</div>
-												</div>
-												<div className='flex justify-end w-5/12 sm:w-full sm:mt-3'>
-													{/*  Price */}
-													<div className='pl-4 sm:pl-0'>
-														<h2 className='text-lg text-orange-500'>$12341</h2>
-														<p className='line-through'>$12131</p>
-														<p>-10%</p>
-													</div>
-												</div>
-											</div>
-										))}
-									</div>
-								))}
+												))}
+										</div>
+									))}
 							</div>
 						</div>
 
@@ -175,23 +189,23 @@ const Shipping = () => {
 									<h2 className='text-xl font-semibold'>Order Summary</h2>
 									<div className='flex justify-between items-center'>
 										<span className='capitalize'>Total Items</span>
-										<span className=''>$85</span>
+										<span className=''>{items}</span>
 									</div>
 
 									<div className='flex justify-between items-center'>
 										<span className='capitalize'>Delivery Fee</span>
-										<span className=''>$85</span>
+										<span className=''>${shippingFee}</span>
 									</div>
 
 									<div className='flex justify-between items-center'>
 										<span className='capitalize'>Total Payment</span>
-										<span className=''>$85</span>
+										<span className=''>${price + shippingFee}</span>
 									</div>
 									<div className='flex justify-between items-center'>
 										<span className='capitalize'>Total</span>
-										<span className=''>$995</span>
+										<span className=''>${price + shippingFee}</span>
 									</div>
-									<button disabled={res ? false : true} className={`${res ? "bg-orange-500 " : "bg-orange-300"} px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg text-sm text-white uppercase`}>
+									<button onClick={handlePlaceOrder} disabled={res ? false : true} className={`${res ? "bg-orange-500 " : "bg-orange-300"} px-5 py-[8px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg text-sm text-white uppercase`}>
 										Place Order
 									</button>
 								</div>
