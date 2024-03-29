@@ -13,6 +13,8 @@ import CategoryShop from "./pages/CategoryShop.jsx";
 import SearchProducts from "./pages/SearchProducts.jsx";
 import {totalCartProducts} from "./store/reducers/cartReducer.js";
 import Payment from "./pages/Payment.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ProtectUser from "./utils/ProtectUser.jsx";
 
 function App() {
 	const dispatch = useDispatch();
@@ -44,6 +46,10 @@ function App() {
 				<Route path='/shipping' element={<Shipping />} />
 				<Route path='/payment' element={<Payment />} />
 				<Route path='/product/details/:slug' element={<Details />} />
+
+				<Route path='/dashboard' element={<ProtectUser />}>
+					<Route path='' element={<Dashboard />}></Route>
+				</Route>
 			</Routes>
 		</BrowserRouter>
 	);
