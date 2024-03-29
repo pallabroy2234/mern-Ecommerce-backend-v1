@@ -12,7 +12,7 @@ import {getCategories} from "./store/reducers/homeReducer.js";
 import CategoryShop from "./pages/CategoryShop.jsx";
 import SearchProducts from "./pages/SearchProducts.jsx";
 import {totalCartProducts} from "./store/reducers/cartReducer.js";
-import Payment from "./pages/payment.jsx";
+import Payment from "./pages/Payment.jsx";
 
 function App() {
 	const dispatch = useDispatch();
