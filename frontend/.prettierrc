@@ -5,5 +5,6 @@
   "semi": true,
   "useTabs": true,
   "singleAttributePerLine": false,
-  "jsxSingleQuote": true
+  "jsxSingleQuote": true,
+  "bracketSameLine": true
 }

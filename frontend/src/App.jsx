@@ -15,6 +15,7 @@ import {totalCartProducts} from "./store/reducers/cartReducer.js";
 import Payment from "./pages/Payment.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ProtectUser from "./utils/ProtectUser.jsx";
+import Index from "./components/dashboard/Index.jsx";
 
 function App() {
 	const dispatch = useDispatch();
@@ -48,7 +49,9 @@ function App() {
 				<Route path='/product/details/:slug' element={<Details />} />
 
 				<Route path='/dashboard' element={<ProtectUser />}>
-					<Route path='' element={<Dashboard />}></Route>
+					<Route path='' element={<Dashboard />}>
+						<Route path='' element={<Index />} />
+					</Route>
 				</Route>
 			</Routes>
 		</BrowserRouter>

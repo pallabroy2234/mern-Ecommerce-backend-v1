@@ -3,7 +3,6 @@ import {Navigate, Outlet, useNavigate} from "react-router-dom";
 
 const ProtectUser = () => {
 	const {userInfo} = useSelector((state) => state.auth);
-
 	if (userInfo) {
 		return <Outlet />;
 	} else {
