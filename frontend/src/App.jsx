@@ -16,6 +16,9 @@ import Payment from "./pages/Payment.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ProtectUser from "./utils/ProtectUser.jsx";
 import Index from "./components/dashboard/Index.jsx";
+import Orders from "./components/dashboard/Orders.jsx";
+import Wishlist from "./components/dashboard/Wishlist.jsx";
+import ChangePassword from "./components/dashboard/ChangePassword.jsx";
 
 function App() {
 	const dispatch = useDispatch();
@@ -51,6 +54,9 @@ function App() {
 				<Route path='/dashboard' element={<ProtectUser />}>
 					<Route path='' element={<Dashboard />}>
 						<Route path='' element={<Index />} />
+						<Route path='/dashboard/orders' element={<Orders />} />
+						<Route path='/dashboard/wishlist' element={<Wishlist />} />
+						<Route path='/dashboard/change-password' element={<ChangePassword />} />
 					</Route>
 				</Route>
 			</Routes>
