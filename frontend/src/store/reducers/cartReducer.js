@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
-// ! ADD TO CART
+// * ADD TO CART || POST || /api/frontend/product/add-to-cart
 export const addToCart = createAsyncThunk("cart/addToCart", async (info, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.post("frontend/product/add-to-cart", info);
@@ -12,7 +12,7 @@ export const addToCart = createAsyncThunk("cart/addToCart", async (info, {reject
 	}
 });
 
-// ! Total Cart Products
+// * TOTAL CART PRODUCTS || POST || /api/frontend/product/total-cartProducts
 
 export const totalCartProducts = createAsyncThunk("cart/totalCartProducts", async (info, {rejectWithValue, fulfillWithValue}) => {
 	try {
@@ -24,7 +24,7 @@ export const totalCartProducts = createAsyncThunk("cart/totalCartProducts", asyn
 	}
 });
 
-// ! GET CART PRODUCT
+// * GET CART PRODUCTS || GET || /api/frontend/product/get-cart-products/:userId
 
 export const getCartProducts = createAsyncThunk("cart/getCartProducts", async (userId, {rejectWithValue, fulfillWithValue}) => {
 	try {
@@ -35,7 +35,7 @@ export const getCartProducts = createAsyncThunk("cart/getCartProducts", async (u
 	}
 });
 
-// * DELETE CART PRODUCT
+// * DELETE CART PRODUCT || DELETE || /api/frontend/product/delete-cartProduct/:cartId
 export const deleteCartProduct = createAsyncThunk("cart/deleteCartProduct", async (cartId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.delete(`frontend/product/delete-cartProduct/${cartId}`);
@@ -45,7 +45,7 @@ export const deleteCartProduct = createAsyncThunk("cart/deleteCartProduct", asyn
 	}
 });
 
-// * QUANTITY INCREMENT
+// * QUANTITY INCREMENT || PUT || /api/frontend/product/quantity-increment/:cartId
 export const quantityIncrement = createAsyncThunk("cart/quantityIncrement", async (cartId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.put(`frontend/product/quantity-increment/${cartId}`);
@@ -55,10 +55,21 @@ export const quantityIncrement = createAsyncThunk("cart/quantityIncrement", asyn
 	}
 });
 
-// * QUANTITY DECREMENT
+// * QUANTITY DECREMENT || PUT || /api/frontend/product/quantity-decrement/:cartId
 export const quantityDecrement = createAsyncThunk("cart/quantityDecrement", async (cartId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.put(`frontend/product/quantity-decrement/${cartId}`);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
+// * ADD TO WISHLIST || || /api/frontend/product/add-to-wishlist/
+export const addToWishlist = createAsyncThunk("cart/addToWishlist", async (info, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.post("frontend/product/add-to-wishlist", info);
+		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
 		console.log(e.response.data);

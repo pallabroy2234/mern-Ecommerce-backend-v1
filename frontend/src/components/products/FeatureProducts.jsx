@@ -4,7 +4,7 @@ import {AiFillHeart, AiOutlineShoppingCart} from "react-icons/ai";
 import {FaEye} from "react-icons/fa";
 import Rattings from "../Rattings.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {addToCart, messageClear} from "../../store/reducers/cartReducer.js";
+import {addToCart, addToWishlist, messageClear} from "../../store/reducers/cartReducer.js";
 import toast from "react-hot-toast";
 import {FadeLoader} from "react-spinners";
 
@@ -33,6 +33,21 @@ const FeatureProducts = ({featureProducts}) => {
 		} else {
 			navigate("/login");
 		}
+	};
+
+	const handleAddToWishList = (item) => {
+		dispatch(
+			addToWishlist({
+				userId: userInfo.id,
+				productId: item?._id,
+				name: item?.name,
+				price: item?.price,
+				image: item?.images[0]?.url,
+				discount: item?.discount,
+				ratting: item?.ratting,
+				slug: item?.slug,
+			}),
+		);
 	};
 
 	useEffect(() => {
@@ -72,7 +87,7 @@ const FeatureProducts = ({featureProducts}) => {
 										<img className='w-full h-full object-contain' src={item?.images[0]?.url} alt={truncateName(item?.name)} />
 									</div>
 									<ul className='z-50 flex transition-all duration-300 -bottom-10 justify-center items-center gap-3 absolute w-full group-hover:bottom-3 '>
-										<li className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
+										<li onClick={() => handleAddToWishList(item)} className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
 											<AiFillHeart />
 										</li>
 										<Link to='/product/details/asdjf' className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>

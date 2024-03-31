@@ -1,9 +1,11 @@
 const CartProducts = require("../../models/cartModal");
+const WishListModal = require("../../models/wishListModal");
 const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const {
 	Types: {ObjectId},
 } = require("mongoose");
 const {mongoose} = require("mongoose");
+const Products = require("../../models/productModal");
 
 // * HANDLE ADD TO CART
 
@@ -382,6 +384,63 @@ const handleQuantityDecrement = async (req, res) => {
 	}
 };
 
+// * HANDLE ADD TO WISHLIST || POST || /api/frontend/product/add-to-wishlist
+const handleAddToWishList = async (req, res) => {
+	try {
+		const {userId, productId, name, slug, price, image, ratting, discount} = req.body;
+		const wishList = await WishListModal.findOne({
+			$and: [
+				{
+					productId: {
+						$eq: productId,
+					},
+				},
+				{
+					userId: {
+						$eq: userId,
+					},
+				},
+			],
+		});
+
+		if (wishList) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Product already exists in wishlist",
+			});
+		}
+
+		const addToWishList = await WishListModal.create({
+			userId,
+			productId,
+			name,
+			slug,
+			price,
+			image,
+			ratting,
+			discount,
+		});
+		if (!addToWishList) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Failed add to wishlist",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: "Successfully add to wishlist",
+			payload: addToWishList,
+		});
+	} catch (e) {
+		console.log(e.message, "handleAddToWishList");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
@@ -389,4 +448,5 @@ module.exports = {
 	handleDeleteCartProduct,
 	handleQuantityIncrement,
 	handleQuantityDecrement,
+	handleAddToWishList,
 };

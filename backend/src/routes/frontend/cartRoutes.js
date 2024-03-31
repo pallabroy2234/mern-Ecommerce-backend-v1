@@ -1,8 +1,9 @@
 const express = require("express");
-const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct, handleQuantityIncrement, handleQuantityDecrement} = require("../../controllers/frontend/cartControllers");
+const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct, handleQuantityIncrement, handleQuantityDecrement, handleAddToWishList} = require("../../controllers/frontend/cartControllers");
 const {isLoggedIn} = require("../../middleware/frontend/authMiddleware");
 const {cartValidator} = require("../../validator/dashboard/cartValidator");
 const {runValidation} = require("../../validator");
+const {wishListValidator} = require("../../validator/frontend/wishListValidator");
 
 const cartRoutes = express.Router();
 
@@ -20,5 +21,8 @@ cartRoutes.put("/quantity-increment/:cartId", isLoggedIn, handleQuantityIncremen
 
 // * QUANTITY DECREMENT
 cartRoutes.put("/quantity-decrement/:cartId", isLoggedIn, handleQuantityDecrement);
+
+// * ADD TO WISHLIST || POST || /api/frontend/product/add-to-wishlist
+cartRoutes.post("/add-to-wishlist", isLoggedIn, wishListValidator, runValidation, handleAddToWishList);
 
 module.exports = cartRoutes;
