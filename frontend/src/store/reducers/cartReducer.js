@@ -203,6 +203,19 @@ export const cartReducer = createSlice({
 		builder.addCase(addToWishlist.pending, (state, _) => {
 			state.loader = true;
 		});
+		// 	* GET WISHLIST
+		builder.addCase(getWishList.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.wishListProducts = payload.payload.wishList;
+			state.wishListCount = payload.payload.wishListCount;
+		});
+		builder.addCase(getWishList.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getWishList.pending, (state, _) => {
+			state.loader = true;
+		});
 	},
 });
 

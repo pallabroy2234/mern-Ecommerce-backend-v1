@@ -143,12 +143,12 @@ const Headers = () => {
 									</li>
 								</ul>
 								<div className='flex md-lg:hidden justify-center items-center gap-5'>
-									<div className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
+									<Link to={"/dashboard/wishlist"} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
 										<span className='text-xl text-red-500'>
 											<AiFillHeart />
 										</span>
 										{wishListCount > 0 ? <div className='w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex text-[12px] justify-center items-center -top-[3px] -right-[5px]'>{wishListCount}</div> : null}
-									</div>
+									</Link>
 									<div onClick={handleRedirectCartPage} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
 										<span className='text-xl text-orange-500'>
 											<AiFillShopping />
