@@ -2,7 +2,7 @@ import {AiOutlineShopping} from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {getOrders} from "../../store/reducers/dashboardReducer.js";
+import {getRecentOrders} from "../../store/reducers/dashboardReducer.js";
 
 const Index = () => {
 	const dispatch = useDispatch();
@@ -11,7 +11,7 @@ const Index = () => {
 	const {totalOrders, recentOrders, cancelledOrders, pendingOrders} = useSelector((state) => state.dashboard);
 
 	useEffect(() => {
-		dispatch(getOrders(userInfo.id));
+		dispatch(getRecentOrders(userInfo.id));
 	}, []);
 
 	const handleRedirect = (item) => {

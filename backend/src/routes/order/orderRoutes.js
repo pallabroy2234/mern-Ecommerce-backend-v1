@@ -8,6 +8,6 @@ const orderRoutes = express.Router();
 // * PLACE  ORDER
 orderRoutes.post("/place-order", isLoggedIn, placeOrderValidator, runValidation, handlePlaceOrder);
 
-orderRoutes.get("/get-orders/:userId", isLoggedIn, handleGetOrders);
+orderRoutes.get("/get-recentOrders/:userId", isLoggedIn, handleGetOrders);
 
 module.exports = orderRoutes;
