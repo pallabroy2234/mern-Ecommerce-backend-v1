@@ -3,11 +3,12 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getMyOrders, messageClear} from "../../store/reducers/orderReducer.js";
 import toast from "react-hot-toast";
+import {FadeLoader} from "react-spinners";
 
 const Orders = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {myOrders, myOrder, errorMessage} = useSelector((state) => state.order);
+	const {myOrders, myOrder, errorMessage, loader} = useSelector((state) => state.order);
 	const [state, setState] = useState("all");
 
 	useEffect(() => {
@@ -43,6 +44,11 @@ const Orders = () => {
 
 	return (
 		<div className='bg-white p-4 rounded-md'>
+			{loader && (
+				<div className='w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]'>
+					<FadeLoader />
+				</div>
+			)}
 			<div className='flex justify-between items-center'>
 				<h2 className='text-xl font-semibold text-slate-600'>My Orders</h2>
 				<select name='' id='' value={state} onChange={(e) => setState(e.target.value)} className='outline-0 px-3 cursor-pointer py-1 border rounded-md text-slate-600'>
