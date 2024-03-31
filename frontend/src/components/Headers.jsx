@@ -78,12 +78,12 @@ const Headers = () => {
 									</ul>
 								</div>
 								{userInfo ? (
-									<div className='flex cursor-pointer justify-center items-center gap-2 text-sm' to='/dashboard'>
+									<Link to={"/dashboard"} className='flex cursor-pointer justify-center items-center gap-2 text-sm'>
 										<span>
 											<FaUser />
 										</span>
 										<span>{userInfo?.name}</span>
-									</div>
+									</Link>
 								) : (
 									<Link to={"/login"} className='flex cursor-pointer justify-center items-center gap-2 text-sm'>
 										<span>

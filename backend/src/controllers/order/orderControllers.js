@@ -3,6 +3,10 @@ const AdminOrder = require("../../models/adminOrderModal");
 const UserOrder = require("../../models/userOrderModal");
 const CartProducts = require("../../models/cartModal");
 const moment = require("moment");
+const {mongoose} = require("mongoose");
+const {
+	Types: {ObjectId},
+} = mongoose;
 
 // *** If User not payment time wise than delete cartProducts
 
@@ -144,6 +148,78 @@ const handlePlaceOrder = async (req, res) => {
 	}
 };
 
+// * GET ORDERS || GET || /api/frontend/product/order/get-orders/:userId
+
+const handleGetOrders = async (req, res) => {
+	try {
+		const {userId} = req.params;
+		if (!userId) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+
+		const recentOrders = await UserOrder.find({
+			userId: {
+				$eq: new ObjectId(userId),
+			},
+		})
+			.sort({createdAt: -1})
+			.limit(5);
+
+		if (!recentOrders) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No Orders Found",
+			});
+		}
+
+		const pendingOrders = await UserOrder.find({
+			userId: {
+				$eq: new ObjectId(userId),
+			},
+			deliveryStatus: "pending",
+		}).countDocuments();
+
+		const totalOrders = await UserOrder.find({
+			userId: {
+				$eq: new ObjectId(userId),
+			},
+		}).countDocuments();
+
+		const cancelledOrders = await UserOrder.find({
+			userId: {
+				$eq: new ObjectId(userId),
+			},
+			deliveryStatus: "cancelled",
+		}).countDocuments();
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Orders Found",
+			payload: {
+				recentOrders,
+				totalOrders,
+				pendingOrders,
+				cancelledOrders,
+			},
+		});
+	} catch (e) {
+		if (e instanceof mongoose.Error) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid User Id",
+			});
+		}
+		return errorResponse(res, {
+			status: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handlePlaceOrder,
+	handleGetOrders,
 };

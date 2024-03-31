@@ -1,7 +1,18 @@
 import {AiOutlineShopping} from "react-icons/ai";
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getOrders} from "../../store/reducers/dashboardReducer.js";
 
 const Index = () => {
+	const dispatch = useDispatch();
+	const {userInfo} = useSelector((state) => state.auth);
+	const {totalOrders} = useSelector((state) => state.dashboard);
+
+	useEffect(() => {
+		dispatch(getOrders(userInfo.id));
+	}, []);
+
 	return (
 		<div>
 			{/* Dashboard Card Section */}
