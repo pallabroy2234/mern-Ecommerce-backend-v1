@@ -1,6 +1,7 @@
 const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const AdminOrder = require("../../models/adminOrderModal");
 const UserOrder = require("../../models/userOrderModal");
+const User = require("../../models/userModal");
 const CartProducts = require("../../models/cartModal");
 const moment = require("moment");
 const {mongoose} = require("mongoose");
@@ -259,8 +260,63 @@ const handleGetMyOrders = async (req, res) => {
 	}
 };
 
+// * HANDLE GET ORDER DETAILS || GET || /api/frontend/product/order/get-orderDetails/:orderId
+const handleGetOrderDetails = async (req, res) => {
+	try {
+		const {orderId} = req.params;
+		const {userId} = req;
+
+		const userExist = await User.exists({_id: userId});
+
+		if (!userExist) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+
+		if (!orderId) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Invalid Order Id",
+			});
+		}
+
+		// * Find Order Details
+		const orderDetails = await UserOrder.findById({
+			_id: orderId,
+			userId: userId,
+		});
+
+		if (!orderDetails) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Order not found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Order Found",
+			payload: orderDetails,
+		});
+	} catch (e) {
+		if (e instanceof mongoose.Error) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Invalid Order Id",
+			});
+		}
+		return errorResponse(res, {
+			status: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handlePlaceOrder,
 	handleGetRecentOrders,
 	handleGetMyOrders,
+	handleGetOrderDetails,
 };

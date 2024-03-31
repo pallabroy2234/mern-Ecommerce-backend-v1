@@ -12,7 +12,6 @@ const Orders = () => {
 	const [state, setState] = useState("all");
 
 	useEffect(() => {
-		console.log(userInfo.id);
 		dispatch(
 			getMyOrders({
 				userId: userInfo.id,
@@ -99,12 +98,14 @@ const Orders = () => {
 											{item?.deliveryStatus}
 										</td>
 										<td scope='row' className='px-6 py-4'>
-											<Link to={`/dashboard/order/details/${item?._id}`}>
-												<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
-											</Link>
-											<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>
-												Pay Now
-											</button>
+											<div className='flex flex-row'>
+												<Link to={`/dashboard/order/details/${item?._id}`}>
+													<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
+												</Link>
+												<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>
+													Pay Now
+												</button>
+											</div>
 										</td>
 									</tr>
 								))}

@@ -17,9 +17,21 @@ export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, pr
 	}
 });
 
+// * GET MY ORDERS
 export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId, status}, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`frontend/product/order/get-myOrders/${userId}/${status}`);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
+// * GET ORDER DETAILS
+export const getOrderDetails = createAsyncThunk("order/getOrderDetails", async (orderId, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.get(`frontend/product/order/get-orderDetails/${orderId}`);
+		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
 		return rejectWithValue(e.response.data);
