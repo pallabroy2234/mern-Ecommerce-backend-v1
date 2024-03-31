@@ -1,11 +1,13 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getMyOrders} from "../../store/reducers/orderReducer.js";
+import {getMyOrders, messageClear} from "../../store/reducers/orderReducer.js";
+import toast from "react-hot-toast";
 
 const Orders = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
+	const {myOrders, myOrder, errorMessage} = useSelector((state) => state.order);
 	const [state, setState] = useState("all");
 
 	useEffect(() => {
@@ -17,6 +19,27 @@ const Orders = () => {
 			}),
 		);
 	}, [state]);
+
+	useEffect(() => {
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [errorMessage]);
+
+	const handleRedirect = (item) => {
+		let items = 0;
+		for (let i = 0; i < item.length; i++) {
+			items = items + item[i].quantity;
+		}
+		navigate("/payment", {
+			state: {
+				price: items.price,
+				items,
+				orderId: item._id,
+			},
+		});
+	};
 
 	return (
 		<div className='bg-white p-4 rounded-md'>
@@ -54,28 +77,31 @@ const Orders = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{[1, 2, 3, 4].map((item, index) => (
-								<tr key={index} className='bg-white border-b'>
-									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
-										234234nihh2342
-									</td>
-									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
-										$12312
-									</td>
-									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
-										Pending
-									</td>
-									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap  text-ellipsis'>
-										Pending
-									</td>
-									<td scope='row' className='px-6 py-4'>
-										<Link to={`/dashboard/order/details/123123`}>
-											<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
-										</Link>
-										<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>Pay Now</span>
-									</td>
-								</tr>
-							))}
+							{myOrders &&
+								myOrders.map((item, index) => (
+									<tr key={index} className='bg-white border-b'>
+										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+											{item?._id}
+										</td>
+										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+											${item?.price}
+										</td>
+										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
+											{item?.paymentStatus}
+										</td>
+										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap  text-ellipsis'>
+											{item?.deliveryStatus}
+										</td>
+										<td scope='row' className='px-6 py-4'>
+											<Link to={`/dashboard/order/details/${item?._id}`}>
+												<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
+											</Link>
+											<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>
+												Pay Now
+											</button>
+										</td>
+									</tr>
+								))}
 						</tbody>
 					</table>
 				</div>
