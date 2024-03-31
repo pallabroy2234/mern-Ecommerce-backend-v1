@@ -83,7 +83,7 @@ const Orders = () => {
 						</thead>
 						<tbody>
 							{myOrders &&
-								myOrders.map((item, index) => (
+								myOrders?.map((item, index) => (
 									<tr key={index} className='bg-white border-b'>
 										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
 											{item?._id}

@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
+// * PLACE ORDER || POST || /api/frontend/product/order/place-order
 export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, products, shippingFee, shippingInfo, userId, items}, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.post(`frontend/product/order/place-order`, {
@@ -17,7 +18,7 @@ export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, pr
 	}
 });
 
-// * GET MY ORDERS
+// * GET MY ORDERS || GET || /api/frontend/product/order/get-myOrders/:userId/:status
 export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId, status}, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`frontend/product/order/get-myOrders/${userId}/${status}`);
@@ -27,11 +28,10 @@ export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId,
 	}
 });
 
-// * GET ORDER DETAILS
+// * GET ORDER DETAILS || GET || /api/frontend/product/order/get-orderDetails/:orderId
 export const getOrderDetails = createAsyncThunk("order/getOrderDetails", async (orderId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`frontend/product/order/get-orderDetails/${orderId}`);
-		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
 		return rejectWithValue(e.response.data);
@@ -77,6 +77,19 @@ export const orderReducer = createSlice({
 			state.myOrders = payload.payload;
 		});
 		builder.addCase(getMyOrders.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+
+		// * ORDER DETAILS
+		builder.addCase(getOrderDetails.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(getOrderDetails.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.myOrder = payload.payload;
+		});
+		builder.addCase(getOrderDetails.rejected, (state, {payload}) => {
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
