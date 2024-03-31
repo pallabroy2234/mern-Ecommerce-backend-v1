@@ -65,7 +65,7 @@ const handlePlaceOrder = async (req, res) => {
 			userId,
 			shippingInfo,
 			products: userOrderProducts,
-			price: price + shippingFee,
+			price: parseInt(price) + parseInt(shippingFee),
 			deliveryStatus: "pending",
 			paymentStatus: "unpaid",
 			date: tempDate,

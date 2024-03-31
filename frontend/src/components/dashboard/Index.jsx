@@ -1,17 +1,32 @@
 import {AiOutlineShopping} from "react-icons/ai";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getOrders} from "../../store/reducers/dashboardReducer.js";
 
 const Index = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {totalOrders} = useSelector((state) => state.dashboard);
+	const {totalOrders, recentOrders, cancelledOrders, pendingOrders} = useSelector((state) => state.dashboard);
 
 	useEffect(() => {
 		dispatch(getOrders(userInfo.id));
 	}, []);
+
+	const handleRedirect = (item) => {
+		let items = 0;
+		for (let i = 0; i < item.length; i++) {
+			items = items + item[i].quantity;
+		}
+		navigate("/payment", {
+			state: {
+				price: items.price,
+				items,
+				orderId: item._id,
+			},
+		});
+	};
 
 	return (
 		<div>
@@ -25,7 +40,7 @@ const Index = () => {
 						</span>
 					</div>
 					<div className='flex flex-col justify-start items-start text-slate-600'>
-						<h2 className='text-3xl font-bold'>20</h2>
+						<h2 className='text-3xl font-bold'>{totalOrders}</h2>
 						<span>Orders</span>
 					</div>
 				</div>
@@ -38,7 +53,7 @@ const Index = () => {
 						</span>
 					</div>
 					<div className='flex flex-col justify-start items-start text-slate-600'>
-						<h2 className='text-3xl font-bold'>20</h2>
+						<h2 className='text-3xl font-bold'>{pendingOrders}</h2>
 						<span>Pending Orders</span>
 					</div>
 				</div>
@@ -51,7 +66,7 @@ const Index = () => {
 						</span>
 					</div>
 					<div className='flex flex-col justify-start items-start text-slate-600'>
-						<h2 className='text-3xl font-bold'>20</h2>
+						<h2 className='text-3xl font-bold'>{cancelledOrders}</h2>
 						<span>Cancelled Orders</span>
 					</div>
 				</div>
@@ -83,28 +98,31 @@ const Index = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{[1, 2, 3].map((item, index) => (
-									<tr key={index} className='bg-white border-b'>
-										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
-											234234nihh2342
-										</td>
-										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
-											$12312
-										</td>
-										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
-											Pending
-										</td>
-										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
-											Pending
-										</td>
-										<td scope='row' className='px-6 py-4'>
-											<Link to={`/dashboard/order/details/123123`}>
-												<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded'>View</span>
-											</Link>
-											<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded cursor-pointer'>Pay Now</span>
-										</td>
-									</tr>
-								))}
+								{recentOrders &&
+									recentOrders.map((item, index) => (
+										<tr key={index} className='bg-white border-b'>
+											<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+												{item?._id}
+											</td>
+											<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+												${item?.price}
+											</td>
+											<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
+												{item?.paymentStatus}
+											</td>
+											<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+												{item?.deliveryStatus}
+											</td>
+											<td scope='row' className='px-6 py-4'>
+												<Link to={`/dashboard/order/details/${item?._id}`}>
+													<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded'>View</span>
+												</Link>
+												<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded cursor-pointer'>
+													Pay Now
+												</button>
+											</td>
+										</tr>
+									))}
 							</tbody>
 						</table>
 					</div>
