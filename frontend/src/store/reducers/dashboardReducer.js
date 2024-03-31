@@ -1,19 +1,19 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
-export const getOrders = createAsyncThunk("dashboard/getOrders", async (userId, {rejectWithValue, fulfilledWithValue}) => {
+export const getOrders = createAsyncThunk("dashboard/getOrders", async (userId, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		console.log(userId);
 		const {data} = await api.get(`/frontend/product/order/get-orders/${userId}`);
-		return fulfilledWithValue(data);
-	} catch (error) {
-		return rejectWithValue(error.response.data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
 	}
 });
 
 export const dashboardReducer = createSlice({
 	name: "dashboard",
 	initialState: {
+		loading: false,
 		recentOrders: [],
 		totalOrders: 0,
 		pendingOrders: 0,
@@ -27,7 +27,23 @@ export const dashboardReducer = createSlice({
 			state.errorMessage = "";
 		},
 	},
-	extraReducers: (builder) => {},
+	extraReducers: (builder) => {
+		builder.addCase(getOrders.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(getOrders.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.recentOrders = payload.payload.recentOrders;
+			state.totalOrders = payload.payload.totalOrders;
+			state.pendingOrders = payload.payload.pendingOrders;
+			state.cancelledOrders = payload.payload.cancelledOrders;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(getOrders.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+	},
 });
 
 export const {messageClear} = dashboardReducer.actions;

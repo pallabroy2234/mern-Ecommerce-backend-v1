@@ -153,6 +153,7 @@ const handlePlaceOrder = async (req, res) => {
 const handleGetOrders = async (req, res) => {
 	try {
 		const {userId} = req.params;
+
 		if (!userId) {
 			return errorResponse(res, {
 				statusCode: 404,
@@ -171,7 +172,7 @@ const handleGetOrders = async (req, res) => {
 		if (!recentOrders) {
 			return errorResponse(res, {
 				statusCode: 404,
-				message: "No Orders Found",
+				message: "No recent orders found",
 			});
 		}
 
