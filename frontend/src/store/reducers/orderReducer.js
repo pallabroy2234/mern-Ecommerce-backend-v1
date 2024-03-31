@@ -17,6 +17,15 @@ export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, pr
 	}
 });
 
+export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId, deliveryStatus}, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.post(`frontend/product/order/get-myOrders/${userId}/${deliveryStatus}`);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
 export const orderReducer = createSlice({
 	name: "order",
 	initialState: {

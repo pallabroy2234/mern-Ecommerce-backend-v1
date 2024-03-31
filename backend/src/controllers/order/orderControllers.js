@@ -148,9 +148,8 @@ const handlePlaceOrder = async (req, res) => {
 	}
 };
 
-// * GET ORDERS || GET || /api/frontend/product/order/get-orders/:userId
-
-const handleGetOrders = async (req, res) => {
+// * HANDLE GET RECENT ORDERS || GET || /api/frontend/product/order/get-recentOrders/:userId
+const handleGetRecentOrders = async (req, res) => {
 	try {
 		const {userId} = req.params;
 
@@ -220,7 +219,20 @@ const handleGetOrders = async (req, res) => {
 	}
 };
 
+// * HANDLE GET MY ORDERS || GET || /api/frontend/product/order/get-myOrders/:userId/:deliveryStatus
+
+const handleGetMyOrders = async (req, res) => {
+	try {
+	} catch (e) {
+		return errorResponse(res, {
+			status: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handlePlaceOrder,
-	handleGetOrders,
+	handleGetRecentOrders,
+	handleGetMyOrders,
 };
