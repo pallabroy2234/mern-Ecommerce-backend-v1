@@ -36,18 +36,22 @@ const FeatureProducts = ({featureProducts}) => {
 	};
 
 	const handleAddToWishList = (item) => {
-		dispatch(
-			addToWishlist({
-				userId: userInfo.id,
-				productId: item?._id,
-				name: item?.name,
-				price: item?.price,
-				image: item?.images[0]?.url,
-				discount: item?.discount,
-				ratting: item?.ratting,
-				slug: item?.slug,
-			}),
-		);
+		if (userInfo) {
+			dispatch(
+				addToWishlist({
+					userId: userInfo.id,
+					productId: item?._id,
+					name: item?.name,
+					price: item?.price,
+					image: item?.images[0]?.url,
+					discount: item?.discount,
+					ratting: item?.ratting,
+					slug: item?.slug,
+				}),
+			);
+		} else {
+			navigate("/login");
+		}
 	};
 
 	useEffect(() => {

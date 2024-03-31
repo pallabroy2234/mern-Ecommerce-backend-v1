@@ -180,6 +180,20 @@ export const cartReducer = createSlice({
 		builder.addCase(quantityDecrement.pending, (state, _) => {
 			state.loader = true;
 		});
+
+		// 	* ADD To WISHLIST
+		builder.addCase(addToWishlist.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.wishListCount = state.wishListCount > 0 ? state.wishListCount + 1 : 1;
+		});
+		builder.addCase(addToWishlist.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(addToWishlist.pending, (state, _) => {
+			state.loader = true;
+		});
 	},
 });
 

@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 const Headers = () => {
 	const {categories} = useSelector((state) => state.home);
 	const {userInfo} = useSelector((state) => state.auth);
-	const {totalCartProductsCount, cartProductCount} = useSelector((state) => state.cart);
+	const {totalCartProductsCount, cartProductCount, wishListCount} = useSelector((state) => state.cart);
 
 	const navigate = useNavigate();
 	const {pathname} = useLocation();
@@ -20,8 +20,6 @@ const Headers = () => {
 	const [height, setHeight] = useState();
 	const [searchValue, setSearchValue] = useState("");
 	const [category, setCategory] = useState();
-
-	const wishlist = 4;
 
 	const search = (e) => {
 		navigate(`/products/search?category=${category ? category : ""}&&search=${searchValue ? searchValue : ""}`);
@@ -149,7 +147,7 @@ const Headers = () => {
 										<span className='text-xl text-red-500'>
 											<AiFillHeart />
 										</span>
-										<div className='w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[5px]'>{wishlist}</div>
+										{wishListCount > 0 ? <div className='w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex text-[12px] justify-center items-center -top-[3px] -right-[5px]'>{wishListCount}</div> : null}
 									</div>
 									<div onClick={handleRedirectCartPage} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
 										<span className='text-xl text-orange-500'>
