@@ -17,9 +17,10 @@ export const placeOrder = createAsyncThunk("order/placeOrder", async ({price, pr
 	}
 });
 
-export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId, deliveryStatus}, {rejectWithValue, fulfillWithValue}) => {
+export const getMyOrders = createAsyncThunk("order/getMyOrders", async ({userId, status}, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		const {data} = await api.post(`frontend/product/order/get-myOrders/${userId}/${deliveryStatus}`);
+		const {data} = await api.get(`frontend/product/order/get-myOrders/${userId}/${status}`);
+		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
 		return rejectWithValue(e.response.data);

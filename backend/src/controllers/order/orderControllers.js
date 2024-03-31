@@ -223,6 +223,34 @@ const handleGetRecentOrders = async (req, res) => {
 
 const handleGetMyOrders = async (req, res) => {
 	try {
+		const {userId, status} = req.params;
+		if (!userId) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+
+		let orders = [];
+
+		if (status !== "all") {
+			orders = await UserOrder.find({userId: userId, deliveryStatus: status}).sort({createdAt: -1});
+		} else {
+			orders = await UserOrder.find({userId: userId}).sort({createdAt: -1});
+		}
+
+		if (orders.length === 0) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No orders found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Orders Found",
+			payload: orders,
+		});
 	} catch (e) {
 		return errorResponse(res, {
 			status: 500,

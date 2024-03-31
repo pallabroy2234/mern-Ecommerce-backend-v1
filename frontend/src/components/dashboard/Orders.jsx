@@ -9,13 +9,14 @@ const Orders = () => {
 	const [state, setState] = useState("all");
 
 	useEffect(() => {
+		console.log(userInfo.id);
 		dispatch(
 			getMyOrders({
 				userId: userInfo.id,
-				deliveryStatus: state,
+				status: state,
 			}),
 		);
-	}, []);
+	}, [state]);
 
 	return (
 		<div className='bg-white p-4 rounded-md'>
@@ -64,14 +65,14 @@ const Orders = () => {
 									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
 										Pending
 									</td>
-									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis'>
+									<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap  text-ellipsis'>
 										Pending
 									</td>
 									<td scope='row' className='px-6 py-4'>
 										<Link to={`/dashboard/order/details/123123`}>
-											<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded'>View</span>
+											<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
 										</Link>
-										<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] rounded cursor-pointer'>Pay Now</span>
+										<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>Pay Now</span>
 									</td>
 								</tr>
 							))}

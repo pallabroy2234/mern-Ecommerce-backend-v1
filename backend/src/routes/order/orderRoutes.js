@@ -12,6 +12,6 @@ orderRoutes.post("/place-order", isLoggedIn, placeOrderValidator, runValidation,
 orderRoutes.get("/get-recentOrders/:userId", isLoggedIn, handleGetRecentOrders);
 
 // * GET MY ORDERS || GET || /api/frontend/product/order/get-myOrders/:userId/:deliveryStatus
-orderRoutes.get("/get-myrOrders/:userId/:deliveryStatus", isLoggedIn, handleGetMyOrders);
+orderRoutes.get("/get-myOrders/:userId/:status", isLoggedIn, handleGetMyOrders);
 
 module.exports = orderRoutes;
