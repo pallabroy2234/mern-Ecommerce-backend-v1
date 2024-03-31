@@ -441,6 +441,41 @@ const handleAddToWishList = async (req, res) => {
 	}
 };
 
+//  * HANDLE GET WISHLIST || POST || /api/frontend/product/get-wishlist
+const handleGetWishList = async (req, res) => {
+	try {
+		const {userId} = req.params;
+		if (!ObjectId.isValid(userId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid user id",
+			});
+		}
+		const wishList = await WishListModal.find({userId: userId});
+		if (!wishList) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No wishList found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "WishList",
+			payload: {
+				wishList,
+				wishListCount: wishList.length,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleGetWishList");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
@@ -449,4 +484,5 @@ module.exports = {
 	handleQuantityIncrement,
 	handleQuantityDecrement,
 	handleAddToWishList,
+	handleGetWishList,
 };

@@ -1,10 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {AiFillHeart, AiOutlineShoppingCart} from "react-icons/ai";
 import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa";
 import Rattings from "../Rattings.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getWishList} from "../../store/reducers/cartReducer.js";
 
 const Wishlist = () => {
+	const dispatch = useDispatch();
+	const {userInfo} = useSelector((state) => state.auth);
+
+	useEffect(() => {
+		if (userInfo) {
+			dispatch(getWishList(userInfo.id));
+		}
+	}, []);
+
 	const handleAddToCart = (index) => {
 		console.log(index);
 	};

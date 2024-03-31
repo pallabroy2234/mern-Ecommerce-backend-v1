@@ -65,10 +65,19 @@ export const quantityDecrement = createAsyncThunk("cart/quantityDecrement", asyn
 	}
 });
 
-// * ADD TO WISHLIST || || /api/frontend/product/add-to-wishlist/
+// * ADD TO WISHLIST || POST || /api/frontend/product/add-to-wishlist/
 export const addToWishlist = createAsyncThunk("cart/addToWishlist", async (info, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.post("frontend/product/add-to-wishlist", info);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
+export const getWishList = createAsyncThunk("cart/getWishList", async (userId, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.get(`frontend/product/get-wishlist/${userId}`);
 		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
