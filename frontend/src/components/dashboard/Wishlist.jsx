@@ -4,7 +4,8 @@ import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa";
 import Rattings from "../Rattings.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getWishList} from "../../store/reducers/cartReducer.js";
+import {getWishList, removeWishlist} from "../../store/reducers/cartReducer.js";
+import Login from "../../pages/Login.jsx";
 
 const Wishlist = () => {
 	const dispatch = useDispatch();
@@ -17,13 +18,17 @@ const Wishlist = () => {
 		}
 	}, []);
 
-	console.log(activeWishlistItems);
 	useEffect(() => {
 		if (wishListProducts) {
 			const wishlistItems = wishListProducts.map((item) => item?.productId);
 			setActiveWishlistItems(wishlistItems);
 		}
 	}, [wishListProducts]);
+
+	const handleRemoveWishlist = (wishlistId) => {
+		console.log(wishlistId);
+		// dispatch(removeWishlist(wishlistId));
+	};
 
 	const truncateName = (name) => {
 		if (name.length > 40) {
@@ -45,6 +50,7 @@ const Wishlist = () => {
 							</div>
 							<ul className='z-50 flex transition-all duration-300 -bottom-10 justify-center items-center gap-3 absolute w-full group-hover:bottom-3 '>
 								<li
+									onClick={() => handleRemoveWishlist(item?._id)}
 									className={`${activeWishlistItems.includes(item?.productId) ? "bg-dark-moderate-green text-white" : "bg-white text-black"} w-[38px] h-[38px] cursor-pointer  flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white  transition-all duration-200`}>
 									<AiFillHeart />
 								</li>

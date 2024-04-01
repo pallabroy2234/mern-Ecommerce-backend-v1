@@ -1,6 +1,6 @@
 const express = require("express");
-const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct, handleQuantityIncrement, handleQuantityDecrement, handleAddToWishList, handleGetWishList} = require("../../controllers/frontend/cartControllers");
-const {isLoggedIn} = require("../../middleware/frontend/authMiddleware");
+const {handleAddToCart, handleTotalCartProducts, handleGetCartProducts, handleDeleteCartProduct, handleQuantityIncrement, handleQuantityDecrement, handleAddToWishList, handleGetWishList, handleRemoveWishList} = require("../../controllers/frontend/cartControllers");
+const {isLoggedIn, authMiddleware} = require("../../middleware/frontend/authMiddleware");
 const {cartValidator} = require("../../validator/dashboard/cartValidator");
 const {runValidation} = require("../../validator");
 const {wishListValidator} = require("../../validator/frontend/wishListValidator");
@@ -27,5 +27,8 @@ cartRoutes.post("/add-to-wishlist", isLoggedIn, wishListValidator, runValidation
 
 // * GET WISHLIST || POST || /api/frontend/product/get-wishlist
 cartRoutes.get("/get-wishlist/:userId", isLoggedIn, handleGetWishList);
+
+// * REMOVE WISHLIST || DELETE || /api/frontend/product/remove-wishlist/:wishlistId
+cartRoutes.delete("/remove-wishlist/:wishlistId", isLoggedIn, authMiddleware, handleRemoveWishList);
 
 module.exports = cartRoutes;

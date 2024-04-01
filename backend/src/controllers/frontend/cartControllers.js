@@ -1,5 +1,6 @@
 const CartProducts = require("../../models/cartModal");
 const WishListModal = require("../../models/wishListModal");
+const User = require("../../models/userModal");
 const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const {
 	Types: {ObjectId},
@@ -476,6 +477,58 @@ const handleGetWishList = async (req, res) => {
 	}
 };
 
+// * HANDLE REMOVE WISHLIST || DELETE || /api/frontend/product/remove-wishlist/:wishlistId
+const handleRemoveWishList = async (req, res) => {
+	try {
+		const {wishlistId} = req.params;
+		const {userId} = req;
+		if (!ObjectId.isValid(wishlistId) || !ObjectId.isValid(userId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const userExist = await User.exists({_id: userId});
+		if (!userExist) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "User not found",
+			});
+		}
+		const wishListExist = await WishListModal.exists({_id: wishlistId});
+
+		if (!wishListExist) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "WishList not found",
+			});
+		}
+
+		const removeWishList = await WishListModal.findByIdAndDelete({
+			_id: wishlistId,
+			userId: userId,
+		});
+
+		if (!removeWishList) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Failed to remove wishlist",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Successfully remove wishlist",
+		});
+	} catch (e) {
+		console.log(e.message, "handleRemoveWishList");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddToCart,
 	handleTotalCartProducts,
@@ -485,4 +538,5 @@ module.exports = {
 	handleQuantityDecrement,
 	handleAddToWishList,
 	handleGetWishList,
+	handleRemoveWishList,
 };

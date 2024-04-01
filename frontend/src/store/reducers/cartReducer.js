@@ -75,17 +75,28 @@ export const addToWishlist = createAsyncThunk("cart/addToWishlist", async (info,
 	}
 });
 
+// * GET WISHLIST || GET || /api/frontend/product/get-wishlist/:userId
 export const getWishList = createAsyncThunk("cart/getWishList", async (userId, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`frontend/product/get-wishlist/${userId}`);
-		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
 
+// *
+
+export const removeWishlist = createAsyncThunk("cart/removeWishlist", async (wishlistId, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.delete(`frontend/product/get-removeWishlist/${wishlistId}`);
+		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		console.log(e.response.data());
+		return rejectWithValue(e.response.data);
+	}
+});
 export const cartReducer = createSlice({
 	name: "cart",
 	initialState: {
