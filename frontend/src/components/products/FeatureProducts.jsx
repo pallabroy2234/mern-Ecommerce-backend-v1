@@ -14,6 +14,17 @@ const FeatureProducts = ({featureProducts}) => {
 	const {successMessage, errorMessage, loader} = useSelector((state) => state.cart);
 	const {userInfo} = useSelector((state) => state.auth);
 
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, errorMessage]);
+
 	const truncateName = (name) => {
 		const letter = name.split("");
 		if (letter.length > 50) {
@@ -55,17 +66,6 @@ const FeatureProducts = ({featureProducts}) => {
 		}
 	};
 
-	useEffect(() => {
-		if (successMessage) {
-			toast.success(successMessage);
-			dispatch(messageClear());
-		}
-		if (errorMessage) {
-			toast.error(errorMessage);
-			dispatch(messageClear());
-		}
-	}, [successMessage, errorMessage]);
-
 	return (
 		<div className='customContainer'>
 			{loader && (
@@ -95,9 +95,11 @@ const FeatureProducts = ({featureProducts}) => {
 										<li onClick={() => handleAddToWishList(item)} className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
 											<AiFillHeart />
 										</li>
-										<Link to='/product/details/asdjf' className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
-											<FaEye />
-										</Link>
+										<li>
+											<Link to={`/product/details/${item?.slug}`} className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
+												<FaEye />
+											</Link>
+										</li>
 										<li onClick={() => handleAddToCart(item?._id)} className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
 											<AiOutlineShoppingCart />
 										</li>

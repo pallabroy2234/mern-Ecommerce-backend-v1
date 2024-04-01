@@ -241,6 +241,91 @@ const getQueryProducts = async (req, res) => {
 	}
 };
 
+// * HANDLE GET PRODUCT DETAILS || GET || /api/frontend/get-product/details/:slug
+
+const handleGetProductDetails = async (req, res) => {
+	try {
+		const {slug} = req.params;
+		if (!slug) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Slug is not provided",
+			});
+		}
+		const product = await Product.findOne({slug: slug});
+		if (!product) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No Product Found",
+			});
+		}
+
+		const relatedProducts = await Product.find({
+			$and: [
+				{
+					_id: {
+						$ne: product._id,
+					},
+				},
+				{
+					category: {
+						$eq: product.category,
+					},
+				},
+			],
+		})
+			.sort({createdAt: -1})
+			.limit(20);
+
+		if (!relatedProducts) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No Related Products Found",
+			});
+		}
+
+		const moreProducts = await Product.find({
+			$and: [
+				{
+					_id: {
+						$ne: product._id,
+					},
+				},
+				{
+					sellerId: {
+						$eq: product.sellerId,
+					},
+				},
+			],
+		})
+			.sort({createdAt: -1})
+			.limit(3);
+
+		if (!moreProducts) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No More Products Found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Product Details Fetch Successfully",
+			payload: {
+				product: product,
+				relatedProducts: relatedProducts,
+				moreProducts: moreProducts,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleGetProductDetails");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	getCategories,
 	getFeatureProducts,
@@ -248,4 +333,5 @@ module.exports = {
 	getCarouselProducts,
 	getPriceRange,
 	getQueryProducts,
+	handleGetProductDetails,
 };

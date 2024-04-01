@@ -1,27 +1,21 @@
-
-const express = require('express');
-const {getCategories, getHomePageProduct, getPriceRangeLatestProduct, getFeatureProducts, getCarouselLatestProducts,
-    getCarouselProducts, getPriceRange, getQueryProducts
-} = require("../../controllers/frontend/homeControllers");
+const express = require("express");
+const {getCategories, getHomePageProduct, getPriceRangeLatestProduct, getFeatureProducts, getCarouselLatestProducts, getCarouselProducts, getPriceRange, getQueryProducts, handleGetProductDetails} = require("../../controllers/frontend/homeControllers");
 const homeRouter = express.Router();
 
+homeRouter.get("/get-categories", getCategories);
 
+homeRouter.get("/get-featureProducts", getFeatureProducts);
 
-homeRouter.get("/get-categories" , getCategories)
+homeRouter.get("/get-carouselLatestProducts", getCarouselLatestProducts);
 
+homeRouter.get("/get-carouselProducts", getCarouselProducts);
 
-homeRouter.get("/get-featureProducts", getFeatureProducts)
+homeRouter.get("/get-priceRange", getPriceRange);
 
-homeRouter.get("/get-carouselLatestProducts", getCarouselLatestProducts)
+homeRouter.get("/get-queryProducts", getQueryProducts);
 
-homeRouter.get("/get-carouselProducts", getCarouselProducts)
+// * GET PRODUCT DETAILS || GET || /api/frontend/get-product/details/:slug
 
-homeRouter.get("/get-priceRange", getPriceRange)
-
-homeRouter.get("/get-queryProducts", getQueryProducts)
-
-
-
-
+homeRouter.get("/get-product/details/:slug", handleGetProductDetails);
 
 module.exports = homeRouter;
