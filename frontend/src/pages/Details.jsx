@@ -14,22 +14,40 @@ import "swiper/css";
 import "swiper/css/pagination";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper/modules";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getProductDetails} from "../store/reducers/homeReducer.js";
 
 const Details = () => {
 	const dispatch = useDispatch();
+	const {loading, product, relatedProducts, moreProducts} = useSelector((state) => state.home);
 	const {slug} = useParams();
-	const [image, setImage] = useState("");
 	const [state, setState] = useState("reviews");
+
+	useEffect(() => {
+		dispatch(getProductDetails(slug));
+	}, [slug]);
+
+	const [image, setImage] = useState("");
+
+	const truncateText = (text) => {
+		if (text.length > 50) {
+			return text.substring(0, 50) + "...";
+		}
+		return text;
+	};
+
 	const responsive = {
-		superLargeDesktop: {
+		superExtraLargeDesktop: {
 			breakpoint: {max: 4000, min: 3000},
 			items: 5,
 		},
-		desktop: {
-			breakpoint: {max: 3000, min: 1024},
+		superLargeDesktop: {
+			breakpoint: {max: 3000, min: 1700},
 			items: 5,
+		},
+		desktop: {
+			breakpoint: {max: 1700, min: 1024},
+			items: 4,
 		},
 		tablet: {
 			breakpoint: {max: 1024, min: 464},
@@ -58,10 +76,6 @@ const Details = () => {
 		},
 	};
 
-	useEffect(() => {
-		dispatch(getProductDetails(slug));
-	}, [slug]);
-
 	const CustomLeftArrow = ({onClick}) => {
 		return (
 			<button className='bg-transparent border border-black hover:bg-black/50 hover:border-0 hover:text-white text-black w-[40px] h-[40px] text-lg flex justify-center items-center absolute top-1/2 left-2 transform -translate-y-1/2' onClick={() => onClick()}>
@@ -77,10 +91,6 @@ const Details = () => {
 			</button>
 		);
 	};
-
-	const images = [2, 3, 4, 2, 5, 7, 8];
-	const discount = 5;
-	const stock = 10;
 
 	return (
 		<div>
@@ -98,19 +108,21 @@ const Details = () => {
 
 			<div className='bg-slate-100 py-5 mb-5'>
 				<div className='customContainer'>
-					{/* Product Details */}
+					{/* Links */}
 					<div className='flex justify-start items-center text-md text-slate-600 w-full'>
-						<Link to={"/"}>Home</Link>
-						<span className='pt-1'>
-							<MdOutlineKeyboardArrowRight />
-						</span>
-						<Link to={"/"}>Sports</Link>
-						<span className='pt-1'>
-							<MdOutlineKeyboardArrowRight />
-						</span>
-						<Link className='whitespace-nowrap text-ellipsis overflow-hidden' to={"/"}>
-							Long Sleeve casua Shirt for man
+						<Link to={"/"} className='text-base sm:text-xs'>
+							Home
 						</Link>
+						<span className='pt-1'>
+							<MdOutlineKeyboardArrowRight />
+						</span>
+						<Link to={"/"} className='whitespace-nowrap text-base sm:text-xs'>
+							{product?.category}
+						</Link>
+						<span className='pt-1'>
+							<MdOutlineKeyboardArrowRight />
+						</span>
+						<span className='whitespace-nowrap text-ellipsis overflow-hidden text-base sm:text-xs'>{product?.name}</span>
 					</div>
 				</div>
 			</div>
@@ -120,19 +132,18 @@ const Details = () => {
 				<div className='grid grid-cols-2  md:grid-cols-1 gap-8'>
 					<div className=''>
 						<div className='p-5 border '>
-							<div className='h-[450px]'>
-								<img className='w-full h-full object-contain' src={image ? `/images/products/${image}.jpg` : `/images/products/${images[3]}.jpg`} alt='' />
-							</div>
+							<div className='h-[450px] sm:h-[250px]'>{product.images && <img className='w-full h-full object-contain' src={`${image ? image : product?.images[0].url}`} alt={product?.name} />}</div>
 						</div>
 
 						<div className='py-3'>
-							{images && (
-								<Carousel autoPlay={true} infinite={true} responsive={responsive} transitionDuration={500} mouseTracking={false} keyBoardControl={false} customLeftArrow={<CustomLeftArrow />} customRightArrow={<CustomRightArrow />}>
-									{images.map((item, index) => (
-										<div onClick={() => setImage(item)} key={index} className={`w-[100px] h-[100px]  gap-6 ${item === image ? "border border-black transition-all duration-300" : ""}`}>
-											<img src={`/images/products/${item}.jpg`} className={`w-full h-full object-contain cursor-pointer ${item === image ? "scale-[0.8] transition-all duration-300" : ""}`} alt='' />
-										</div>
-									))}
+							{product.images && (
+								<Carousel autoPlay={true} infinite={true} responsive={responsive} transitionDuration={150} mouseTracking={false} keyBoardControl={false} customLeftArrow={<CustomLeftArrow />} customRightArrow={<CustomRightArrow />}>
+									{product.images &&
+										product?.images.map((item, index) => (
+											<div onClick={() => setImage(item.url)} key={index} className={`w-[100px] h-[100px]  gap-6 ${item.url === image ? "border border-black transition-all duration-300" : ""}`}>
+												<img src={item.url} className={`w-full h-full object-contain cursor-pointer ${item.url === image ? "scale-[0.8] transition-all duration-300" : ""}`} alt='' />
+											</div>
+										))}
 								</Carousel>
 							)}
 						</div>
@@ -141,41 +152,38 @@ const Details = () => {
 					<div className='flex flex-col gap-5'>
 						{/* Product Heading */}
 						<div className='text-3xl md:text-xl  text-slate-600 font-bold'>
-							<h2 title='Long Sleeve casua Shirt for man' className='overflow-hidden whitespace-nowrap text-ellipsis'>
-								Long Sleeve casua Shirt for man
+							<h2 title={product?.name} className='text-3xl lg:text-xl  md:text-2xl sm:text-[16px]'>
+								{product?.name}
 							</h2>
 						</div>
 
 						{/* Product Ratting */}
 						<div className='flex justify-start items-center gap-4'>
 							<div className='flex text-xl'>
-								<Rattings rattings={4.5} />
+								<Rattings rattings={product?.ratting} />
 							</div>
 							<span className='text-green-500'>(23 reviews)</span>
 						</div>
 						{/* Discount Section */}
 						<div className='text-2xl sm:text-xl text-red-500 font-bold flex gap-3'>
-							{discount ? (
+							{product.discount > 0 ? (
 								<>
-									<h2 className='line-through'>$500</h2>
+									<h2 className='line-through'>${product?.price}</h2>
 									<h2>
-										${500 - Math.floor(500 * discount) / 100}(-{discount}%)
+										${product?.price - Math.floor((product.price * product?.discount) / 100)}(-{product?.discount}%)
 									</h2>
 								</>
 							) : (
-								<h2>Price : $500</h2>
+								<h2>Price : ${product?.price}</h2>
 							)}
 						</div>
 						{/*  Description   */}
 						<div className='text-slate-600'>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur
-								adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?
-							</p>
+							<p>{product?.description}</p>
 						</div>
 						{/*   Quantity  , stock and Favorite Item */}
 						<div className='flex gap-3 pb-10 border-b flex-wrap'>
-							{stock && stock ? (
+							{product?.stock && product?.stock ? (
 								<>
 									<div className='flex justify-start items-start gap-4 sm:flex-col '>
 										<div className='flex bg-slate-200 h-[50px] justify-center items-center text-xl rounded-sm'>
@@ -200,7 +208,7 @@ const Details = () => {
 						<div className='flex flex-col gap-6 py-5'>
 							<div className='flex items-center justify-start gap-14'>
 								<span className='text-black font-bold text-xl sm:text-lg'>Availability</span>
-								<span className={`text-${stock ? "green" : "red"}-500`}>{stock ? `In Stock(${stock})` : "Out of Stock"}</span>
+								<span className={`text-${product?.stock > 0 ? "green" : "red"}-500`}>{product?.stock > 0 ? `In Stock(${product?.stock})` : "Out of Stock"}</span>
 							</div>
 							<div className='flex items-center justify-start gap-20 md-lg:gap-10 md:gap-20 sm:items-start sm:flex-col sm:gap-5 '>
 								<span className='text-black font-bold text-xl sm:text-lg'>Share on</span>
@@ -231,7 +239,7 @@ const Details = () => {
 
 						{/*  Chatting Option  */}
 						<div className={`flex py-5 gap-3 flex-wrap`}>
-							{stock ? <button className='px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>Buy Now</button> : null}
+							{product?.stock > 0 ? <button className='px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>Buy Now</button> : null}
 
 							<button className='px-9 py-3  whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-lime-500/40 bg-lime-500 text-white rounded-sm capitalize'>Chat Seller</button>
 						</div>
@@ -261,10 +269,7 @@ const Details = () => {
 									</div>
 								) : state === "description" ? (
 									<>
-										<p className='py-5 text-slate-600'>
-											Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet,
-											consectetur adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?
-										</p>
+										<p className='py-5 text-slate-600'>{product && product.description}</p>
 									</>
 								) : null}
 							</div>
@@ -275,25 +280,26 @@ const Details = () => {
 						{/*  Shop Related Products   */}
 						<div className='pl-4 md-lg:pl-0'>
 							<div className='px-3 py-2 text-slate-600 bg-slate-200'>
-								<h2>Pallab's Fashion</h2>
+								<h2>{moreProducts && moreProducts.length > 0 ? moreProducts[0].shopName : "No Related Products Found"}</h2>
 							</div>
 							<div className='flex flex-col p-5 gap-8 mt-3 border'>
-								{[1, 2, 3].map((item, index) => (
-									<Link key={index} className=''>
-										<div className='flex flex-col gap-3 md-lg:flex-row md-lg:items-center sm:flex-col sm:items-start '>
-											<div className='relative h-[300px] lg:h-[200px] lg:w-[200px] sm:w-full sm:h-full overflow-hidden'>
-												<img className='w-full h-full object-cover' src={`/images/products/${index + 1}.jpg`} alt='' />
-												<div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>6%</div>
-											</div>
-											<div className=''>
-												<h2 className='text-slate-600 py-1'>Standard dummy text ever since the</h2>
-												<div className='flex items-center gap-2 text-xl'>
-													<Rattings rattings={4.5} />
+								{moreProducts &&
+									moreProducts.map((item, index) => (
+										<Link to={`/product/details/${item?.slug}`} key={index} className=''>
+											<div className='flex flex-col gap-3 md-lg:flex-row md-lg:items-center sm:flex-col sm:items-start '>
+												<div className='relative h-[300px] lg:h-[200px] lg:w-[200px] sm:w-full sm:h-full overflow-hidden'>
+													<img className='w-full h-full object-cover' src={item?.images[0].url} alt={item?.name} />
+													{item.discount > 0 ? <div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>-{item?.discount}%</div> : null}
+												</div>
+												<div className=''>
+													<h2 className='text-slate-600 py-1'>{truncateText(item?.name)}</h2>
+													<div className='flex items-center gap-2 text-xl'>
+														<Rattings rattings={item?.ratting} />
+													</div>
 												</div>
 											</div>
-										</div>
-									</Link>
-								))}
+										</Link>
+									))}
 							</div>
 						</div>
 					</div>
@@ -303,7 +309,7 @@ const Details = () => {
 			{/* Related Product */}
 			<section>
 				<div className='customContainer'>
-					<h2 className='text-2xl py-8 text-slate-600'>Related Product</h2>
+					{relatedProducts.length > 0 ? <h2 className='text-2xl py-8 text-slate-600'>Related Product</h2> : null}
 					<div>
 						<Swiper
 							slidesPerView={"auto"}
@@ -331,30 +337,31 @@ const Details = () => {
 							}}
 							modules={[Pagination]}
 							className='mySwiper'>
-							{[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
-								return (
-									<SwiperSlide key={index}>
-										<Link to={"#"} className='block'>
-											<div className='relative h-[270px]'>
-												<div className='w-full h-full'>
-													<img className='w-full h-full object-cover' src={`/images/products/${index + 1}.jpg`} alt='' />
-													<div className='absolute h-full w-full top-0 left-0 bg-[#000] opacity-25 hover:opacity-50 transition-all duration-500'></div>
+							{relatedProducts &&
+								relatedProducts.map((item, index) => {
+									return (
+										<SwiperSlide key={index}>
+											<Link to={`/product/details/${item?.slug}`} className='block'>
+												<div className='relative h-[270px]'>
+													<div className='w-full h-full'>
+														<img className='w-full h-full object-contain' src={item?.images[0].url} alt={item?.name} />
+														<div className='absolute h-full w-full top-0 left-0 bg-[#000] opacity-25 hover:opacity-50 transition-all duration-500'></div>
+													</div>
+													{item.discount ? <div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>-{item?.discount}%</div> : null}
 												</div>
-												<div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>6%</div>
-											</div>
-											<div className='p-4 flex flex-col gap-1'>
-												<h2 className='text-slate-600 text-lg font-semibold'>Standard dummy text ever since the</h2>
-												<div className='flex justify-start items-center gap-3'>
-													<h2 className='text-[#6699ff] text-xl font-bold'>$5645</h2>
-													<div className='flex'>
-														<Rattings rattings={4.5} />
+												<div className='px-2  py-4 flex flex-col gap-1'>
+													<h2 className='text-slate-600 text-lg font-semibold'>{truncateText(item?.name)}</h2>
+													<div className='flex justify-start items-center gap-3'>
+														<h2 className='text-[#6699ff] text-xl font-bold'>${item?.price}</h2>
+														<div className='flex'>
+															<Rattings rattings={item?.ratting} />
+														</div>
 													</div>
 												</div>
-											</div>
-										</Link>
-									</SwiperSlide>
-								);
-							})}
+											</Link>
+										</SwiperSlide>
+									);
+								})}
 						</Swiper>
 					</div>
 					<div className='w-full flex justify-center items-center py-10'>

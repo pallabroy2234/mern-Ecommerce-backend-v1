@@ -18,7 +18,6 @@ export const getFeatureProducts = createAsyncThunk("home/getFeatureProducts", as
 		const {data} = await api.get("/frontend/get-featureProducts");
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
@@ -27,10 +26,8 @@ export const getFeatureProducts = createAsyncThunk("home/getFeatureProducts", as
 export const getProductDetails = createAsyncThunk("home/getProductDetails", async (slug, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`/frontend/get-product/details/${slug}`);
-		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
@@ -94,6 +91,10 @@ export const homeReducer = createSlice({
 		priceRange: {low: 50, high: 100},
 		products: [],
 		pagination: {},
+		// 	 *
+		product: {},
+		relatedProducts: [],
+		moreProducts: [],
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -180,6 +181,21 @@ export const homeReducer = createSlice({
 			state.pagination = {};
 		});
 		builder.addCase(getQueryProducts.pending, (state, _) => {
+			state.loading = true;
+		});
+
+		// 	* GET PRODUCT DETAILS
+		builder.addCase(getProductDetails.fulfilled, (state, {payload}) => {
+			state.loading = false;
+			state.product = payload.payload.product;
+			state.relatedProducts = payload.payload.relatedProducts;
+			state.moreProducts = payload.payload.moreProducts;
+		});
+		builder.addCase(getProductDetails.rejected, (state, {payload}) => {
+			state.loading = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getProductDetails.pending, (state, _) => {
 			state.loading = true;
 		});
 	},
