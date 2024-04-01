@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {AiFillHeart, AiOutlineShoppingCart} from "react-icons/ai";
 import {FaEye} from "react-icons/fa";
@@ -13,6 +13,7 @@ const FeatureProducts = ({featureProducts}) => {
 	const navigate = useNavigate();
 	const {successMessage, errorMessage, loader} = useSelector((state) => state.cart);
 	const {userInfo} = useSelector((state) => state.auth);
+
 	const truncateName = (name) => {
 		const letter = name.split("");
 		if (letter.length > 50) {

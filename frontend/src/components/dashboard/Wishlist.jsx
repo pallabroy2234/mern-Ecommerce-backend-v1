@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AiFillHeart, AiOutlineShoppingCart} from "react-icons/ai";
 import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa";
@@ -10,12 +10,20 @@ const Wishlist = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
 	const {wishListProducts, wishListCount} = useSelector((state) => state.cart);
-
+	const [activeWishlistItems, setActiveWishlistItems] = useState([]);
 	useEffect(() => {
 		if (userInfo) {
 			dispatch(getWishList(userInfo.id));
 		}
 	}, []);
+
+	console.log(activeWishlistItems);
+	useEffect(() => {
+		if (wishListProducts) {
+			const wishlistItems = wishListProducts.map((item) => item?.productId);
+			setActiveWishlistItems(wishlistItems);
+		}
+	}, [wishListProducts]);
 
 	const truncateName = (name) => {
 		if (name.length > 40) {
@@ -36,7 +44,8 @@ const Wishlist = () => {
 								<img className='w-full h-full object-contain' src={item?.image} alt={item?.name} />
 							</div>
 							<ul className='z-50 flex transition-all duration-300 -bottom-10 justify-center items-center gap-3 absolute w-full group-hover:bottom-3 '>
-								<li className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
+								<li
+									className={`${activeWishlistItems.includes(item?.productId) ? "bg-dark-moderate-green text-white" : "bg-white text-black"} w-[38px] h-[38px] cursor-pointer  flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white  transition-all duration-200`}>
 									<AiFillHeart />
 								</li>
 								<Link to={`/product/details/${item?._id}`} className='w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full hover:bg-dark-moderate-green hover:text-white hover:rotate-[720deg] transition-all duration-200'>
