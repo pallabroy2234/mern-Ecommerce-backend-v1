@@ -85,11 +85,10 @@ export const getWishList = createAsyncThunk("cart/getWishList", async (userId, {
 	}
 });
 
-// *
-
+// * REMOVE WISHLIST || DELETE || /api/frontend/product/remove-wishlist/:wishlistId
 export const removeWishlist = createAsyncThunk("cart/removeWishlist", async (wishlistId, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		const {data} = await api.delete(`frontend/product/get-removeWishlist/${wishlistId}`);
+		const {data} = await api.delete(`frontend/product/remove-wishlist/${wishlistId}`);
 		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
@@ -225,6 +224,21 @@ export const cartReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(getWishList.pending, (state, _) => {
+			state.loader = true;
+		});
+
+		// 	* REMOVE WISHLIST
+		builder.addCase(removeWishlist.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.wishListCount = state.wishListCount - 1;
+			state.wishListProducts = state.wishListProducts.filter((item) => item._id !== payload.payload.removeWishListId);
+		});
+		builder.addCase(removeWishlist.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(removeWishlist.pending, (state, _) => {
 			state.loader = true;
 		});
 	},

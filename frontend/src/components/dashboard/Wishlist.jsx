@@ -4,13 +4,15 @@ import {Link} from "react-router-dom";
 import {FaEye} from "react-icons/fa";
 import Rattings from "../Rattings.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {getWishList, removeWishlist} from "../../store/reducers/cartReducer.js";
+import {getWishList, messageClear, removeWishlist} from "../../store/reducers/cartReducer.js";
 import Login from "../../pages/Login.jsx";
+import toast from "react-hot-toast";
+import {FadeLoader} from "react-spinners";
 
 const Wishlist = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {wishListProducts, wishListCount} = useSelector((state) => state.cart);
+	const {wishListProducts, wishListCount, errorMessage, successMessage, loader} = useSelector((state) => state.cart);
 	const [activeWishlistItems, setActiveWishlistItems] = useState([]);
 	useEffect(() => {
 		if (userInfo) {
@@ -25,9 +27,19 @@ const Wishlist = () => {
 		}
 	}, [wishListProducts]);
 
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, messageClear]);
+
 	const handleRemoveWishlist = (wishlistId) => {
-		console.log(wishlistId);
-		// dispatch(removeWishlist(wishlistId));
+		dispatch(removeWishlist(wishlistId));
 	};
 
 	const truncateName = (name) => {
@@ -39,6 +51,11 @@ const Wishlist = () => {
 
 	return (
 		<div className='w-full grid grid-cols-4 xl:grid-cols-3 md-lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6'>
+			{loader && (
+				<div className='w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]'>
+					<FadeLoader />
+				</div>
+			)}
 			{wishListProducts &&
 				wishListProducts?.map((item, index) => (
 					<div key={index} className='group border transition-all duration-300 shadow-md hover:-translate-y-2  z-50 rounded-md bg-white'>

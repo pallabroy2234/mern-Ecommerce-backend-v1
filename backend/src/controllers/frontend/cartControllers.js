@@ -519,6 +519,9 @@ const handleRemoveWishList = async (req, res) => {
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Successfully remove wishlist",
+			payload: {
+				removeWishListId: removeWishList._id,
+			},
 		});
 	} catch (e) {
 		console.log(e.message, "handleRemoveWishList");
