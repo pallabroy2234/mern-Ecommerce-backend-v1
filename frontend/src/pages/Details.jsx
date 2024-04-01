@@ -16,6 +16,7 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import {Pagination} from "swiper/modules";
 import {useDispatch, useSelector} from "react-redux";
 import {getProductDetails} from "../store/reducers/homeReducer.js";
+import {FadeLoader} from "react-spinners";
 
 const Details = () => {
 	const dispatch = useDispatch();
@@ -28,6 +29,10 @@ const Details = () => {
 	}, [slug]);
 
 	const [image, setImage] = useState("");
+
+	useEffect(() => {
+		setImage("");
+	}, [product]);
 
 	const truncateText = (text) => {
 		if (text.length > 50) {
@@ -94,6 +99,11 @@ const Details = () => {
 
 	return (
 		<div>
+			{loading && (
+				<div className='w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]'>
+					<FadeLoader />
+				</div>
+			)}
 			<Headers />
 			{/* Banner Section */}
 			<div className="bg-[url('/images/banner/order.jpg')] h-[220px] mt-6 bg-cover bg-no-repeat relative bg-left">
@@ -287,8 +297,11 @@ const Details = () => {
 									moreProducts.map((item, index) => (
 										<Link to={`/product/details/${item?.slug}`} key={index} className=''>
 											<div className='flex flex-col gap-3 md-lg:flex-row md-lg:items-center sm:flex-col sm:items-start '>
-												<div className='relative h-[300px] lg:h-[200px] lg:w-[200px] sm:w-full sm:h-full overflow-hidden'>
-													<img className='w-full h-full object-cover' src={item?.images[0].url} alt={item?.name} />
+												<div className='relative overflow-hidden'>
+													<div className='relative h-[300px] lg:h-[200px] lg:w-[200px] sm:w-full sm:h-full'>
+														<img className='w-full h-full object-contain' src={item?.images[0].url} alt={item?.name} />
+														<div className='absolute h-full w-full top-0 left-0 bg-[#000] opacity-25'></div>
+													</div>
 													{item.discount > 0 ? <div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>-{item?.discount}%</div> : null}
 												</div>
 												<div className=''>
