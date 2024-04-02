@@ -104,11 +104,17 @@ export const homeReducer = createSlice({
 		product: {},
 		relatedProducts: [],
 		moreProducts: [],
+
+		// 	* submitUserReview
+		submitSuccessMessage: "",
+		submitErrorMessage: "",
 	},
 	reducers: {
 		messageClear: (state) => {
 			state.successMessage = "";
 			state.errorMessage = "";
+			state.submitSuccessMessage = "";
+			state.submitErrorMessage = "";
 		},
 	},
 	extraReducers: (builder) => {
@@ -211,11 +217,11 @@ export const homeReducer = createSlice({
 		// 	* SUBMIT USER REVIEW
 		builder.addCase(submitUserReview.fulfilled, (state, {payload}) => {
 			state.loading = false;
-			state.successMessage = payload.message;
+			state.submitSuccessMessage = payload.message;
 		});
 		builder.addCase(submitUserReview.rejected, (state, {payload}) => {
 			state.loading = false;
-			state.errorMessage = payload.message;
+			state.submitErrorMessage = payload.message;
 		});
 		builder.addCase(submitUserReview.pending, (state, {payload}) => {
 			state.loading = true;

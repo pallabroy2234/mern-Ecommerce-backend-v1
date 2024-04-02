@@ -14,7 +14,7 @@ const Review = ({product}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {successMessage, errorMessage, loading} = useSelector((state) => state.home);
+	const {submitSuccessMessage, submitErrorMessage, loading} = useSelector((state) => state.home);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [parPage, setParPage] = useState(5);
 	const [reactRatting, setReactRatting] = useState();
@@ -36,17 +36,19 @@ const Review = ({product}) => {
 		}
 	};
 	useEffect(() => {
-		if (successMessage) {
-			toast.success(successMessage);
+		if (submitSuccessMessage) {
+			toast.success(submitSuccessMessage);
 			dispatch(messageClear());
 			setReview("");
 			setReactRatting(0);
 		}
-		if (errorMessage) {
-			toast.error(errorMessage);
+		if (submitErrorMessage) {
+			toast.error(submitErrorMessage);
 			dispatch(messageClear());
 		}
-	}, [successMessage, errorMessage]);
+	}, [submitSuccessMessage, submitErrorMessage]);
+
+	// * GET
 
 	return (
 		<div className='mt-8'>

@@ -2,6 +2,7 @@ const Category = require("../../models/categoryModal");
 const Product = require("../../models/productModal");
 const User = require("../../models/userModal");
 const ReviewModal = require("../../models/reviewModal");
+const WishListModal = require("../../models/wishListModal");
 const {successResponse, errorResponse} = require("../../helper/responseHelper");
 const queryProducts = require("../../utiles/queryProducts");
 const {
@@ -407,6 +408,32 @@ const handleSubmitReview = async (req, res) => {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Product Ratting Not Updated",
+			});
+		}
+		// * UPDATE WISHLIST RATINGS
+		const updateWishlist = await WishListModal.findOneAndUpdate(
+			{
+				$and: [
+					{
+						userId: {
+							$eq: userId,
+						},
+					},
+					{
+						productId: {
+							$eq: productId,
+						},
+					},
+				],
+			},
+			{
+				ratting: averageRatting,
+			},
+		);
+		if (!updateWishlist) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Wishlist Ratting Not Updated",
 			});
 		}
 
