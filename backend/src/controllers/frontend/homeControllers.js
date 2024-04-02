@@ -263,8 +263,8 @@ const handleGetProductDetails = async (req, res) => {
 		const relatedProducts = await Product.find({
 			$and: [
 				{
-					_id: {
-						$ne: product._id,
+					sellerId: {
+						$ne: product.sellerId,
 					},
 				},
 				{
