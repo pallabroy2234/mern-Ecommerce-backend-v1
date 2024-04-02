@@ -72,6 +72,17 @@ export const getQueryProducts = createAsyncThunk("home/getQueryProducts", async 
 		);
 		return fulfillWithValue(data);
 	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
+// * SUBMIT USER REVIEW || POST || /api/frontend/submit-user-review
+export const submitUserReview = createAsyncThunk("home/submitUserReview", async (info, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.post("/frontend/submit-user-review", info);
+		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
 		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}

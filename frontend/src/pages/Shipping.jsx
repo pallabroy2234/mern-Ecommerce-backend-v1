@@ -11,10 +11,10 @@ import {FadeLoader} from "react-spinners";
 const Shipping = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
+
 	const {userInfo} = useSelector((state) => state.auth);
 	const {successMessage, errorMessage, loader, orderId} = useSelector((state) => state.order);
 

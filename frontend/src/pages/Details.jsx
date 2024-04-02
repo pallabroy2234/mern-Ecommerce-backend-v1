@@ -133,6 +133,42 @@ const Details = () => {
 		}
 	};
 
+	// * HANDLE BUY BUTTON FUNCTION
+
+	const handleBuyNow = () => {
+		if (userInfo) {
+			let price = 0;
+			if (product.discount !== 0) {
+				price = product.price - Math.floor((product.price * product.discount) / 100);
+			} else {
+				price = product.price;
+			}
+			const obj = [
+				{
+					sellerId: product?.sellerId,
+					shopName: product?.shopName,
+					price: parseInt(quantity) * parseInt(price - Math.floor((price * 5) / 100)),
+					products: [
+						{
+							quantity,
+							productInfo: product,
+						},
+					],
+				},
+			];
+			navigate("/shipping", {
+				state: {
+					products: obj,
+					price: parseInt(price) * parseInt(quantity),
+					shippingFee: 85,
+					items: 1,
+				},
+			});
+		} else {
+			navigate("/login");
+		}
+	};
+
 	const responsive = {
 		superExtraLargeDesktop: {
 			breakpoint: {max: 4000, min: 3000},
@@ -349,7 +385,11 @@ const Details = () => {
 
 						{/*  Chatting Option  */}
 						<div className={`flex py-5 gap-3 flex-wrap`}>
-							{product?.stock > 0 ? <button className='px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>Buy Now</button> : null}
+							{product?.stock > 0 ? (
+								<button onClick={handleBuyNow} className='px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>
+									Buy Now
+								</button>
+							) : null}
 
 							<button className='px-9 py-3  whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-lime-500/40 bg-lime-500 text-white rounded-sm capitalize'>Chat Seller</button>
 						</div>
@@ -375,7 +415,7 @@ const Details = () => {
 							<div>
 								{state === "reviews" ? (
 									<div>
-										<Review />
+										<Review product={product} />
 									</div>
 								) : state === "description" ? (
 									<>

@@ -1,8 +1,13 @@
 const Category = require("../../models/categoryModal");
 const Product = require("../../models/productModal");
+const User = require("../../models/userModal");
+const ReviewModal = require("../../models/reviewModal");
 const {successResponse, errorResponse} = require("../../helper/responseHelper");
 const queryProducts = require("../../utiles/queryProducts");
-const {isHexColor} = require("validator");
+const {
+	Types: {ObjectId},
+} = require("mongoose");
+const moment = require("moment");
 
 // ! getCategories function for frontend
 const getCategories = async (req, res) => {
@@ -326,6 +331,98 @@ const handleGetProductDetails = async (req, res) => {
 	}
 };
 
+// * HANDLE SUBMIT USER REVIEW || POST || /api/frontend/submit-user-review
+const handleSubmitReview = async (req, res) => {
+	try {
+		const {userId} = req;
+		const {name, review, ratting, productId} = req.body;
+		if (!ObjectId.isValid(userId) || !ObjectId.isValid(productId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid  Id",
+			});
+		}
+		const userExists = await User.findById(userId);
+		if (!userExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please Login First",
+			});
+		}
+		const productExists = await Product.findById(productId);
+
+		if (!productExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Invalid Product",
+			});
+		}
+
+		// * CHECK REVIEW EXISTS OR NOT
+		// const reviewExists = await ReviewModal.find({
+		// 	$and: [
+		// 		{
+		// 			userId: userId,
+		// 		},
+		// 		{
+		// 			productId: productId,
+		// 		},
+		// 	],
+		// });
+		// if (reviewExists.length > 2) {
+		// 	return errorResponse(res, {
+		// 		statusCode: 400,
+		// 		message: "You already review this product",
+		// 	});
+		// }
+
+		const reviewData = await ReviewModal.create({
+			userId: userId,
+			productId: productId,
+			name: name,
+			ratting: ratting,
+			review: review,
+			date: moment(Date.now()).format("LL"),
+		});
+		if (!reviewData) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Review Not Submitted",
+			});
+		}
+
+		let totalProductRatting = 0;
+		let averageRatting = 0;
+		const totalProductReviews = await ReviewModal.find({productId: productId});
+		for (let i = 0; i < totalProductReviews.length; i++) {
+			totalProductRatting = totalProductRatting + totalProductReviews[i].ratting;
+		}
+		if (totalProductReviews.length > 0) {
+			averageRatting = parseInt(totalProductRatting / totalProductReviews.length).toFixed(1);
+		}
+
+		// 	* UPDATE PRODUCT RATINGS
+		const updateProduct = await Product.findByIdAndUpdate({_id: productId}, {ratting: averageRatting}, {new: true});
+		if (!updateProduct) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Product Ratting Not Updated",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: "Review Submitted Successfully",
+		});
+	} catch (e) {
+		console.log(e.message, "handleSubmitReview");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	getCategories,
 	getFeatureProducts,
@@ -334,4 +431,5 @@ module.exports = {
 	getPriceRange,
 	getQueryProducts,
 	handleGetProductDetails,
+	handleSubmitReview,
 };
