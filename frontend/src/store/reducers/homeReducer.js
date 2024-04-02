@@ -80,10 +80,8 @@ export const getQueryProducts = createAsyncThunk("home/getQueryProducts", async 
 export const submitUserReview = createAsyncThunk("home/submitUserReview", async (info, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.post("/frontend/submit-user-review", info);
-		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
-		console.log(e.response.data);
 		return rejectWithValue(e.response.data);
 	}
 });
@@ -207,6 +205,19 @@ export const homeReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(getProductDetails.pending, (state, _) => {
+			state.loading = true;
+		});
+
+		// 	* SUBMIT USER REVIEW
+		builder.addCase(submitUserReview.fulfilled, (state, {payload}) => {
+			state.loading = false;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(submitUserReview.rejected, (state, {payload}) => {
+			state.loading = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(submitUserReview.pending, (state, {payload}) => {
 			state.loading = true;
 		});
 	},

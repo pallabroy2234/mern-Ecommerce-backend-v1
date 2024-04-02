@@ -1,18 +1,20 @@
 import Rattings from "./Rattings.jsx";
 import RattingTemp from "./RattingTemp.jsx";
 import Pagination from "./Pagination.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ReactRatting from "react-rating";
 import {CiStar} from "react-icons/ci";
 import {AiFillStar} from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {submitUserReview} from "../store/reducers/homeReducer.js";
+import {messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
+import toast from "react-hot-toast";
 
 const Review = ({product}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {userInfo} = useSelector((state) => state.auth);
+	const {successMessage, errorMessage, loading} = useSelector((state) => state.home);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [parPage, setParPage] = useState(5);
 	const [reactRatting, setReactRatting] = useState();
@@ -33,6 +35,18 @@ const Review = ({product}) => {
 			navigate("/login");
 		}
 	};
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+			setReview("");
+			setReactRatting(0);
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, errorMessage]);
 
 	return (
 		<div className='mt-8'>
@@ -159,7 +173,7 @@ const Review = ({product}) => {
 							/>
 						</div>
 						<form onSubmit={(e) => handleSubmitReview(e)}>
-							<textarea onChange={(e) => setReview(e.target.value)} required name='' id='' rows='5' className='border outline-0 p-3 w-full rounded-md'></textarea>
+							<textarea onChange={(e) => setReview(e.target.value)} required name='review' id='review' value={review} rows='5' className='border outline-0 p-3 w-full rounded-md'></textarea>
 							<div className='mt-2'>
 								<button className='py-2 px-8 bg-indigo-500 text-white rounded-sm'>Submit</button>
 							</div>
