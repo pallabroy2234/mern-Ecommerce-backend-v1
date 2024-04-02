@@ -1,6 +1,6 @@
 import Footer from "../components/Footer.jsx";
 import Headers from "../components/Headers.jsx";
-import {Link, useLocation, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -17,12 +17,18 @@ import {Pagination} from "swiper/modules";
 import {useDispatch, useSelector} from "react-redux";
 import {getProductDetails} from "../store/reducers/homeReducer.js";
 import {FadeLoader} from "react-spinners";
+import toast from "react-hot-toast";
+import {addToCart, addToWishlist, getWishList, messageClear, removeWishlist} from "../store/reducers/cartReducer.js";
 
 const Details = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const {loading, product, relatedProducts, moreProducts} = useSelector((state) => state.home);
+	const {errorMessage, successMessage, wishListProducts} = useSelector((state) => state.cart);
+	const {userInfo} = useSelector((state) => state.auth);
 	const {slug} = useParams();
 	const [state, setState] = useState("reviews");
+	const [quantity, setQuantity] = useState(1);
 
 	useEffect(() => {
 		dispatch(getProductDetails(slug));
@@ -34,11 +40,97 @@ const Details = () => {
 		setImage("");
 	}, [product]);
 
+	// Toast message  || Cart Reducer
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, errorMessage]);
+
+	// * GET WISH LIST PRODUCTS
+
+	useEffect(() => {
+		if (userInfo) {
+			dispatch(getWishList(userInfo.id));
+		}
+	}, [successMessage]);
+
+	useEffect(() => {
+		if (wishListProducts) {
+			const wishlistItems = wishListProducts.map((item) => item?.productId);
+			setActiveWishlistItems(wishlistItems);
+		}
+	}, [wishListProducts]);
+
+	const [activeWishlistItems, setActiveWishlistItems] = useState([]);
+
 	const truncateText = (text) => {
 		if (text.length > 50) {
 			return text.substring(0, 50) + "...";
 		}
 		return text;
+	};
+
+	const handleQuantityIncrement = () => {
+		if (quantity >= product.stock) {
+			toast.error("Out of Stock");
+		} else {
+			setQuantity(quantity + 1);
+		}
+	};
+
+	const handleQuantityDecrement = () => {
+		if (quantity <= 1) {
+			toast.error("Minimum Quantity Reached");
+		} else {
+			setQuantity(quantity - 1);
+		}
+	};
+
+	const handleAddToCart = () => {
+		if (userInfo) {
+			dispatch(
+				addToCart({
+					userId: userInfo.id,
+					quantity: quantity,
+					productId: product._id,
+				}),
+			);
+		} else {
+			navigate("/login");
+		}
+	};
+
+	// * HANDLE WISHLIST FUNCTION || CART REDUCER || ADD AND REMOVE ALSO
+	const handleWishlist = () => {
+		if (userInfo) {
+			const isAlreadyInWishlist = activeWishlistItems.includes(product._id);
+			const activeWishlist = wishListProducts.find((item) => item.productId === product._id);
+
+			if (!isAlreadyInWishlist) {
+				dispatch(
+					addToWishlist({
+						userId: userInfo.id,
+						productId: product?._id,
+						name: product?.name,
+						price: product?.price,
+						image: product?.images[0]?.url,
+						discount: product?.discount,
+						ratting: product?.ratting,
+						slug: product?.slug,
+					}),
+				);
+			} else {
+				dispatch(removeWishlist(activeWishlist._id));
+			}
+		} else {
+			navigate("/login");
+		}
 	};
 
 	const responsive = {
@@ -197,20 +289,28 @@ const Details = () => {
 								<>
 									<div className='flex justify-start items-start gap-4 sm:flex-col '>
 										<div className='flex bg-slate-200 h-[50px] justify-center items-center text-xl rounded-sm'>
-											<div className='px-6 cursor-pointer'>-</div>
-											<div className='px-5'>5</div>
-											<div className='px-6 cursor-pointer'>+</div>
+											<button onClick={handleQuantityDecrement} className='px-6 cursor-pointer'>
+												-
+											</button>
+											<div className='px-5'>{quantity}</div>
+											<button onClick={handleQuantityIncrement} className='px-6 cursor-pointer'>
+												+
+											</button>
 										</div>
 										<div className='w-full'>
-											<button className='px-9 py-3 h-[50px] whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-purple-500/40 bg-purple-500 text-white rounded-sm'>Add to Cart</button>
+											<button onClick={handleAddToCart} className='px-9 py-3 h-[50px] whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-purple-500/40 bg-purple-500 text-white rounded-sm'>
+												Add to Cart
+											</button>
 										</div>
 									</div>
 								</>
 							) : null}
 							<div>
-								<div className='h-[50px] w-[50px] flex justify-center items-center cursor-pointer text-xl hover:shadow-lg hover:shadow-cyan-500/40 bg-cyan-500 text-white'>
+								<button
+									onClick={handleWishlist}
+									className={`${activeWishlistItems.includes(product._id) ? "bg-red-500 hover:shadow-red-500/30" : "hover:shadow-cyan-500/40 bg-cyan-500"} h-[50px] w-[50px] flex justify-center items-center cursor-pointer text-xl hover:shadow-lg  text-white`}>
 									<AiFillHeart />
-								</div>
+								</button>
 							</div>
 						</div>
 
@@ -304,8 +404,9 @@ const Details = () => {
 													</div>
 													{item.discount > 0 ? <div className='z-50 flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2'>-{item?.discount}%</div> : null}
 												</div>
-												<div className=''>
+												<div className='flex flex-col'>
 													<h2 className='text-slate-600 py-1'>{truncateText(item?.name)}</h2>
+													<p className='mb-3 text-base]'>Price:{item?.price}</p>
 													<div className='flex items-center gap-2 text-xl'>
 														<Rattings rattings={item?.ratting} />
 													</div>
