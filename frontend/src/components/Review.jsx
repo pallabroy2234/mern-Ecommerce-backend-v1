@@ -9,6 +9,10 @@ import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getProductReviews, messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
 import toast from "react-hot-toast";
+import ReactPaginate from "react-paginate";
+import {FaChevronLeft} from "react-icons/fa6";
+import {FaChevronRight} from "react-icons/fa";
+import {BsArrowLeft, BsArrowRight} from "react-icons/bs";
 
 const Review = ({product}) => {
 	const dispatch = useDispatch();
@@ -20,6 +24,11 @@ const Review = ({product}) => {
 	const [limit, setLimit] = useState(5);
 	const [reactRatting, setReactRatting] = useState();
 	const [review, setReview] = useState("");
+	const [currentPage, setCurrentPage] = useState(0);
+
+	const handlePageChange = (selectedPage) => {
+		setPageNumber(selectedPage.selected + 1);
+	};
 
 	// * Handle Submit Review
 	const handleSubmitReview = (e) => {
@@ -157,10 +166,25 @@ const Review = ({product}) => {
 							<p className='text-base text-slate-600'>{item?.review}</p>
 						</div>
 					))}
-
 				<div className='flex justify-end'>
 					{reviewPagination.totalNumberOfReviews && reviewPagination.totalNumberOfReviews >= parPage ? (
-						<Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={reviewPagination.totalNumberOfReviews} parPage={parPage} showItem={Math.floor(reviewPagination.totalNumberOfReviews / parPage)} />
+						<ReactPaginate
+							className='flex flex-row gap-3 justify-center items-center'
+							pageCount={reviewPagination.totalPages}
+							pageRangeDisplayed={parPage}
+							marginPagesDisplayed={10}
+							// onPageChange={(e) => setPageNumber(e.selected + 1)}
+							onPageChange={handlePageChange}
+							containerClassName={"pagination-container"}
+							activeClassName={"active"}
+							pageClassName={"page"}
+							breakAriaLabels={"..."}
+							nextLabel={<BsArrowRight />}
+							previousLabel={<BsArrowLeft />}
+							nextClassName='arrow'
+							previousClassName='arrow'
+							disabledClassName={"arrow-disabled"}
+						/>
 					) : null}
 				</div>
 			</div>

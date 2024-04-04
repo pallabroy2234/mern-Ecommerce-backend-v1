@@ -457,6 +457,7 @@ const handleGetProductReviews = async (req, res) => {
 		const {productId} = req.params;
 		const pageNumber = parseInt(req.query.pageNumber) || 1;
 		const limit = parseInt(req.query.limit) || 5;
+
 		const skipPage = (pageNumber - 1) * limit;
 		if (!ObjectId.isValid(productId)) {
 			return errorResponse(res, {
@@ -501,6 +502,7 @@ const handleGetProductReviews = async (req, res) => {
 		];
 
 		const [ratings, reviews] = await Promise.all([ReviewModal.aggregate(aggregatePipeline), ReviewModal.find({productId: productId}).sort({createdAt: -1}).skip(skipPage).limit(limit)]);
+		const totalProductReviews = await ReviewModal.find({productId: productId}).countDocuments();
 		if (!reviews) {
 			return errorResponse(res, {
 				statusCode: 404,
@@ -514,6 +516,11 @@ const handleGetProductReviews = async (req, res) => {
 			});
 		}
 
+		const totalPages = Math.ceil(totalProductReviews / parseInt(limit));
+		const currentPage = parseInt(pageNumber);
+		const previousPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+		const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Product Reviews Fetch Successfully",
@@ -521,11 +528,11 @@ const handleGetProductReviews = async (req, res) => {
 				ratings,
 				reviews,
 				pagination: {
-					totalNumberOfReviews: reviews.length,
-					totalPages: Math.ceil(reviews.length / limit),
-					currentPage: pageNumber,
-					previousPage: pageNumber - 1 ? pageNumber - 1 : null,
-					nextPage: pageNumber + 1 <= Math.ceil(reviews.length / limit) ? pageNumber + 1 : null,
+					totalNumberOfReviews: totalProductReviews,
+					totalPages,
+					currentPage,
+					previousPage,
+					nextPage,
 				},
 			},
 		});

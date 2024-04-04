@@ -7,11 +7,40 @@
     .customContainer {
         @apply w-[85%] lg:w-[90%] mx-auto;
     }
-    .wrapper{
+
+    .wrapper {
         @apply w-[85%] md:w-[90%] sm:w-[90%] lg:w-[90%] mx-auto h-full ;
     }
 }
 
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    align-items: center;
+}
+
+.page a {
+    @apply px-[18px] border py-[8px] rounded-md
+}
+
+.active a {
+    @apply bg-blue-500 text-white border-blue-500
+}
+
+
+.arrow {
+    @apply flex items-center justify-center
+}
+
+.arrow a {
+    @apply px-4 border py-[12px] rounded-md
+}
+.arrow-disabled a {
+    @apply bg-gray-100
+}
 
 .custom-dot-list-style-bannerSection button {
     position: relative;
@@ -46,7 +75,7 @@
 }
 
 /* If Swiper bullet style Change  */
-.swiperBullet{
+.swiperBullet {
     width: 10px;
     height: 10px;
     background-color: red;
@@ -54,4 +83,5 @@
     display: inline-block;
     margin: 0 8px;
 }
+
 
