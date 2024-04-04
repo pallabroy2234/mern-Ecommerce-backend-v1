@@ -411,31 +411,45 @@ const handleSubmitReview = async (req, res) => {
 			});
 		}
 		// * UPDATE WISHLIST RATINGS
-		const updateWishlist = await WishListModal.findOneAndUpdate(
+		// const updateWishlist = await WishListModal.findOneAndUpdate(
+		// 	{
+		// 		$and: [
+		// 			{
+		// 				userId: {
+		// 					$eq: userId,
+		// 				},
+		// 			},
+		// 			{
+		// 				productId: {
+		// 					$eq: productId,
+		// 				},
+		// 			},
+		// 		],
+		// 	},
+		// 	{
+		// 		ratting: averageRatting,
+		// 	},
+		// );
+		//
+		// if (updateWishlist) {
+		// }
+
+		// * If wishlist exist and update ratting
+		await WishListModal.findOneAndUpdate(
 			{
-				$and: [
-					{
-						userId: {
-							$eq: userId,
-						},
-					},
-					{
-						productId: {
-							$eq: productId,
-						},
-					},
-				],
+				userId: userId,
+				productId: productId,
 			},
 			{
-				ratting: averageRatting,
+				$set: {
+					ratting: averageRatting,
+				},
+			},
+			{
+				new: true, // Return the updated document
+				upsert: false, // Do not insert a new document if it doesn't exist
 			},
 		);
-		if (!updateWishlist) {
-			return errorResponse(res, {
-				statusCode: 400,
-				message: "Wishlist Ratting Not Updated",
-			});
-		}
 
 		return successResponse(res, {
 			statusCode: 201,

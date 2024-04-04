@@ -167,7 +167,7 @@ const Review = ({product}) => {
 						</div>
 					))}
 				<div className='flex justify-end'>
-					{reviewPagination.totalNumberOfReviews && reviewPagination.totalNumberOfReviews >= parPage ? (
+					{reviewPagination.totalNumberOfReviews && reviewPagination.totalNumberOfReviews > parPage ? (
 						<ReactPaginate
 							className='flex flex-row gap-3 justify-center items-center'
 							pageCount={reviewPagination.totalPages}
