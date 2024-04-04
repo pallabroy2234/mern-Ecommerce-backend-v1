@@ -17,6 +17,7 @@ const Review = ({product}) => {
 	const {submitSuccessMessage, submitErrorMessage, loading} = useSelector((state) => state.home);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [parPage, setParPage] = useState(5);
+	const [limit, setLimit] = useState(5);
 	const [reactRatting, setReactRatting] = useState();
 	const [review, setReview] = useState("");
 
@@ -58,7 +59,7 @@ const Review = ({product}) => {
 				}),
 			);
 		}
-	}, [pageNumber, product]);
+	}, [pageNumber, product, limit]);
 
 	return (
 		<div className='mt-8'>

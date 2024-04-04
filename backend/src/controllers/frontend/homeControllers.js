@@ -455,7 +455,9 @@ const handleSubmitReview = async (req, res) => {
 const handleGetProductReviews = async (req, res) => {
 	try {
 		const {productId} = req.params;
-		const {pageNumber} = req.query || 1;
+		const pageNumber = parseInt(req.query.pageNumber) || 1;
+		const limit = parseInt(req.query.limit) || 5;
+		const skipPage = (pageNumber - 1) * limit;
 		if (!ObjectId.isValid(productId)) {
 			return errorResponse(res, {
 				statusCode: 400,
@@ -470,7 +472,63 @@ const handleGetProductReviews = async (req, res) => {
 			});
 		}
 
-		console.log(productId, pageNumber);
+		const aggregatePipeline = [
+			{
+				$match: {
+					productId: new ObjectId(productId),
+					ratting: {$exists: true, $ne: null},
+				},
+			},
+			{
+				$unwind: "$ratting",
+			},
+			{
+				$group: {
+					_id: "$ratting",
+					count: {$sum: 1},
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					ratting: "$_id",
+					count: 1,
+				},
+			},
+			{
+				$sort: {ratting: -1},
+			},
+		];
+
+		const [ratings, reviews] = await Promise.all([ReviewModal.aggregate(aggregatePipeline), ReviewModal.find({productId: productId}).sort({createdAt: -1}).skip(skipPage).limit(limit)]);
+		if (reviews.length === 0) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No Reviews Found",
+			});
+		}
+		if (ratings.length === 0) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "No Ratings Found",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Product Reviews Fetch Successfully",
+			payload: {
+				ratings,
+				reviews,
+				pagination: {
+					totalNumberOfReviews: reviews.length,
+					totalPages: Math.ceil(reviews.length / limit),
+					currentPage: pageNumber,
+					previousPage: pageNumber - 1 ? pageNumber - 1 : null,
+					nextPage: pageNumber + 1 <= Math.ceil(reviews.length / limit) ? pageNumber + 1 : null,
+				},
+			},
+		});
 	} catch (e) {
 		console.log(e.message, "handleGetProductReviews");
 		return errorResponse(res, {

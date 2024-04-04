@@ -86,9 +86,9 @@ export const submitUserReview = createAsyncThunk("home/submitUserReview", async 
 	}
 });
 
-export const getProductReviews = createAsyncThunk("home/getProductReviews", async ({productId, pageNumber}, {rejectWithValue, fulfillWithValue}) => {
+export const getProductReviews = createAsyncThunk("home/getProductReviews", async ({productId, pageNumber, limit}, {rejectWithValue, fulfillWithValue}) => {
 	try {
-		const {data} = await api.get(`/frontend/get-product-reviews/${productId}?pageNumber=${pageNumber || 1}`);
+		const {data} = await api.get(`/frontend/get-product-reviews/${productId}?pageNumber=${pageNumber || 1}&&limit=${limit || 5}`);
 		console.log(data);
 		return fulfillWithValue(data);
 	} catch (e) {
@@ -119,6 +119,11 @@ export const homeReducer = createSlice({
 		// 	* submitUserReview
 		submitSuccessMessage: "",
 		submitErrorMessage: "",
+
+		// 	* getProductReviews
+		reviews: [],
+		rattings: [],
+		reviewPagination: {},
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -237,6 +242,8 @@ export const homeReducer = createSlice({
 		builder.addCase(submitUserReview.pending, (state, {payload}) => {
 			state.loading = true;
 		});
+
+		// 	* GET PRODUCT REVIEWS
 	},
 });
 
