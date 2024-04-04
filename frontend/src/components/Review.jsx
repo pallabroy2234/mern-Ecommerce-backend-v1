@@ -7,7 +7,7 @@ import {CiStar} from "react-icons/ci";
 import {AiFillStar} from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
+import {getProductReviews, messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
 import toast from "react-hot-toast";
 
 const Review = ({product}) => {
@@ -48,7 +48,17 @@ const Review = ({product}) => {
 		}
 	}, [submitSuccessMessage, submitErrorMessage]);
 
-	// * GET
+	// * GET USER REVIEWS
+	useEffect(() => {
+		if (product?._id) {
+			dispatch(
+				getProductReviews({
+					productId: product?._id,
+					pageNumber: pageNumber,
+				}),
+			);
+		}
+	}, [pageNumber, product]);
 
 	return (
 		<div className='mt-8'>

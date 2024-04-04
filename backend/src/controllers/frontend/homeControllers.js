@@ -450,6 +450,36 @@ const handleSubmitReview = async (req, res) => {
 	}
 };
 
+//  * HANDLE GET PRODUCT REVIEWS || GET || /api/frontend/get-product-reviews/:productId?pageNumber=1
+
+const handleGetProductReviews = async (req, res) => {
+	try {
+		const {productId} = req.params;
+		const {pageNumber} = req.query || 1;
+		if (!ObjectId.isValid(productId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid Product Id",
+			});
+		}
+		const productExists = await Product.findById(productId);
+		if (!productExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Product Not Found",
+			});
+		}
+
+		console.log(productId, pageNumber);
+	} catch (e) {
+		console.log(e.message, "handleGetProductReviews");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	getCategories,
 	getFeatureProducts,
@@ -459,4 +489,5 @@ module.exports = {
 	getQueryProducts,
 	handleGetProductDetails,
 	handleSubmitReview,
+	handleGetProductReviews,
 };

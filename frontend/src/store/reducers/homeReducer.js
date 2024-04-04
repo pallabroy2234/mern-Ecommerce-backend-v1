@@ -86,6 +86,17 @@ export const submitUserReview = createAsyncThunk("home/submitUserReview", async 
 	}
 });
 
+export const getProductReviews = createAsyncThunk("home/getProductReviews", async ({productId, pageNumber}, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.get(`/frontend/get-product-reviews/${productId}?pageNumber=${pageNumber || 1}`);
+		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		console.log(e.response.data);
+		return rejectWithValue(e.response.data);
+	}
+});
+
 export const homeReducer = createSlice({
 	name: "home",
 	initialState: {
