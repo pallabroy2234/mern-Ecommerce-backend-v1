@@ -122,7 +122,7 @@ export const homeReducer = createSlice({
 
 		// 	* getProductReviews
 		reviews: [],
-		rattings: [],
+		ratings: [],
 		reviewPagination: {},
 	},
 	reducers: {
@@ -244,6 +244,19 @@ export const homeReducer = createSlice({
 		});
 
 		// 	* GET PRODUCT REVIEWS
+		builder.addCase(getProductReviews.fulfilled, (state, {payload}) => {
+			state.loading = false;
+			state.reviews = payload.payload.reviews;
+			state.ratings = payload.payload.ratings;
+			state.reviewPagination = payload.payload.pagination;
+		});
+		builder.addCase(getProductReviews.rejected, (state, {payload}) => {
+			state.loading = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getProductReviews.pending, (state, {payload}) => {
+			state.loading = true;
+		});
 	},
 });
 

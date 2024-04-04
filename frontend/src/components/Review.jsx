@@ -14,8 +14,8 @@ const Review = ({product}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {submitSuccessMessage, submitErrorMessage, loading} = useSelector((state) => state.home);
-	const [pageNumber, setPageNumber] = useState(1);
+	const {submitSuccessMessage, submitErrorMessage, loading, ratings, reviews, reviewPagination} = useSelector((state) => state.home);
+	const [pageNumber, setPageNumber] = useState(reviewPagination.currentPage || 1);
 	const [parPage, setParPage] = useState(5);
 	const [limit, setLimit] = useState(5);
 	const [reactRatting, setReactRatting] = useState();
@@ -59,7 +59,7 @@ const Review = ({product}) => {
 				}),
 			);
 		}
-	}, [pageNumber, product, limit]);
+	}, [pageNumber, product]);
 
 	return (
 		<div className='mt-8'>
@@ -141,27 +141,27 @@ const Review = ({product}) => {
 				</div>
 			</div>
 
-			<h2 className='text-slate-600 text-xl font-bold py-5'>Product Reviews 30</h2>
+			<h2 className='text-slate-600 text-xl font-bold py-5'>Product Reviews {reviewPagination?.totalNumberOfReviews || 0}</h2>
 
 			<div className='flex flex-col gap-8 pb-10 pt-4'>
-				{[1, 2, 3, 4, 5, 6].map((item, index) => (
-					<div key={index} className='flex flex-col gap-1'>
-						<div className='flex justify-between items-center'>
-							<div className='flex gap-1 text-xl'>
-								<RattingTemp ratting={4} />
+				{reviews &&
+					reviews?.map((item, index) => (
+						<div key={index} className='flex flex-col gap-1'>
+							<div className='flex justify-between items-center'>
+								<div className='flex gap-1 text-xl'>
+									<RattingTemp ratting={item?.ratting} />
+								</div>
+								<span className='text-slate-600'>{item?.date}</span>
 							</div>
-							<span className='text-slate-600'>19 Feb 2024</span>
+							<span className='text-slate-600 text-lg font-semibold'>{item?.name}</span>
+							<p className='text-base text-slate-600'>{item?.review}</p>
 						</div>
-						<span className='text-slate-600 text-lg font-semibold'>Pallab Roy Tushar</span>
-						<p className='text-base text-slate-600'>
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem deleniti ea exercitationem illo iste, iure laudantium officiis pariatur, quis quod ratione recusandae reiciendis sint veritatis? Cupiditate fuga illum quae. Lorem ipsum dolor sit amet, consectetur
-							adipisicing elit. Blanditiis dolorum itaque possimus sed. Eaque eligendi exercitationem itaque iure, labore, magni obcaecati odit pariatur perspiciatis praesentium quae quia, quod vitae? Officiis?
-						</p>
-					</div>
-				))}
+					))}
 
 				<div className='flex justify-end'>
-					<Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={20} parPage={parPage} showItem={Math.floor(20 / 3)} />
+					{reviewPagination.totalNumberOfReviews && reviewPagination.totalNumberOfReviews >= parPage ? (
+						<Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={reviewPagination.totalNumberOfReviews} parPage={parPage} showItem={Math.floor(reviewPagination.totalNumberOfReviews / parPage)} />
+					) : null}
 				</div>
 			</div>
 

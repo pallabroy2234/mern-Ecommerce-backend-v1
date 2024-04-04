@@ -501,13 +501,13 @@ const handleGetProductReviews = async (req, res) => {
 		];
 
 		const [ratings, reviews] = await Promise.all([ReviewModal.aggregate(aggregatePipeline), ReviewModal.find({productId: productId}).sort({createdAt: -1}).skip(skipPage).limit(limit)]);
-		if (reviews.length === 0) {
+		if (!reviews) {
 			return errorResponse(res, {
 				statusCode: 404,
 				message: "No Reviews Found",
 			});
 		}
-		if (ratings.length === 0) {
+		if (!ratings) {
 			return errorResponse(res, {
 				statusCode: 404,
 				message: "No Ratings Found",
