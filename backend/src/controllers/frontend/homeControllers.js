@@ -392,24 +392,33 @@ const handleSubmitReview = async (req, res) => {
 			});
 		}
 
-		let totalProductRatting = 0;
-		let averageRatting = 0;
-		const totalProductReviews = await ReviewModal.find({productId: productId});
-		for (let i = 0; i < totalProductReviews.length; i++) {
-			totalProductRatting = totalProductRatting + totalProductReviews[i].ratting;
-		}
-		if (totalProductReviews.length > 0) {
-			averageRatting = parseInt(totalProductRatting / totalProductReviews.length).toFixed(1);
-		}
+		// let totalProductRatting = 0;
+		// let averageRatting = 0;
+		// const totalProductReviews = await ReviewModal.find({productId: productId});
+		// for (let i = 0; i < totalProductReviews.length; i++) {
+		// 	totalProductRatting = totalProductRatting + totalProductReviews[i].ratting;
+		// }
+		// if (totalProductReviews.length > 0) {
+		// 	averageRatting = parseInt(totalProductRatting / totalProductReviews.length).toFixed(1);
+		// }
+
+		const totalProductReviews = await ReviewModal.find({
+			productId: productId,
+			ratting: {$exists: true, $ne: null},
+		});
+
+		const totalProductRatting = totalProductReviews.reduce((acc, item) => acc + item.ratting, 0);
+		const averageRatting = (totalProductRatting / totalProductReviews.length).toFixed(1);
 
 		// 	* UPDATE PRODUCT RATINGS
-		const updateProduct = await Product.findByIdAndUpdate({_id: productId}, {ratting: averageRatting}, {new: true});
+		const updateProduct = await Product.findByIdAndUpdate({_id: productId}, {ratting: averageRatting});
 		if (!updateProduct) {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Product Ratting Not Updated",
 			});
 		}
+
 		// * UPDATE WISHLIST RATINGS
 		// const updateWishlist = await WishListModal.findOneAndUpdate(
 		// 	{

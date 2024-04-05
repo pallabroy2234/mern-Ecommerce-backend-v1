@@ -13,6 +13,7 @@ import ReactPaginate from "react-paginate";
 import {FaChevronLeft} from "react-icons/fa6";
 import {FaChevronRight} from "react-icons/fa";
 import {BsArrowLeft, BsArrowRight} from "react-icons/bs";
+import rattings from "./Rattings.jsx";
 
 const Review = ({product}) => {
 	const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const Review = ({product}) => {
 			navigate("/login");
 		}
 	};
+
 	useEffect(() => {
 		if (submitSuccessMessage) {
 			toast.success(submitSuccessMessage);
@@ -76,77 +78,92 @@ const Review = ({product}) => {
 			<div className='flex gap-10 md:flex-col'>
 				<div className='flex flex-col gap-2 justify-start items-start py-4'>
 					<div>
-						<span className='text-6xl md:text-3xl font-semibold'>4.5</span>
+						<span className='text-6xl md:text-3xl font-semibold'>{product?.ratting}</span>
 						<span className='text-3xl md:text-xl font-semibold text-slate-600'>/5</span>
 					</div>
 					<div className='flex text-4xl md:text-lg gap-1'>
-						<Rattings rattings={4.5} />
+						<Rattings rattings={product?.ratting} />
 					</div>
-					<p className='text-sm text-slate-600'>23 Ratting</p>
+					<p className='text-sm text-slate-600'>{reviewPagination?.totalNumberOfReviews} Ratting</p>
 				</div>
 
 				{/* Product All Ratting */}
 				<div className='flex gap-2 flex-col py-4'>
-					{/* 5 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={5} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[60%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>10</p>
-					</div>
-					{/* 4 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={4} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[70%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>20</p>
-					</div>
-					{/* 3 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={3} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[40%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>8</p>
-					</div>
-					{/* 2 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={2} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[30%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>5</p>
-					</div>
-					{/* 1 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={1} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[10%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>3</p>
-					</div>
-					{/* 0 star review */}
-					<div className='flex justify-start items-center gap-5'>
-						<div className='text-md flex gap-1 w-[93px]'>
-							<RattingTemp ratting={0} />
-						</div>
-						<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-							<div className='h-full bg-ratting w-[0%]'></div>
-						</div>
-						<p className='text-sm text-slate-600 w-[0%]'>0</p>
-					</div>
+					{/* Ratings */}
+					{[5, 4, 3, 2, 1, 0].map((rating, index) => {
+						const ratingData = ratings?.find((item) => item.ratting === rating) || {rating: 0, count: 0};
+						return (
+							<div key={index} className='flex justify-start items-center gap-5'>
+								<div className='text-md flex gap-1 w-[93px]'>
+									<RattingTemp ratting={rating} />
+								</div>
+								<div className='w-[200px] h-[14px] bg-slate-200 relative'>
+									<div className={`h-full bg-ratting w-[${ratingData.count * 10}%]`}></div>
+								</div>
+								<p className={`text-sm text-slate-600 w-[0%]`}>{ratingData.count}</p>
+							</div>
+						);
+					})}
+
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={5} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[60%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>10</p>*/}
+					{/*</div>*/}
+					{/*/!* 4 star review *!/*/}
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={4} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[70%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>20</p>*/}
+					{/*</div>*/}
+					{/*/!* 3 star review *!/*/}
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={3} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[40%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>8</p>*/}
+					{/*</div>*/}
+					{/*/!* 2 star review *!/*/}
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={2} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[30%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>5</p>*/}
+					{/*</div>*/}
+					{/*/!* 1 star review *!/*/}
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={1} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[10%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>3</p>*/}
+					{/*</div>*/}
+					{/*/!* 0 star review *!/*/}
+					{/*<div className='flex justify-start items-center gap-5'>*/}
+					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
+					{/*		<RattingTemp ratting={0} />*/}
+					{/*	</div>*/}
+					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
+					{/*		<div className='h-full bg-ratting w-[0%]'></div>*/}
+					{/*	</div>*/}
+					{/*	<p className='text-sm text-slate-600 w-[0%]'>0</p>*/}
+					{/*</div>*/}
 				</div>
 			</div>
 
