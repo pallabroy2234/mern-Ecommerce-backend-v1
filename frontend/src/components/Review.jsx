@@ -7,7 +7,7 @@ import {CiStar} from "react-icons/ci";
 import {AiFillStar} from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getProductReviews, messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
+import {getProductDetails, getProductReviews, messageClear, submitUserReview} from "../store/reducers/homeReducer.js";
 import toast from "react-hot-toast";
 import ReactPaginate from "react-paginate";
 import {FaChevronLeft} from "react-icons/fa6";
@@ -26,8 +26,7 @@ const Review = ({product}) => {
 	const [reactRatting, setReactRatting] = useState();
 	const [review, setReview] = useState("");
 	const [currentPage, setCurrentPage] = useState(0);
-	// * Bar Width for Ratting
-	let bar = 0;
+
 	const handlePageChange = (selectedPage) => {
 		setPageNumber(selectedPage.selected + 1);
 	};
@@ -60,6 +59,7 @@ const Review = ({product}) => {
 					pageNumber: pageNumber,
 				}),
 			);
+			dispatch(getProductDetails(product.slug));
 		}
 		if (submitErrorMessage) {
 			toast.error(submitErrorMessage);
@@ -103,14 +103,16 @@ const Review = ({product}) => {
 						const barWidth = reviewPagination.totalNumberOfReviews !== 0 ? (ratingData.count / reviewPagination.totalNumberOfReviews) * maxWidth : 0;
 						// Ensure barWidth is a number and not NaN
 						const validBarWidth = Number.isFinite(barWidth) ? barWidth : 0;
-						bar = validBarWidth.toFixed(0);
+						let validBar = validBarWidth.toFixed(0);
+
+						const bar = "{validBar}%";
 						return (
 							<div key={index} className='flex justify-start items-center gap-5'>
 								<div className='text-md flex gap-1 w-[93px]'>
 									<RattingTemp ratting={rating} />
 								</div>
 								<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-									<div className={`h-full bg-ratting transition-all duration-300  w-[${bar}%]`}></div>
+									<div style={{width: `${validBar}%`}} className={`h-full bg-ratting transition-all duration-300`}></div>
 								</div>
 								<p className={`text-sm text-slate-600 w-[0%]`}>{ratingData.count}</p>
 							</div>
