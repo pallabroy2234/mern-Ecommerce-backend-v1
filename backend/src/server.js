@@ -1,12 +1,34 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const app = require('./app');
-const connectDatabase = require("./utiles/db")
-const port = process.env.PORT || 5002
+const app = require("./app");
+const connectDatabase = require("./utiles/db");
+const port = process.env.PORT || 5002;
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
 
-app.listen(port, async () => {
-    await connectDatabase()
-    console.log(`server is running at http://localhost:${port}`);
+server.listen(port, async () => {
+	await connectDatabase();
+	console.log(`server is running at http://localhost:${port}`);
 });
 
+const io = socketIo(server, {
+	cors: {
+		origin: "*",
+		credentials: true,
+	},
+});
 
+io.on("connection", (socket) => {
+	console.log("Socket connected: ", socket.id);
+	socket.on("disconnect", () => {
+		console.log("Socket disconnected: ", socket.id);
+	});
+	socket.on("joinRoom", ({roomId}) => {
+		socket.join(roomId);
+		console.log("Socket joined room: ", roomId);
+	});
+	socket.on("message", ({roomId, message}) => {
+		io.to(roomId).emit("message", message);
+	});
+});
