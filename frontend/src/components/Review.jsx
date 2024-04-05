@@ -26,7 +26,8 @@ const Review = ({product}) => {
 	const [reactRatting, setReactRatting] = useState();
 	const [review, setReview] = useState("");
 	const [currentPage, setCurrentPage] = useState(0);
-
+	// * Bar Width for Ratting
+	let bar = 0;
 	const handlePageChange = (selectedPage) => {
 		setPageNumber(selectedPage.selected + 1);
 	};
@@ -53,6 +54,12 @@ const Review = ({product}) => {
 			dispatch(messageClear());
 			setReview("");
 			setReactRatting(0);
+			dispatch(
+				getProductReviews({
+					productId: product?._id,
+					pageNumber: pageNumber,
+				}),
+			);
 		}
 		if (submitErrorMessage) {
 			toast.error(submitErrorMessage);
@@ -92,78 +99,23 @@ const Review = ({product}) => {
 					{/* Ratings */}
 					{[5, 4, 3, 2, 1, 0].map((rating, index) => {
 						const ratingData = ratings?.find((item) => item.ratting === rating) || {rating: 0, count: 0};
+						const maxWidth = 100;
+						const barWidth = reviewPagination.totalNumberOfReviews !== 0 ? (ratingData.count / reviewPagination.totalNumberOfReviews) * maxWidth : 0;
+						// Ensure barWidth is a number and not NaN
+						const validBarWidth = Number.isFinite(barWidth) ? barWidth : 0;
+						bar = validBarWidth.toFixed(0);
 						return (
 							<div key={index} className='flex justify-start items-center gap-5'>
 								<div className='text-md flex gap-1 w-[93px]'>
 									<RattingTemp ratting={rating} />
 								</div>
 								<div className='w-[200px] h-[14px] bg-slate-200 relative'>
-									<div className={`h-full bg-ratting w-[${ratingData.count * 10}%]`}></div>
+									<div className={`h-full bg-ratting transition-all duration-300  w-[${bar}%]`}></div>
 								</div>
 								<p className={`text-sm text-slate-600 w-[0%]`}>{ratingData.count}</p>
 							</div>
 						);
 					})}
-
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={5} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[60%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>10</p>*/}
-					{/*</div>*/}
-					{/*/!* 4 star review *!/*/}
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={4} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[70%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>20</p>*/}
-					{/*</div>*/}
-					{/*/!* 3 star review *!/*/}
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={3} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[40%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>8</p>*/}
-					{/*</div>*/}
-					{/*/!* 2 star review *!/*/}
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={2} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[30%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>5</p>*/}
-					{/*</div>*/}
-					{/*/!* 1 star review *!/*/}
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={1} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[10%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>3</p>*/}
-					{/*</div>*/}
-					{/*/!* 0 star review *!/*/}
-					{/*<div className='flex justify-start items-center gap-5'>*/}
-					{/*	<div className='text-md flex gap-1 w-[93px]'>*/}
-					{/*		<RattingTemp ratting={0} />*/}
-					{/*	</div>*/}
-					{/*	<div className='w-[200px] h-[14px] bg-slate-200 relative'>*/}
-					{/*		<div className='h-full bg-ratting w-[0%]'></div>*/}
-					{/*	</div>*/}
-					{/*	<p className='text-sm text-slate-600 w-[0%]'>0</p>*/}
-					{/*</div>*/}
 				</div>
 			</div>
 
@@ -190,7 +142,6 @@ const Review = ({product}) => {
 							pageCount={reviewPagination.totalPages}
 							pageRangeDisplayed={parPage}
 							marginPagesDisplayed={10}
-							// onPageChange={(e) => setPageNumber(e.selected + 1)}
 							onPageChange={handlePageChange}
 							containerClassName={"pagination-container"}
 							activeClassName={"active"}

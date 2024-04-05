@@ -15,7 +15,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 					style: {
 						background: "white",
 						color: "black",
-						animationDuration: "0.5s",
 					},
 				}}
 			/>
