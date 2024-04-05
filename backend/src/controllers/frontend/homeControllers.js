@@ -392,16 +392,6 @@ const handleSubmitReview = async (req, res) => {
 			});
 		}
 
-		// let totalProductRatting = 0;
-		// let averageRatting = 0;
-		// const totalProductReviews = await ReviewModal.find({productId: productId});
-		// for (let i = 0; i < totalProductReviews.length; i++) {
-		// 	totalProductRatting = totalProductRatting + totalProductReviews[i].ratting;
-		// }
-		// if (totalProductReviews.length > 0) {
-		// 	averageRatting = parseInt(totalProductRatting / totalProductReviews.length).toFixed(1);
-		// }
-
 		const totalProductReviews = await ReviewModal.find({
 			productId: productId,
 			ratting: {$exists: true, $ne: null},
@@ -418,30 +408,6 @@ const handleSubmitReview = async (req, res) => {
 				message: "Product Ratting Not Updated",
 			});
 		}
-
-		// * UPDATE WISHLIST RATINGS
-		// const updateWishlist = await WishListModal.findOneAndUpdate(
-		// 	{
-		// 		$and: [
-		// 			{
-		// 				userId: {
-		// 					$eq: userId,
-		// 				},
-		// 			},
-		// 			{
-		// 				productId: {
-		// 					$eq: productId,
-		// 				},
-		// 			},
-		// 		],
-		// 	},
-		// 	{
-		// 		ratting: averageRatting,
-		// 	},
-		// );
-		//
-		// if (updateWishlist) {
-		// }
 
 		// * If wishlist exist and update ratting
 		await WishListModal.findOneAndUpdate(
