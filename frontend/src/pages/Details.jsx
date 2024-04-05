@@ -391,7 +391,9 @@ const Details = () => {
 								</button>
 							) : null}
 
-							<button className='px-9 py-3  whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-lime-500/40 bg-lime-500 text-white rounded-sm capitalize'>Chat Seller</button>
+							<Link to={`/dashboard/chat/${product?.sellerId}`} className='px-9 py-3  whitespace-nowrap sm:w-full cursor-pointer hover:shadow-lg hover:shadow-lime-500/40 bg-lime-500 text-white rounded-sm capitalize'>
+								Chat Seller
+							</Link>
 						</div>
 					</div>
 				</div>

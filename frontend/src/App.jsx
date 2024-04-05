@@ -19,6 +19,7 @@ import Orders from "./components/dashboard/Orders.jsx";
 import Wishlist from "./components/dashboard/Wishlist.jsx";
 import ChangePassword from "./components/dashboard/ChangePassword.jsx";
 import OrderDetails from "./components/dashboard/OrderDetails.jsx";
+import Chat from "./components/dashboard/Chat.jsx";
 
 function App() {
 	const dispatch = useDispatch();
@@ -57,6 +58,8 @@ function App() {
 						<Route path='/dashboard/orders' element={<Orders />} />
 						<Route path='/dashboard/order/details/:orderId' element={<OrderDetails />} />
 						<Route path='/dashboard/wishlist' element={<Wishlist />} />
+						<Route path='/dashboard/chat' element={<Chat />} />
+						<Route path='/dashboard/chat/:sellerId' element={<Chat />} />
 						<Route path='/dashboard/change-password' element={<ChangePassword />} />
 					</Route>
 				</Route>

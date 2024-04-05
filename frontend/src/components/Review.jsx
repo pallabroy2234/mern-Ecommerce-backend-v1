@@ -142,8 +142,8 @@ const Review = ({product}) => {
 						<ReactPaginate
 							className='flex flex-row gap-3 justify-center items-center'
 							pageCount={reviewPagination.totalPages}
-							pageRangeDisplayed={parPage}
-							marginPagesDisplayed={10}
+							pageRangeDisplayed={0}
+							marginPagesDisplayed={1}
 							onPageChange={handlePageChange}
 							containerClassName={"pagination-container"}
 							activeClassName={"active"}
