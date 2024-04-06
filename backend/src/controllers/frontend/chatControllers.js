@@ -21,8 +21,8 @@ const handleAddFriend = async (req, res) => {
 			});
 		}
 
-		if (sellerId !== "") {
-			const sellerExists = await Seller.findById({_id: sellerId});
+		if (sellerId !== "" && sellerId !== null && sellerId !== undefined) {
+			const sellerExists = await Seller.findOne({_id: sellerId});
 			const checkSeller = await SellerCustomerModal.findOneAndUpdate(
 				{
 					myId: userId,
