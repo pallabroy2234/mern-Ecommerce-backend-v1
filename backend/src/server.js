@@ -19,6 +19,16 @@ const io = socketIo(server, {
 	},
 });
 
+let allUser = [];
+
+const addUser = (userId, socketId, userInfo) => {
+	const checkUser = allUser.some((user) => user.userId === userId);
+	if (!checkUser) {
+		allUser.push({userId, socketId, userInfo});
+		console.log(allUser);
+	}
+};
+
 io.on("connection", (socket) => {
 	console.log("Socket connected: ", socket.id);
 	socket.on("disconnect", () => {
@@ -30,5 +40,9 @@ io.on("connection", (socket) => {
 	});
 	socket.on("message", ({roomId, message}) => {
 		io.to(roomId).emit("message", message);
+	});
+
+	socket.on("addUser", (userId, userInfo) => {
+		addUser(userId, socket.id, userInfo);
 	});
 });

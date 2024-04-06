@@ -5,6 +5,7 @@ import {IoSend} from "react-icons/io5";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import io from "socket.io-client";
+import {addFriend} from "../../store/reducers/chatReducer.js";
 
 const socket = io("http://localhost:3000");
 
@@ -13,7 +14,18 @@ const Chat = () => {
 	const {sellerId} = useParams();
 	const {userInfo} = useSelector((state) => state.auth);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		socket.emit("addUser", userInfo.id, userInfo);
+	}, []);
+
+	useEffect(() => {
+		dispatch(
+			addFriend({
+				sellerId: sellerId || "",
+				// userId: userInfo.id,
+			}),
+		);
+	}, [sellerId]);
 
 	return (
 		<div className='bg-white p-3 rounded-md'>

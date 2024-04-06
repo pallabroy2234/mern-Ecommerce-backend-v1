@@ -36,6 +36,9 @@ app.use("/api/frontend/product", require("./routes/frontend/cartRoutes"));
 // * ORDER ROUTES
 app.use("/api/frontend/product/order", require("./routes/order/orderRoutes"));
 
+// * CHAT ROUTES
+app.use("/api/frontend/chat", require("./routes/frontend/chatRoutes"));
+
 // * CLOUDINARY CONFIG
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
