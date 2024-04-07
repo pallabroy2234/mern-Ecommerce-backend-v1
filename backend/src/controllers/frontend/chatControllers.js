@@ -125,7 +125,6 @@ const handleAddFriend = async (req, res) => {
 				payload: {
 					myFriends,
 					currentFriend: currentFriend[0],
-					messages,
 				},
 			});
 		} else {
@@ -136,7 +135,9 @@ const handleAddFriend = async (req, res) => {
 			return successResponse(res, {
 				statusCode: 200,
 				message: "ok",
-				payload: myFriends,
+				payload: {
+					myFriends,
+				},
 			});
 		}
 	} catch (e) {

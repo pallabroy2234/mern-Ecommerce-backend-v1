@@ -15,6 +15,7 @@ export const addFriend = createAsyncThunk("chat/addFriend", async (info, {reject
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {
+		loader: false,
 		myFriends: [],
 		friendMessages: [],
 		currentFriend: {},
@@ -27,7 +28,22 @@ export const chatReducer = createSlice({
 			state.errorMessage = "";
 		},
 	},
-	extraReducers: (builder) => {},
+	extraReducers: (builder) => {
+		builder.addCase(addFriend.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.myFriends = payload.payload.myFriends.myFriends;
+			state.currentFriend = payload.payload.currentFriend;
+			state.friendMessages = payload.payload.messages;
+		});
+		builder.addCase(addFriend.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(addFriend.pending, (state, _) => {
+			state.loader = true;
+		});
+	},
 });
 
 export const {messageClear} = chatReducer.actions;
