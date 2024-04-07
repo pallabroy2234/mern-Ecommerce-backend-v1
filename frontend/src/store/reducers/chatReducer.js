@@ -24,10 +24,10 @@ export const chatReducer = createSlice({
 	initialState: {
 		loader: false,
 		myFriends: [],
-		friendMessages: [],
 		currentFriend: {},
 		successMessage: "",
 		errorMessage: "",
+		friendMessages: [],
 	},
 	reducers: {
 		messageClear: (state, _) => {
@@ -48,6 +48,29 @@ export const chatReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(addFriend.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(sendMessageSeller.fulfilled, (state, {payload}) => {
+			let tempFriends = state.myFriends;
+			let index = tempFriends.findIndex((friend) => friend.friendId === payload.payload.message.receiverId);
+			if (index !== -1 && index !== 0) {
+				const removeFriends = tempFriends.splice(index, 1)[0];
+				tempFriends.unshift(removeFriends);
+			}
+			// while (index > 0) {
+			// 	let temp = tempFriends[index];
+			// 	tempFriends[index] = tempFriends[index - 1];
+			// 	tempFriends[index - 1] = temp;
+			// 	index--;
+			// }
+			state.myFriends = tempFriends;
+			state.friendMessages = [...state.friendMessages, payload.payload.message];
+			state.successMessage = payload.message;
+		});
+		builder.addCase(sendMessageSeller.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(sendMessageSeller.pending, (state, _) => {
 			state.loader = true;
 		});
 	},

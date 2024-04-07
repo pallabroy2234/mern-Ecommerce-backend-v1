@@ -29,13 +29,10 @@ const Chat = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(text);
 		if (text) {
 			dispatch(
 				sendMessageSeller({
-					// senderId: userInfo.id,
-					// senderName: userInfo.name,
-					massage: text,
+					message: text,
 					receiverId: sellerId,
 				}),
 			);
@@ -56,8 +53,8 @@ const Chat = () => {
 					<div className='w-full flex flex-col text-slate-600 py-4 gap-1 h-[400px] pr-3'>
 						{myFriends &&
 							myFriends.map((item, index) => (
-								<Link key={index} to={`/dashboard/chat/${item?.friendId}`} className={`flex gap-2 justify-start items-center pl-2 py-[8px] border border-purple-500 rounded-md hover:mr-4  transition-all duration-300 ${item.friendId === sellerId ? "mr-4" : "mr-0"} `}>
-									<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-purple-500 ring-offset-2 '>
+								<Link key={index} to={`/dashboard/chat/${item?.friendId}`} className={`flex gap-2 justify-start items-center pl-2 py-[8px] border border-cyan-500 rounded-md hover:mr-4  transition-all duration-300 ${item.friendId === sellerId ? "mr-4" : "mr-0"} `}>
+									<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-cyan-500 ring-offset-2 '>
 										<div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0 z-20'></div>
 										<img className='w-full h-full object-cover' src={item?.image} alt={item?.sellerName} />
 									</div>
@@ -71,7 +68,7 @@ const Chat = () => {
 					{currentFriend ? (
 						<div className='w-full h-full'>
 							<div className='flex justify-start gap-3 items-center text-slate-600 text-xl h-[50px]'>
-								<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-offset-2 ring-purple-500'>
+								<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-offset-2 ring-cyan-500'>
 									<div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0'></div>
 									<img className='w-full h-full object-cover' src={currentFriend?.image} alt='' />
 								</div>
@@ -79,18 +76,30 @@ const Chat = () => {
 							</div>
 							<div className='h-[400px] w-full bg-slate-100 p-3 rounded-md'>
 								<div className='w-full h-full overflow-y-auto flex flex-col gap-3'>
-									<div className='w-full flex gap-2 justify-start items-center text-[14px]'>
-										<img className='w[30px] h-[30px] rounded-full' src={"../../public/images/user.png"} alt='' />
-										<div className='p-2 bg-purple-500 text-white rounded-md'>
-											<span>How Are You? seller Message</span>
-										</div>
-									</div>
-									<div className='w-full flex gap-2 justify-end items-center text-[14px]'>
-										<div className='p-2 bg-purple-500 text-white rounded-md'>
-											<span>How Are You? seller Message</span>
-										</div>
-										<img className='w[30px] h-[30px] rounded-full' src={"../../public/images/user.png"} alt='' />
-									</div>
+									{/* seller message */}
+									{friendMessages.map((item, index) => {
+										if (currentFriend?.friendId !== item.receiverId) {
+											return (
+												<div key={index} className='w-full flex gap-2 justify-start items-center text-[14px]'>
+													<div className='p-2 bg-purple-500 text-white rounded-md'>
+														<span>{item?.message}</span>
+													</div>
+													<img className='w[30px] h-[30px] rounded-full' src={"../../public/images/user.png"} alt='' />
+												</div>
+											);
+										} else {
+											return (
+												<div key={index} className='w-full flex gap-2 justify-end items-center text-[14px]'>
+													<div className='p-2 bg-cyan-500 text-white rounded-md'>
+														<span>{item?.message}</span>
+													</div>
+													<img className='w[30px] h-[30px] rounded-full' src={"../../public/images/user.png"} alt='' />
+												</div>
+											);
+										}
+									})}
+
+									{/* user Message */}
 								</div>
 							</div>
 							<form onSubmit={(e) => handleSubmit(e)} className='flex p-2 justify-between items-center w-full'>

@@ -7,11 +7,6 @@ const http = require("http");
 const socketIo = require("socket.io");
 const server = http.createServer(app);
 
-server.listen(port, async () => {
-	await connectDatabase();
-	console.log(`server is running at http://localhost:${port}`);
-});
-
 const io = socketIo(server, {
 	cors: {
 		origin: "*",
@@ -45,4 +40,9 @@ io.on("connection", (socket) => {
 	socket.on("addUser", (userId, userInfo) => {
 		addUser(userId, socket.id, userInfo);
 	});
+});
+
+server.listen(port, async () => {
+	await connectDatabase();
+	console.log(`server is running at http://localhost:${port}`);
 });

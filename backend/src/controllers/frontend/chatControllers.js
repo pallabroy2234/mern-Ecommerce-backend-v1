@@ -65,7 +65,7 @@ const handleAddFriend = async (req, res) => {
 				},
 			);
 
-			const messages = await SellerCustomerModal.find({
+			const messages = await SellerCustomerMessageModal.find({
 				$or: [
 					{
 						$and: [
@@ -125,6 +125,7 @@ const handleAddFriend = async (req, res) => {
 				payload: {
 					myFriends,
 					currentFriend: currentFriend[0],
+					messages,
 				},
 			});
 		} else {
@@ -155,7 +156,6 @@ const handleSendMessageToSeller = async (req, res) => {
 	try {
 		const {userId} = req;
 		const {receiverId, message} = req.body;
-		console.log(message, "message");
 		if (!ObjectId.isValid(userId) || !ObjectId.isValid(receiverId)) {
 			return errorResponse(res, {
 				status: 400,
@@ -201,22 +201,11 @@ const handleSendMessageToSeller = async (req, res) => {
 
 		// * Seller sort
 		const userSellerSortFriend = await SellerCustomerModal.findOne({myId: userId});
-
-		// Extract the array of myFriends
 		let myFriends = userSellerSortFriend.myFriends;
-
-		// Find the index of the friend to be moved
 		const index = myFriends.findIndex((friend) => friend.friendId.toString() === receiverId.toString());
-
-		// If the friend is found and it's not already at the beginning of the array
 		if (index !== -1 && index !== 0) {
-			// Remove the friend from its current position
 			const removedFriend = myFriends.splice(index, 1)[0];
-
-			// Add the friend back to the beginning of the array
 			myFriends.unshift(removedFriend);
-
-			// Update the document in the database
 			await SellerCustomerModal.updateOne({myId: userId}, {$set: {myFriends: myFriends}});
 		}
 
