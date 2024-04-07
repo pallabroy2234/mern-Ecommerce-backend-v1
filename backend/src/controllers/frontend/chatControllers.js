@@ -6,8 +6,9 @@ const mongoose = require("mongoose");
 const User = require("../../models/userModal");
 const Seller = require("../../models/sellerModal");
 const SellerCustomerModal = require("../../models/chat/sellerCustomerModal");
-// * HANDLE ADD FRIEND || POST || /api/frontend/chat/add-friend
+const sellerCustomerMessageModal = require("../../models/chat/sellerCustomerMessageModal");
 
+// * HANDLE ADD FRIEND || POST || /api/frontend/chat/add-friend
 const handleAddFriend = async (req, res) => {
 	try {
 		const {userId} = req;
@@ -64,12 +65,67 @@ const handleAddFriend = async (req, res) => {
 				},
 			);
 
+			const messages = await SellerCustomerModal.find({
+				$or: [
+					{
+						$and: [
+							{
+								receiverId: {
+									$eq: new ObjectId(sellerId),
+								},
+							},
+							{
+								senderId: {
+									$eq: new ObjectId(userId),
+								},
+							},
+						],
+					},
+					{
+						$and: [
+							{
+								senderId: {
+									$eq: new ObjectId(userId),
+								},
+							},
+							{
+								receiverId: {
+									$eq: new ObjectId(sellerId),
+								},
+							},
+						],
+					},
+				],
+			});
+
+			const myFriends = await SellerCustomerModal.findOne({
+				myId: userId,
+			});
+			const currentFriend = await SellerCustomerModal.aggregate([
+				{
+					$match: {myId: userId},
+				},
+				{
+					$unwind: "$myFriends",
+				},
+				{
+					$match: {"myFriends.friendId": new ObjectId(sellerId)},
+				},
+				{
+					$replaceRoot: {newRoot: "$myFriends"},
+				},
+				{
+					$limit: 1,
+				},
+			]);
+
 			return successResponse(res, {
 				statusCode: 200,
 				message: "ok",
 				payload: {
-					checkSeller,
-					checkUser,
+					myFriends,
+					currentFriend: currentFriend[0],
+					messages,
 				},
 			});
 		} else {
