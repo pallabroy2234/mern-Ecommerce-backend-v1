@@ -16,8 +16,8 @@ app.use(
 	cors({
 		origin: /.*/,
 		preflightContinue: false,
-		credentials: true
-	})
+		credentials: true,
+	}),
 );
 
 app.use(bodyParser.json());
@@ -29,6 +29,9 @@ app.use("/api", authRouter);
 app.use("/api", categoryRouter);
 app.use("/api", require("./routes/dashboard/productRoutes"));
 app.use("/api", sellerRouter);
+
+// * DASHBOARD ROUTES
+app.use("/api/dashboard/chat/seller", require("./routes/dashboard/sellerChatRoutes"));
 
 // * Frontend route
 app.use("/api/frontend", require("./routes/frontend/homeRoutes"));
@@ -45,7 +48,7 @@ app.use("/api/frontend/chat", require("./routes/frontend/chatRoutes"));
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
 	api_key: process.env.CLOUD_API_KEY,
-	api_secret: process.env.CLOUD_SECRET_KEY
+	api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
 //  * Client error handle
@@ -53,7 +56,7 @@ app.use((req, res, next) => {
 	// next(createError(404, "Route not found"));
 	return errorResponse(res, {
 		statusCode: 404,
-		message: "Route not found"
+		message: "Route not found",
 	});
 });
 
@@ -63,12 +66,12 @@ app.use((err, req, res, next) => {
 	if (err instanceof multer.MulterError) {
 		return errorResponse(res, {
 			statusCode: 500,
-			message: err.message
+			message: err.message,
 		});
 	}
 	return errorResponse(res, {
 		statusCode: err.status,
-		message: err.message
+		message: err.message,
 	});
 });
 

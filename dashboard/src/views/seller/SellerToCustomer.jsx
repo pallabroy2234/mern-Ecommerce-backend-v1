@@ -1,11 +1,28 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getUsers} from "../../store/Reducers/chatReducer.js";
 
 
 const SellerToCustomer = () => {
+    const {customerId} = useParams()
+    const dispatch = useDispatch()
+    const {userInfo}  = useSelector(state => state.auth)
     const [show, setShow] = useState(true)
     const sellerId = 32
+    console.log(customerId);
+    
+    useEffect(() => {
+        if(userInfo){
+            // * USER INFO MEANS SELLER INFO
+            // dispatch(getUsers(userInfo._id))
+            dispatch(getUsers())
+        }
+    }, []);
+    
+    
     
     return (
         <div className="px-2 lg:px-7 pt-5">
