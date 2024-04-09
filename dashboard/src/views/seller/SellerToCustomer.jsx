@@ -1,18 +1,20 @@
 import {useEffect, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getUsers} from "../../store/Reducers/chatReducer.js";
+import {sellerRoutes} from "../../router/routes/SellerRoutes.jsx";
 
 
 const SellerToCustomer = () => {
     const {customerId} = useParams()
     const dispatch = useDispatch()
     const {userInfo}  = useSelector(state => state.auth)
+    const {sellerFriends} = useSelector(state => state.chat)
     const [show, setShow] = useState(true)
     const sellerId = 32
-    console.log(customerId);
+    
     
     useEffect(() => {
         if(userInfo){
@@ -20,7 +22,15 @@ const SellerToCustomer = () => {
             // dispatch(getUsers(userInfo._id))
             dispatch(getUsers())
         }
+    }, [userInfo]);
+    
+    useEffect(() => {
+         if(customerId){
+
+         }
     }, []);
+    
+    
     
     
     
@@ -36,55 +46,21 @@ const SellerToCustomer = () => {
                                 <span onClick={() => setShow(false)} className="block cursor-pointer md:hidden "><IoMdClose/></span>
                             </div>
                             
-                            <div className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
-                                <div className="relative">
-                                    <img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt=""/>
-                                    <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
-                                </div>
-                                <div className="flex flex-col justify-center items-start w-full">
-                                    <div className="flex flex-col justify-center items-start w-full">
-                                        <h2 className="text-base font-semibold">Pallab Roy Tushar</h2>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            <div className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8  mb-4 rounded-sm cursor-pointer`}>
-                                <div className="relative">
-                                    <img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt=""/>
-                                    <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
-                                </div>
-                                <div className="flex flex-col justify-center items-start w-full">
-                                    <div className="flex flex-col justify-center items-start w-full">
-                                        <h2 className="text-base font-semibold">Pallab Roy Tushar</h2>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            <div className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-2 mb-4 rounded-sm cursor-pointer`}>
-                                <div className="relative">
-                                    <img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt=""/>
-                                    <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
-                                </div>
-                                <div className="flex flex-col justify-center items-start w-full">
-                                    <div className="flex flex-col justify-center items-start w-full">
-                                        <h2 className="text-base font-semibold">Pallab Roy Tushar</h2>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-2 mb-4 rounded-sm cursor-pointer`}>
-                                <div className="relative">
-                                    <img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt=""/>
-                                    <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
-                                </div>
-                                <div className="flex flex-col justify-center items-start w-full">
-                                    <div className="flex flex-col justify-center items-start w-full">
-                                        <h2 className="text-base font-semibold">Pallab Roy Tushar</h2>
-                                    </div>
-                                </div>
-                            </div>
+                            {
+                                sellerFriends && sellerFriends.map((friend, index)=> (
+                                    <Link to={`/seller/dashboard/chat-customer/${friend?.friendId}`} key={index} className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
+                                        <div className="relative">
+                                            <img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src={friend?.image ? friend?.image : "/public/images/admin.jpg"} alt={friend?.userName} />
+                                            <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+                                        </div>
+                                        <div className="flex flex-col justify-center items-start w-full">
+                                            <div className="flex flex-col justify-center items-start w-full">
+                                                <h2 className="text-base font-semibold">{friend?.userName}</h2>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))
+                            }
                         </div>
                     </div>
                     
@@ -103,7 +79,6 @@ const SellerToCustomer = () => {
                                     </div>
                                 )
                             }
-                            
                             <div onClick={() => setShow(true)} className="w-[35px] flex md:hidden h-[35px] rounded-sm bg-blue-500 shadow-lg hover:shadow-blue-500/50 justify-center cursor-pointer items-center text-white">
                                 <span><FaList/></span>
                             </div>

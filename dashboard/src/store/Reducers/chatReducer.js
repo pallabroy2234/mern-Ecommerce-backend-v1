@@ -47,9 +47,21 @@ export const chatReducer = createSlice({
 		
 	},
 	extraReducers: builder => {
-	
+		// * GET SELLER FRIENDS
+	 builder.addCase(getUsers.fulfilled, (state, {payload})=> {
+		 state.loader = false;
+		 state.sellerFriends = payload.payload.users;
+		 state.successMessage = payload.message;
+	 });
+	 builder.addCase(getUsers.rejected, (state, {payload})=> {
+		 state.loader = false;
+		 state.errorMessage = payload.message;
+	 });
+	 builder.addCase(getUsers.pending, (state,_)=> {
+		 state.loader = true;
+	 })
+		
 	}
-	
 });
 
 
