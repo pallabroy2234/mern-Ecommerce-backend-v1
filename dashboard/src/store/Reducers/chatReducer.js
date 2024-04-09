@@ -18,7 +18,20 @@ export const getUsers = createAsyncThunk(
 	}
 );
 
-
+export const getUserMessages = createAsyncThunk(
+	"chat/getUserMessages",
+	async (customerId, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/chat/seller/get-user-messages/${customerId}`, {
+				withCredentials: true,
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 
 
