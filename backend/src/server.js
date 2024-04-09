@@ -5,6 +5,7 @@ const connectDatabase = require("./utiles/db");
 const port = process.env.PORT || 5002;
 const http = require("http");
 const socketIo = require("socket.io");
+const cors = require("cors");
 const server = http.createServer(app);
 
 const io = socketIo(server, {

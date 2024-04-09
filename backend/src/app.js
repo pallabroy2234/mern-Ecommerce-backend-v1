@@ -14,10 +14,12 @@ const sellerRouter = require("./routes/dashboard/sellerRouters");
 // * ALL API MIDDLEWARE
 app.use(
 	cors({
-		origin: ["http://localhost:5173"],
-		credentials: true,
-	}),
+		origin: /.*/,
+		preflightContinue: false,
+		credentials: true
+	})
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -43,7 +45,7 @@ app.use("/api/frontend/chat", require("./routes/frontend/chatRoutes"));
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
 	api_key: process.env.CLOUD_API_KEY,
-	api_secret: process.env.CLOUD_SECRET_KEY,
+	api_secret: process.env.CLOUD_SECRET_KEY
 });
 
 //  * Client error handle
@@ -51,7 +53,7 @@ app.use((req, res, next) => {
 	// next(createError(404, "Route not found"));
 	return errorResponse(res, {
 		statusCode: 404,
-		message: "Route not found",
+		message: "Route not found"
 	});
 });
 
@@ -61,12 +63,12 @@ app.use((err, req, res, next) => {
 	if (err instanceof multer.MulterError) {
 		return errorResponse(res, {
 			statusCode: 500,
-			message: err.message,
+			message: err.message
 		});
 	}
 	return errorResponse(res, {
 		statusCode: err.status,
-		message: err.message,
+		message: err.message
 	});
 });
 
