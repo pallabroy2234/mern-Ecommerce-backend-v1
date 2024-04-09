@@ -16,12 +16,24 @@ const io = socketIo(server, {
 });
 
 let allUser = [];
+let allSeller = [];
 
+// * ADD USER
 const addUser = (userId, socketId, userInfo) => {
 	const checkUser = allUser.some((user) => user.userId === userId);
+	console.log(allUser);
 	if (!checkUser) {
 		allUser.push({userId, socketId, userInfo});
 		console.log(allUser);
+	}
+};
+
+//  * ADD SELLER
+const addSeller = (sellerId, socketId, userInfo) => {
+	const checkSeller = allSeller.some((seller) => seller.sellerId === sellerId);
+	if (!checkSeller) {
+		allSeller.push({sellerId, socketId, userInfo});
+		console.log(allSeller);
 	}
 };
 
@@ -37,9 +49,13 @@ io.on("connection", (socket) => {
 	socket.on("message", ({roomId, message}) => {
 		io.to(roomId).emit("message", message);
 	});
-
+	// * ADD USER
 	socket.on("addUser", (userId, userInfo) => {
 		addUser(userId, socket.id, userInfo);
+	});
+	// 	 * ADD SELLER
+	socket.on("addSeller", (userId, userInfo) => {
+		addSeller(userId, socket.id, userInfo);
 	});
 });
 

@@ -53,11 +53,11 @@ const Chat = () => {
 					<div className='w-full flex flex-col text-slate-600 py-4 gap-1 h-[400px] pr-3'>
 						{myFriends &&
 							myFriends.map((item, index) => (
-								<Link key={index} to={`/dashboard/chat/${item?.friendId}`} className={`flex gap-2 justify-start items-center pl-2 py-[8px] border border-cyan-500 rounded-md hover:mr-4  transition-all duration-300 ${item.friendId === sellerId ? "mr-4" : "mr-0"} `}>
-									<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-cyan-500 ring-offset-2 '>
-										<div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0 z-20'></div>
+								<Link key={index} to={`/dashboard/chat/${item?.friendId}`} className={`flex gap-2 relative justify-start items-center pl-2 py-[8px] border border-cyan-500 rounded-md hover:mr-4  transition-all duration-300 ${item.friendId === sellerId ? "mr-4" : "mr-0"} `}>
+									<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-cyan-500 ring-offset-2'>
 										<img className='w-full h-full object-cover' src={item?.image} alt={item?.sellerName} />
 									</div>
+									<div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-2 left-[38px] z-20'></div>
 									<span className='text-nowrap text-ellipsis'>{item?.sellerName}</span>
 								</Link>
 							))}
