@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleChatForGetUsers, handleGetUserMessages} = require("../../controllers/dashbaord/sellerChatControllers");
+const {handleChatForGetUsers, handleGetUserMessages, handleSendSellerMessage} = require("../../controllers/dashbaord/sellerChatControllers");
 const {isSeller, authMiddleware} = require("../../middleware/authMiddleware");
 const sellerChatRoutes = express.Router();
 
@@ -8,5 +8,8 @@ sellerChatRoutes.get("/get-users", authMiddleware, isSeller, handleChatForGetUse
 
 // * GET USER MESSAGES FOR SELLER || GET /api/dashboard/chat/seller/get-user-messages/:customerId
 sellerChatRoutes.get("/get-user-messages/:customerId", authMiddleware, isSeller, handleGetUserMessages);
+
+// * SEND MESSAGE TO SELLER || POST  || /api/dashboard/chat/seller/send-seller-message
+sellerChatRoutes.post("/send-seller-message", authMiddleware, isSeller, handleSendSellerMessage);
 
 module.exports = sellerChatRoutes;

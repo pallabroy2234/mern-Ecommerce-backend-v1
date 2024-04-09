@@ -101,29 +101,29 @@ const handleGetUserMessages = async (req, res) => {
 			],
 		});
 
-		const currentFriend = await SellerCustomerModal.aggregate([
-			{
-				$match: {myId: id},
-			},
-			{
-				$unwind: "$myFriends",
-			},
-			{
-				$match: {"myFriends.friendId": new ObjectId(userExist._id)},
-			},
-			{
-				$replaceRoot: {newRoot: "$myFriends"},
-			},
-			{
-				$limit: 1,
-			},
-		]);
+		// const currentFriend = await SellerCustomerModal.aggregate([
+		// 	{
+		// 		$match: {myId: id},
+		// 	},
+		// 	{
+		// 		$unwind: "$myFriends",
+		// 	},
+		// 	{
+		// 		$match: {"myFriends.friendId": new ObjectId(userExist._id)},
+		// 	},
+		// 	{
+		// 		$replaceRoot: {newRoot: "$myFriends"},
+		// 	},
+		// 	{
+		// 		$limit: 1,
+		// 	},
+		// ]);
 		return successResponse(res, {
 			statusCode: 200,
 			message: "ok",
 			payload: {
 				messages,
-				currentFriend: currentFriend[0],
+				currentFriend: userExist,
 			},
 		});
 	} catch (error) {
@@ -134,7 +134,86 @@ const handleGetUserMessages = async (req, res) => {
 	}
 };
 
+// * HANDLE SEND SELLER MESSAGE || POST || /api/dashboard/chat/seller/send-seller-message
+
+const handleSendSellerMessage = async (req, res) => {
+	try {
+		const {id} = req;
+		const {receiverId, message} = req.body;
+		if (!ObjectId.isValid(id) || !ObjectId.isValid(receiverId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const sellerExist = await Seller.findOne({_id: id});
+		if (!sellerExist) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+		const userExist = await User.findOne({_id: receiverId});
+		if (!userExist) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "User not found",
+			});
+		}
+
+		const creteMessage = await SellerCustomerMessageModal.create({
+			senderId: sellerExist._id,
+			senderName: sellerExist.name,
+			receiverId: userExist._id,
+			receiverName: userExist.name,
+			message: message,
+		});
+
+		// * User sort
+		const userSortFriend = await SellerCustomer.findOne({myId: sellerExist._id});
+		let sellerFriends = userSortFriend.myFriends;
+		const indexUser = sellerFriends.findIndex((friend) => friend.friendId.toString() === userExist._id.toString());
+		if (indexUser !== -1 && indexUser !== 0) {
+			const removeFriend = sellerFriends.splice(indexUser, 1)[0];
+			sellerFriends.unshift(removeFriend);
+			await SellerCustomer.updateOne(
+				{
+					myId: sellerExist._id,
+				},
+				{
+					myFriends: sellerFriends,
+				},
+			);
+		}
+
+		// * Seller sort
+		const sellerSort = await SellerCustomer.findOne({myId: userExist._id});
+		let userFriends = sellerSort.myFriends;
+		const index = userFriends.findIndex((friend) => friend.friendId.toString() === sellerExist._id.toString());
+		if (index !== -1 && index !== 0) {
+			const removedFriend = userFriends.splice(index, 1)[0];
+			userFriends.unshift(removedFriend);
+			await SellerCustomer.updateOne({myId: userExist._id}, {$set: {myFriends: userFriends}});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Message sent successfully",
+			payload: {
+				message: creteMessage,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleSendSellerMessage");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal server error",
+		});
+	}
+};
+
 module.exports = {
 	handleChatForGetUsers,
 	handleGetUserMessages,
+	handleSendSellerMessage,
 };

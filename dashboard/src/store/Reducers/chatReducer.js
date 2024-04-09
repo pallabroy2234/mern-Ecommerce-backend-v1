@@ -8,7 +8,7 @@ export const getUsers = createAsyncThunk(
 	async (_, {rejectWithValue, fulfillWithValue}) => {
 		try {
 			const {data} = await api.get(`/dashboard/chat/seller/get-users`, {
-				withCredentials: true,
+				withCredentials: true
 			});
 			return fulfillWithValue(data);
 		} catch (e) {
@@ -23,7 +23,7 @@ export const getUserMessages = createAsyncThunk(
 	async (customerId, {rejectWithValue, fulfillWithValue}) => {
 		try {
 			const {data} = await api.get(`/dashboard/chat/seller/get-user-messages/${customerId}`, {
-				withCredentials: true,
+				withCredentials: true
 			});
 			return fulfillWithValue(data);
 		} catch (e) {
@@ -34,23 +34,38 @@ export const getUserMessages = createAsyncThunk(
 );
 
 
-
+// * SEND MESSAGE
+export const sendSellerMessage = createAsyncThunk(
+	"chat/sendSellerMessage",
+	async (info, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post("/dashboard/chat/seller/send-seller-message", info, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {
 		successMessage: "",
 		errorMessage: "",
-		loader : false,
-		sellerFriends :[],
-		activeUsers : [],
-		activeSeller :[],
-		messageNotifications : [],
+		loader: false,
+		sellerFriends: [],
+		activeUsers: [],
+		activeSeller: [],
+		messageNotifications: [],
 		activeAdmin: "",
-		friends: [],
+		// friends: [],
 		sellerAdminMessages: [],
-		currentSeller:{},
-		currentUser: {},
+		sellerUserMessages: [],
+		currentSeller: {},
+		currentUser: {}
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -61,19 +76,35 @@ export const chatReducer = createSlice({
 	},
 	extraReducers: builder => {
 		// * GET SELLER FRIENDS
-	 builder.addCase(getUsers.fulfilled, (state, {payload})=> {
-		 state.loader = false;
-		 state.sellerFriends = payload.payload.users;
-		 state.successMessage = payload.message;
-	 });
-	 builder.addCase(getUsers.rejected, (state, {payload})=> {
-		 state.loader = false;
-		 state.errorMessage = payload.message;
-	 });
-	 builder.addCase(getUsers.pending, (state,_)=> {
-		 state.loader = true;
-	 })
-		
+		builder.addCase(getUsers.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.sellerFriends = payload.payload.users;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(getUsers.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getUsers.pending, (state, _) => {
+			state.loader = true;
+		});
+		// 	* GET USER MESSAGES AND ALSO GET CURRENT USER
+		builder.addCase(getUserMessages.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.sellerUserMessages = payload.payload.messages;
+			state.currentUser = payload.payload.currentFriend;
+		});
+		builder.addCase(getUserMessages.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getUserMessages.pending, (state, _) => {
+			state.loader = true;
+		});
+	// 	* SEND MESSAGE
+	
+	
+	
 	}
 });
 
