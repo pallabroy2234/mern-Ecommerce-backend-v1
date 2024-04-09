@@ -101,23 +101,6 @@ const handleGetUserMessages = async (req, res) => {
 			],
 		});
 
-		// const currentFriend = await SellerCustomerModal.aggregate([
-		// 	{
-		// 		$match: {myId: id},
-		// 	},
-		// 	{
-		// 		$unwind: "$myFriends",
-		// 	},
-		// 	{
-		// 		$match: {"myFriends.friendId": new ObjectId(userExist._id)},
-		// 	},
-		// 	{
-		// 		$replaceRoot: {newRoot: "$myFriends"},
-		// 	},
-		// 	{
-		// 		$limit: 1,
-		// 	},
-		// ]);
 		return successResponse(res, {
 			statusCode: 200,
 			message: "ok",
@@ -201,6 +184,8 @@ const handleSendSellerMessage = async (req, res) => {
 			message: "Message sent successfully",
 			payload: {
 				message: creteMessage,
+				userFriends,
+				sellerFriends,
 			},
 		});
 	} catch (e) {

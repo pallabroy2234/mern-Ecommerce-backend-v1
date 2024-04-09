@@ -85,12 +85,12 @@ const handleAddFriend = async (req, res) => {
 						$and: [
 							{
 								senderId: {
-									$eq: new ObjectId(userId),
+									$eq: new ObjectId(sellerId),
 								},
 							},
 							{
 								receiverId: {
-									$eq: new ObjectId(sellerId),
+									$eq: new ObjectId(userId),
 								},
 							},
 						],
@@ -118,7 +118,6 @@ const handleAddFriend = async (req, res) => {
 					$limit: 1,
 				},
 			]);
-
 			return successResponse(res, {
 				statusCode: 200,
 				message: "ok",
@@ -184,20 +183,6 @@ const handleSendMessageToSeller = async (req, res) => {
 			receiverName: sellerExists.name,
 			message: message,
 		});
-
-		// 	* Sort message friend list
-		// const userSellerSortFriend = await SellerCustomerModal.findOne({
-		// 	myId: userId,
-		// });
-		//
-		// let myFriends = userSellerSortFriend.myFriends;
-		// let index = myFriends.findIndex((friend) => friend.friendId.toString() === receiverId.toString());
-		// while (index > 0) {
-		// 	let temp = myFriends[index];
-		// 	myFriends[index] = myFriends[index - 1];
-		// 	myFriends[index - 1] = temp;
-		// 	index--;
-		// }
 
 		// * Seller sort
 		const userSellerSortFriend = await SellerCustomerModal.findOne({myId: userId});

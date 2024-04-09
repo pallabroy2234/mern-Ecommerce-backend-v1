@@ -14,7 +14,7 @@ const Chat = () => {
 	const {userInfo} = useSelector((state) => state.auth);
 	const {myFriends, currentFriend, friendMessages} = useSelector((state) => state.chat);
 	const [text, setText] = useState("");
-
+	console.log(currentFriend);
 	useEffect(() => {
 		socket.emit("addUser", userInfo.id, userInfo);
 	}, []);
@@ -78,7 +78,9 @@ const Chat = () => {
 								<div className='w-full h-full overflow-y-auto flex flex-col gap-3'>
 									{/* seller message */}
 									{friendMessages.map((item, index) => {
+										// * True but return false
 										if (currentFriend?.friendId !== item.receiverId) {
+											console.log(currentFriend.friendId, item.receiverId, "receiver");
 											return (
 												<div key={index} className='w-full flex gap-2 justify-start items-center text-[14px]'>
 													<div className='p-2 bg-purple-500 text-white rounded-md'>
@@ -87,7 +89,10 @@ const Chat = () => {
 													<img className='w[30px] h-[30px] rounded-full' src={"../../public/images/user.png"} alt='' />
 												</div>
 											);
-										} else {
+										}
+										//  True and return true
+										if (sellerId === item.receiverId) {
+											console.log(sellerId === item.receiverId, "sender");
 											return (
 												<div key={index} className='w-full flex gap-2 justify-end items-center text-[14px]'>
 													<div className='p-2 bg-cyan-500 text-white rounded-md'>
