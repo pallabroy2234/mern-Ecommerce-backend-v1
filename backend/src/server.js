@@ -15,13 +15,12 @@ const io = socketIo(server, {
 	},
 });
 
-let allUser = [];
-let allSeller = [];
+var allUser = [];
+var allSeller = [];
 
 // * ADD USER
 const addUser = (userId, socketId, userInfo) => {
 	const checkUser = allUser.some((user) => user.userId === userId);
-	console.log(allUser);
 	if (!checkUser) {
 		allUser.push({userId, socketId, userInfo});
 		console.log(allUser);
@@ -35,6 +34,12 @@ const addSeller = (sellerId, socketId, userInfo) => {
 		allSeller.push({sellerId, socketId, userInfo});
 		console.log(allSeller);
 	}
+};
+
+// * Find USER
+
+const findUser = (userId) => {
+	return allUser.find((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
@@ -56,6 +61,15 @@ io.on("connection", (socket) => {
 	// 	 * ADD SELLER
 	socket.on("addSeller", (userId, userInfo) => {
 		addSeller(userId, socket.id, userInfo);
+	});
+	// 	* SEND SELLER MESSAGE
+	socket.on("send-seller-message", (message) => {
+		if (message) {
+			const user = findUser(message.receiverId);
+			if (user !== undefined) {
+				socket.to(user.socketId).emit("seller-message", message);
+			}
+		}
 	});
 });
 

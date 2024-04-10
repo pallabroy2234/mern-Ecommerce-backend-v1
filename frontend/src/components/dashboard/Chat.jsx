@@ -5,7 +5,8 @@ import {IoSend} from "react-icons/io5";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import io from "socket.io-client";
-import {addFriend, sendMessageSeller} from "../../store/reducers/chatReducer.js";
+import {addFriend, sendMessageSeller, updateMessage} from "../../store/reducers/chatReducer.js";
+import toast from "react-hot-toast";
 
 const socket = io("http://localhost:3000");
 const Chat = () => {
@@ -14,7 +15,8 @@ const Chat = () => {
 	const {userInfo} = useSelector((state) => state.auth);
 	const {myFriends, currentFriend, friendMessages} = useSelector((state) => state.chat);
 	const [text, setText] = useState("");
-	console.log(currentFriend);
+	const [receiverMessage, setReceiverMessage] = useState("");
+
 	useEffect(() => {
 		socket.emit("addUser", userInfo.id, userInfo);
 	}, []);
@@ -39,6 +41,22 @@ const Chat = () => {
 			setText("");
 		}
 	};
+
+	useEffect(() => {
+		socket.on("seller-message", (message) => {
+			setReceiverMessage(message);
+		});
+	}, []);
+
+	useEffect(() => {
+		if (receiverMessage) {
+			if (sellerId === receiverMessage.senderId && userInfo.id === receiverMessage.receiverId) {
+				dispatch(updateMessage(receiverMessage));
+			}
+		} else {
+			toast.success(receiverMessage.senderName + " " + "send a message");
+		}
+	}, [receiverMessage]);
 
 	return (
 		<div className='bg-white p-3 rounded-md'>
@@ -80,7 +98,6 @@ const Chat = () => {
 									{friendMessages.map((item, index) => {
 										// * True but return false
 										if (currentFriend?.friendId !== item.receiverId) {
-											console.log(currentFriend.friendId, item.receiverId, "receiver");
 											return (
 												<div key={index} className='w-full flex gap-2 justify-start items-center text-[14px]'>
 													<div className='p-2 bg-purple-500 text-white rounded-md'>
@@ -92,7 +109,6 @@ const Chat = () => {
 										}
 										//  True and return true
 										if (sellerId === item.receiverId) {
-											console.log(sellerId === item.receiverId, "sender");
 											return (
 												<div key={index} className='w-full flex gap-2 justify-end items-center text-[14px]'>
 													<div className='p-2 bg-cyan-500 text-white rounded-md'>

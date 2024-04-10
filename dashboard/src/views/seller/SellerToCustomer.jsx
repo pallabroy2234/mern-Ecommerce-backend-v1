@@ -3,15 +3,16 @@ import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserMessages, getUsers, sendSellerMessage} from "../../store/Reducers/chatReducer.js";
-import {sellerRoutes} from "../../router/routes/SellerRoutes.jsx";
+import {getUserMessages, getUsers, messageClear, sendSellerMessage} from "../../store/Reducers/chatReducer.js";
+import {socket} from "../../utils/utils.js";
+
 
 
 const SellerToCustomer = () => {
 	const {customerId} = useParams();
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector(state => state.auth);
-	const {sellerFriends, sellerUserMessages, currentUser} = useSelector(state => state.chat);
+	const {sellerFriends, sellerUserMessages, currentUser , successMessage} = useSelector(state => state.chat);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
 	
@@ -39,6 +40,13 @@ const SellerToCustomer = () => {
 		}));
 		setText("");
 	};
+	
+	useEffect(() => {
+		if(successMessage){
+			socket.emit("send-seller-message", sellerUserMessages[sellerUserMessages.length-1])
+			dispatch(messageClear())
+		}
+	}, [successMessage]);
 	
 	
 	return (<div className="px-2 lg:px-7 pt-5">

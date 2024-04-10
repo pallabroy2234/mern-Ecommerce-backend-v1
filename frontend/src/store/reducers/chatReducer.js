@@ -19,6 +19,7 @@ export const sendMessageSeller = createAsyncThunk("chat/sendMessageSeller", asyn
 		return rejectWithValue(e.response.data);
 	}
 });
+
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {
@@ -33,6 +34,9 @@ export const chatReducer = createSlice({
 		messageClear: (state, _) => {
 			state.successMessage = "";
 			state.errorMessage = "";
+		},
+		updateMessage: (state, {payload}) => {
+			state.friendMessages = [...state.friendMessages, payload];
 		},
 	},
 	extraReducers: (builder) => {
@@ -76,5 +80,5 @@ export const chatReducer = createSlice({
 	},
 });
 
-export const {messageClear} = chatReducer.actions;
+export const {messageClear, updateMessage} = chatReducer.actions;
 export default chatReducer.reducer;

@@ -184,8 +184,6 @@ const handleSendSellerMessage = async (req, res) => {
 			message: "Message sent successfully",
 			payload: {
 				message: creteMessage,
-				userFriends,
-				sellerFriends,
 			},
 		});
 	} catch (e) {

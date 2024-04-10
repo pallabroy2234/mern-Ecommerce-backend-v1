@@ -61,7 +61,6 @@ export const chatReducer = createSlice({
 		activeSeller: [],
 		messageNotifications: [],
 		activeAdmin: "",
-		// friends: [],
 		sellerAdminMessages: [],
 		sellerUserMessages: [],
 		currentSeller: {},
@@ -101,21 +100,25 @@ export const chatReducer = createSlice({
 		builder.addCase(getUserMessages.pending, (state, _) => {
 			state.loader = true;
 		});
-	// 	* SEND MESSAGE
-	builder.addCase(sendSellerMessage.fulfilled, (state, {payload})=> {
-		let tempFriends = state.sellerFriends;
-		let index = tempFriends.findIndex((friend)=> friend.friendId === payload.payload.message.receiverId);
-		if (index !== -1 && index !== 0) {
-			const removeFriends = tempFriends.splice(index, 1)[0];
-			tempFriends.unshift(removeFriends);
-		}
-		state.sellerFriends = tempFriends;
-		state.sellerUserMessages = [...state.sellerUserMessages, payload.payload.message];
-		state.successMessage = payload.message;
 		
-	})
-	
-	
+		// 	* SEND MESSAGE
+		builder.addCase(sendSellerMessage.fulfilled, (state, {payload}) => {
+			let tempFriends = state.sellerFriends;
+			let index = tempFriends.findIndex((friend) => friend.friendId === payload.payload.message.receiverId);
+			if (index !== -1 && index !== 0) {
+				const removeFriends = tempFriends.splice(index, 1)[0];
+				tempFriends.unshift(removeFriends);
+			}
+			state.sellerFriends = tempFriends;
+			state.sellerUserMessages = [...state.sellerUserMessages, payload.payload.message];
+			state.successMessage = payload.message;
+		});
+		builder.addCase(sendSellerMessage.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(sendSellerMessage.pending, (state, _) => {
+			state.loader = true;
+		});
 	}
 });
 
