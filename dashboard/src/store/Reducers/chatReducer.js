@@ -57,7 +57,7 @@ export const chatReducer = createSlice({
 		errorMessage: "",
 		loader: false,
 		sellerFriends: [],
-		activeUsers: [],
+		activeUser: [],
 		activeSeller: [],
 		messageNotifications: [],
 		activeAdmin: "",
@@ -74,6 +74,9 @@ export const chatReducer = createSlice({
 		updateMessage: (state, {payload}) => {
 			state.sellerUserMessages = [...state.sellerUserMessages, payload];
 		},
+		updateUser: (state, {payload}) => {
+			state.activeUser = payload;
+		}
 		
 	},
 	extraReducers: builder => {
@@ -126,5 +129,5 @@ export const chatReducer = createSlice({
 });
 
 
-export const {messageClear,updateMessage} = chatReducer.actions;
+export const {messageClear, updateMessage, updateUser} = chatReducer.actions;
 export default chatReducer.reducer;

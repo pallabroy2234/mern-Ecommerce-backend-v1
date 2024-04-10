@@ -2,10 +2,12 @@ import Header from "./Header.jsx";
 import Sidebar from "./Sidebar.jsx";
 import {Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {socket} from "../utils/utils.js";
+import {updateUser} from "../store/Reducers/chatReducer.js";
 
 const MainLayout = () => {
+	const dispatch = useDispatch()
 	const {userInfo} = useSelector(state => state.auth);
 	const [showSidebar, setShowSidebar] = useState(false);
 	//
@@ -17,6 +19,12 @@ const MainLayout = () => {
 			 socket.emit("addAdmin", userInfo)
 		 }
 	}, [userInfo]);
+	
+	useEffect(() => {
+		socket.on("active-user", (user)=> {
+			dispatch(updateUser(user))
+		})
+	}, []);
 	
 	return (
 		<div className="bg-[#161d31]  w-full min-h-screen ">

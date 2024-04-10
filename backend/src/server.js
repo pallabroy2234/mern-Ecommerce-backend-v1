@@ -53,34 +53,30 @@ const disconnect = (socketId) => {
 };
 
 io.on("connection", (socket) => {
-	console.log("Socket connected: frontend ", socket.id);
+	console.log("Socket connected:  ", socket.id);
 
-	socket.on("disconnect", () => {
-		console.log("Socket disconnected:  ", socket.id);
-		disconnect(socket.id);
-	});
-
-	socket.on("joinRoom", ({roomId}) => {
-		socket.join(roomId);
-		console.log("Socket joined room: ", roomId);
-	});
-
-	socket.on("message", ({roomId, message}) => {
-		io.to(roomId).emit("message", message);
-	});
-	socket.on("reconnect", () => {
-		console.log("Socket reconnected: ", socket.id);
-	});
-	socket.on("reconnect_error", () => {
-		console.log("Socket reconnection error: ", socket.id);
-	});
+	// socket.on("joinRoom", ({roomId}) => {
+	// 	socket.join(roomId);
+	// 	console.log("Socket joined room: ", roomId);
+	// });
+	//
+	// socket.on("message", ({roomId, message}) => {
+	// 	io.to(roomId).emit("message", message);
+	// });
+	// socket.on("reconnect", () => {
+	// 	console.log("Socket reconnected: ", socket.id);
+	// });
+	// socket.on("reconnect_error", () => {
+	// 	console.log("Socket reconnection error: ", socket.id);
+	// });
 
 	// * ADD USER
 	socket.on("addUser", (userId, userInfo) => {
 		addUser(userId, socket.id, userInfo);
-		
+
 		// 	* DISCONNECT SELLER
 		io.emit("active-user", allUser);
+		io.emit("active-seller", allSeller);
 	});
 	// 	 * ADD SELLER
 	socket.on("addSeller", (userId, userInfo) => {
@@ -88,6 +84,7 @@ io.on("connection", (socket) => {
 
 		// 	* DISCONNECT SELLER
 		io.emit("active-seller", allSeller);
+		io.emit("active-user", allUser);
 	});
 	// 	* GET SELLER MESSAGE AND AFTER GETTING MESSAGE SEND TO USER
 	socket.on("send-seller-message", (message) => {
@@ -108,9 +105,16 @@ io.on("connection", (socket) => {
 			}
 		}
 	});
+
+	socket.on("disconnect", () => {
+		console.log("Socket disconnected:  ", socket.id);
+		disconnect(socket.id);
+		io.emit("active-seller", allSeller);
+		io.emit("active-user", allUser);
+	});
 });
 
-server.listen(port, async () => {
-	await connectDatabase();
+server.listen(port, () => {
+	connectDatabase();
 	console.log(`server is running at http://localhost:${port}`);
 });

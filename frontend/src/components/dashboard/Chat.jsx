@@ -69,10 +69,10 @@ const Chat = () => {
 		if (receiverMessage) {
 			if (sellerId === receiverMessage.senderId && userInfo.id === receiverMessage.receiverId) {
 				dispatch(updateMessage(receiverMessage));
+			} else {
+				toast.success(receiverMessage.senderName + " " + "send a message");
+				dispatch(messageClear());
 			}
-		} else {
-			toast.success(receiverMessage.senderName + " " + "send a message");
-			dispatch(messageClear());
 		}
 	}, [receiverMessage]);
 

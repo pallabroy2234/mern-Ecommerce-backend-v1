@@ -19,12 +19,11 @@ const SellerToCustomer = () => {
 	const {customerId} = useParams();
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector(state => state.auth);
-	const {sellerFriends, sellerUserMessages, currentUser , successMessage} = useSelector(state => state.chat);
+	const {sellerFriends, sellerUserMessages, currentUser , successMessage , activeUser} = useSelector(state => state.chat);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
 	const [receiveMessage, setReceiveMessage] = useState("");
 	const lastMessageRef = useRef(null);
-	const [activeUser, setActiveUser] = useState([]);
 	
 	// * Scroll to bottom
 	useEffect(() => {
@@ -67,11 +66,7 @@ const SellerToCustomer = () => {
 	useEffect(()=> {
 		socket.on("user-message", (message)=> {
 			setReceiveMessage(message);
-			
 		})
-		socket.on("active-user", (allUser) => {
-			setActiveUser(allUser);
-		});
 	},[])
 	
 
@@ -80,13 +75,13 @@ const SellerToCustomer = () => {
 		if (receiveMessage) {
 			if (customerId === receiveMessage.senderId && userInfo._id === receiveMessage.receiverId) {
 				dispatch(updateMessage(receiveMessage));
+			}else {
+				toast.success(receiveMessage.senderName + " " + "send a message");
+				dispatch(messageClear())
 			}
-		} else {
-			toast.success(receiveMessage.senderName + " " + "send a message");
-			dispatch(messageClear())
 		}
 	}, [receiveMessage]);
-	console.log(activeUser);
+	
 	
 	return (<div className="px-2 lg:px-7 pt-5">
 		<div className="w-full bg-secondary px-4 py-4 rounded-md h-[calc(100vh-140px)]">
@@ -104,7 +99,7 @@ const SellerToCustomer = () => {
 								<div className="relative">
 									<img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src={friend?.image ? friend?.image : "/public/images/admin.jpg"} alt={friend?.userName} />
 									{
-										activeUser.some((user) => user.userId === friend.friendId) &&
+										 activeUser.some((user) => user.userId === friend.friendId) &&
 										<div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
 									}
 								</div>
