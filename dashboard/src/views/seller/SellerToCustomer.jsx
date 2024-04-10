@@ -1,10 +1,17 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserMessages, getUsers, messageClear, sendSellerMessage} from "../../store/Reducers/chatReducer.js";
+import {
+	getUserMessages,
+	getUsers,
+	messageClear,
+	sendSellerMessage,
+	updateMessage
+} from "../../store/Reducers/chatReducer.js";
 import {socket} from "../../utils/utils.js";
+import toast from "react-hot-toast";
 
 
 
@@ -15,7 +22,16 @@ const SellerToCustomer = () => {
 	const {sellerFriends, sellerUserMessages, currentUser , successMessage} = useSelector(state => state.chat);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
+	const [receiveMessage, setReceiveMessage] = useState("");
+	const lastMessageRef = useRef(null);
+	const [activeUser, setActiveUser] = useState([]);
 	
+	// * Scroll to bottom
+	useEffect(() => {
+		if (lastMessageRef.current) {
+			lastMessageRef.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+		}
+	}, [sellerUserMessages]);
 	
 	useEffect(() => {
 		if (userInfo) {
@@ -27,7 +43,6 @@ const SellerToCustomer = () => {
 	
 	
 	useEffect(() => {
-		console.log(customerId);
 		if (customerId) {
 			dispatch(getUserMessages(customerId));
 		}
@@ -48,6 +63,30 @@ const SellerToCustomer = () => {
 		}
 	}, [successMessage]);
 	
+	// * GET REALTIME USER MESSAGE
+	useEffect(()=> {
+		socket.on("user-message", (message)=> {
+			setReceiveMessage(message);
+			
+		})
+		socket.on("active-user", (allUser) => {
+			setActiveUser(allUser);
+		});
+	},[])
+	
+
+	// * UPDATE MESSAGE
+	useEffect(() => {
+		if (receiveMessage) {
+			if (customerId === receiveMessage.senderId && userInfo._id === receiveMessage.receiverId) {
+				dispatch(updateMessage(receiveMessage));
+			}
+		} else {
+			toast.success(receiveMessage.senderName + " " + "send a message");
+			dispatch(messageClear())
+		}
+	}, [receiveMessage]);
+	console.log(activeUser);
 	
 	return (<div className="px-2 lg:px-7 pt-5">
 		<div className="w-full bg-secondary px-4 py-4 rounded-md h-[calc(100vh-140px)]">
@@ -64,25 +103,29 @@ const SellerToCustomer = () => {
 							<Link to={`/seller/dashboard/chat-customer/${friend?.friendId}`} key={index} className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
 								<div className="relative">
 									<img className="w-[50px] h-[50px] ring-[3px] ring-white  max-w-[55px] p-[2px] rounded-full" src={friend?.image ? friend?.image : "/public/images/admin.jpg"} alt={friend?.userName} />
-									<div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+									{
+										activeUser.some((user) => user.userId === friend.friendId) &&
+										<div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+									}
 								</div>
 								<div className="flex flex-col justify-center items-start w-full">
-									<div className="flex flex-col justify-center items-start w-full">
+								<div className="flex flex-col justify-center items-start w-full">
 										<h2 className="text-base font-semibold">{friend?.userName}</h2>
 									</div>
 								</div>
 							</Link>))}
 					</div>
 				</div>
-				
-				
 				{/*  message body */}
 				<div className="w-full md:w-[calc(100%-200px)] md:pl-4">
 					<div className="flex justify-between items-center">
 						{currentUser && (<div className="flex justify-start items-center gap-3">
 							<div className="relative">
 								<img className="w-[54px] h-[54px] ring-[3px] ring-green-500  max-w-[55px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
-								<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+								{
+									activeUser.some((user) => user.userId === customerId) &&
+									<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+								}
 							</div>
 							<h2 className="text-white font-semibold">{currentUser?.name}</h2>
 						</div>)}
@@ -97,7 +140,7 @@ const SellerToCustomer = () => {
 								// * True but return false
 								if (message.receiverId !== customerId) {
 									return (
-										<div key={index} className="w-full flex justify-start items-center">
+										<div key={index} ref={lastMessageRef} className="w-full flex justify-start items-center">
 											<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 												<div>
 													<img src={message?.image ? message?.image : "/public/images/admin.jpg"} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" alt={message?.senderName} />
@@ -105,64 +148,26 @@ const SellerToCustomer = () => {
 												<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">
 													<span>{message.message}</span>
 												</div>
-											
 											</div>
-										</div>);
+										</div>
+									);
 								}
 								// * True return true
 								if (message.senderId === userInfo._id) {
-									
 									return (
-										<div key={index} className="w-full flex justify-end items-center">
+										<div key={index} ref={lastMessageRef} className="w-full flex justify-end items-center">
 											<div className="flex justify-end items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-												<div>
-													<img src={message?.image ? message?.image : "/public/images/admin.jpg"} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" alt={message?.senderName} />
-												</div>
 												<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
 													<span>{message.message}</span>
+												</div>
+												<div>
+													<img src={message?.image ? message?.image : "/public/images/admin.jpg"} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" alt={message?.senderName} />
 												</div>
 											</div>
 										</div>
 									);
 								}
-								
-								
 							}) : null}
-							
-							
-							{/*{*/}
-							{/*	*/}
-							{/*	sellerUserMessages && sellerUserMessages.length > 0 ? sellerUserMessages.map((message, index) => (*/}
-							{/*		message.receiverId === customerId ? (*/}
-							{/*			<div key={index} className="w-full flex justify-start items-center">*/}
-							{/*				<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">*/}
-							{/*					<div>*/}
-							{/*						<img src={message?.image ? message?.image : "/public/images/admin.jpg"} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" alt={message?.senderName} />*/}
-							{/*					</div>*/}
-							{/*					<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">*/}
-							{/*						<span>{message.message}</span>*/}
-							{/*					</div>*/}
-							{/*				</div>*/}
-							{/*			</div>*/}
-							{/*		) : null*/}
-							{/*	)) : null*/}
-							{/*}*/}
-							{/*{*/}
-							{/*	sellerUserMessages && sellerUserMessages.length > 0 ? sellerUserMessages.map((message, index) => (*/}
-							{/*		message.senderId === userInfo._id ? (*/}
-							{/*			<div key={index} className="w-full flex justify-end items-center">*/}
-							{/*				<div className="flex justify-end items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">*/}
-							{/*					<div>*/}
-							{/*						<img src={message?.image ? message?.image : "/public/images/admin.jpg"} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" alt={message?.senderName} />*/}
-							{/*					</div>*/}
-							{/*					<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">*/}
-							{/*						<span>{message.message}</span>*/}
-							{/*					</div>*/}
-							{/*				</div>*/}
-							{/*			</div>*/}
-							{/*		) : null*/}
-							{/*	)) : null*/}
-							{/*}*/}
 						</div>
 					</div>
 					
