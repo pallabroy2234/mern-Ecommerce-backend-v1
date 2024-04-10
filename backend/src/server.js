@@ -13,25 +13,23 @@ const io = socketIo(server, {
 		origin: "*",
 		credentials: true,
 	},
-	connectionStateRecovery: true,
 });
 
-let allUser = [];
 let allSeller = [];
-
-// * ADD USER
-const addUser = (userId, socketId, userInfo) => {
-	const checkUser = allUser.some((user) => user.userId === userId);
-	if (!checkUser) {
-		allUser.push({userId, socketId, userInfo});
-	}
-};
+let allUser = [];
 
 //  * ADD SELLER
 const addSeller = (sellerId, socketId, userInfo) => {
 	const checkSeller = allSeller.some((seller) => seller.sellerId === sellerId);
 	if (!checkSeller) {
 		allSeller.push({sellerId, socketId, userInfo});
+	}
+};
+// * ADD USER
+const addUser = (userId, socketId, userInfo) => {
+	const checkUser = allUser.some((user) => user.userId === userId);
+	if (!checkUser) {
+		allUser.push({userId, socketId, userInfo});
 	}
 };
 
@@ -47,9 +45,11 @@ const findSeller = (sellerId) => {
 
 // * DISCONNECT FUNCTION
 
-const disconnect = (socketId) => {
-	allUser = allUser.filter((user) => user.socketId !== socketId);
+const disconnectSeller = (socketId) => {
 	allSeller = allUser.filter((seller) => seller.socketId !== socketId);
+};
+const disconnectUser = (socketId) => {
+	allUser = allUser.filter((user) => user.socketId !== socketId);
 };
 
 io.on("connection", (socket) => {
@@ -86,6 +86,7 @@ io.on("connection", (socket) => {
 		io.emit("active-seller", allSeller);
 		io.emit("active-user", allUser);
 	});
+
 	// 	* GET SELLER MESSAGE AND AFTER GETTING MESSAGE SEND TO USER
 	socket.on("send-seller-message", (message) => {
 		if (message) {
@@ -108,9 +109,10 @@ io.on("connection", (socket) => {
 
 	socket.on("disconnect", () => {
 		console.log("Socket disconnected:  ", socket.id);
-		disconnect(socket.id);
-		io.emit("active-seller", allSeller);
+		disconnectSeller(socket.id);
+		disconnectUser(socket.id);
 		io.emit("active-user", allUser);
+		io.emit("active-seller", allSeller);
 	});
 });
 

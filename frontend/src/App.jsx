@@ -20,22 +20,23 @@ import Wishlist from "./components/dashboard/Wishlist.jsx";
 import ChangePassword from "./components/dashboard/ChangePassword.jsx";
 import OrderDetails from "./components/dashboard/OrderDetails.jsx";
 import Chat from "./components/dashboard/Chat.jsx";
+import io from "socket.io-client";
+import {updateSeller} from "./store/reducers/chatReducer.js";
+
+const socket = io("http://localhost:3000");
 
 function App() {
 	const dispatch = useDispatch();
-	// const {userInfo} = useSelector(state => state.auth)
-	// const {totalCartProductsCount} = useSelector(state => state.cart)
-
-	// useEffect(() => {
-	//     if (userInfo) {
-	//         dispatch(totalCartProducts({
-	//             userId: userInfo.id
-	//         }))
-	//     }
-	// }, [totalCartProductsCount, userInfo]);
+	const {userInfo} = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		dispatch(getCategories());
+	}, []);
+
+	useEffect(() => {
+		socket.on("active-seller", (allSellers) => {
+			dispatch(updateSeller(allSellers));
+		});
 	}, []);
 
 	return (

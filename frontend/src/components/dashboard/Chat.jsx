@@ -13,10 +13,10 @@ const Chat = () => {
 	const dispatch = useDispatch();
 	const {sellerId} = useParams();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {myFriends, currentFriend, friendMessages, successMessage} = useSelector((state) => state.chat);
+	const {myFriends, currentFriend, friendMessages, successMessage, activeSeller} = useSelector((state) => state.chat);
 	const [text, setText] = useState("");
 	const [receiverMessage, setReceiverMessage] = useState("");
-	const [activeSeller, setActiveSeller] = useState([]);
+	// const [activeSeller, setActiveSeller] = useState([]);
 	const lastMessageRef = useRef(null);
 
 	// * Scroll to bottom
@@ -59,9 +59,9 @@ const Chat = () => {
 		socket.on("seller-message", (message) => {
 			setReceiverMessage(message);
 		});
-		socket.on("active-seller", (allSellers) => {
-			setActiveSeller(allSellers);
-		});
+		// socket.on("active-seller", (allSellers) => {
+		// 	setActiveSeller(allSellers);
+		// });
 	}, []);
 
 	// * Update message
