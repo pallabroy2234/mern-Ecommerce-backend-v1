@@ -4,7 +4,7 @@ import {Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {socket} from "../utils/utils.js";
-import {updateUser} from "../store/Reducers/chatReducer.js";
+import {updateSellers, updateUser} from "../store/Reducers/chatReducer.js";
 
 const MainLayout = () => {
 	const dispatch = useDispatch()
@@ -24,7 +24,13 @@ const MainLayout = () => {
 		socket.on("active-user", (user)=> {
 			dispatch(updateUser(user))
 		})
+		socket.on("active-seller", (sellers)=> {
+			console.log(sellers);
+			dispatch(updateSellers(sellers))
+		})
 	}, []);
+	
+	
 	
 	return (
 		<div className="bg-[#161d31]  w-full min-h-screen ">

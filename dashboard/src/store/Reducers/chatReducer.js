@@ -50,6 +50,22 @@ export const sendSellerMessage = createAsyncThunk(
 	}
 );
 
+export const getSellers = createAsyncThunk(
+	"chat/getSellers",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get("/dashboard/chat/admin/get-sellers", {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+	
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {
@@ -58,13 +74,14 @@ export const chatReducer = createSlice({
 		loader: false,
 		sellerFriends: [],
 		activeUser: [],
-		activeSeller: [],
+		activeSellers: [],
 		messageNotifications: [],
 		activeAdmin: "",
 		sellerAdminMessages: [],
 		sellerUserMessages: [],
 		currentSeller: {},
-		currentUser: {}
+		currentUser: {},
+		sellers: [],
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -76,6 +93,9 @@ export const chatReducer = createSlice({
 		},
 		updateUser: (state, {payload}) => {
 			state.activeUser = payload;
+		},
+		updateSellers : (state,{payload})=> {
+			state.activeSellers = payload
 		}
 		
 	},
@@ -125,9 +145,22 @@ export const chatReducer = createSlice({
 		builder.addCase(sendSellerMessage.pending, (state, _) => {
 			state.loader = true;
 		});
+		
+	// 	* GET SELLERS
+		builder.addCase(getSellers.fulfilled, (state, {payload})=> {
+			state.sellers = payload.payload
+			state.loader = false
+		});
+		builder.addCase(getSellers.rejected, (state, {payload})=> {
+			state.errorMessage = payload.message
+			state.loader = false
+		});
+		builder.addCase(getSellers.pending, (state, _)=> {
+			state.loader = true
+		})
 	}
 });
 
 
-export const {messageClear, updateMessage, updateUser} = chatReducer.actions;
+export const {messageClear, updateMessage ,updateSellers, updateUser} = chatReducer.actions;
 export default chatReducer.reducer;

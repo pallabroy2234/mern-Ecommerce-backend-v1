@@ -17,6 +17,7 @@ const io = socketIo(server, {
 
 let allSeller = [];
 let allUser = [];
+let admin = {}
 
 //  * ADD SELLER
 const addSeller = (sellerId, socketId, userInfo) => {
@@ -42,6 +43,10 @@ const findUser = (userId) => {
 const findSeller = (sellerId) => {
 	return allSeller.find((seller) => seller.sellerId === sellerId);
 };
+
+
+
+
 
 // * DISCONNECT FUNCTION
 
@@ -81,10 +86,17 @@ io.on("connection", (socket) => {
 	// 	 * ADD SELLER
 	socket.on("addSeller", (userId, userInfo) => {
 		addSeller(userId, socket.id, userInfo);
-
 		// 	* DISCONNECT SELLER
 		io.emit("active-seller", allSeller);
 		io.emit("active-user", allUser);
+	});
+
+	// * ADD ADMIN
+	socket.on("addAdmin", (adminInfo) => {
+		delete adminInfo.email;
+		admin  = adminInfo;
+		admin.socketId = socket.id;
+		io.emit("active-seller", allSeller)
 	});
 
 	// 	* GET SELLER MESSAGE AND AFTER GETTING MESSAGE SEND TO USER

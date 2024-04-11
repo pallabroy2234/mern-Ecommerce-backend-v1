@@ -41,8 +41,11 @@ app.use("/api/frontend/product", require("./routes/frontend/cartRoutes"));
 // * ORDER ROUTES
 app.use("/api/frontend/product/order", require("./routes/order/orderRoutes"));
 
-// * CHAT ROUTES
+// * SELLER CHAT ROUTES
 app.use("/api/frontend/chat", require("./routes/frontend/chatRoutes"));
+
+// * ADMIN CHAT ROUTES
+app.use("/api/dashboard/chat/admin", require("./routes/dashboard/adminChatRoutes"));
 
 // * CLOUDINARY CONFIG
 cloudinary.config({
