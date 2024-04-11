@@ -10,7 +10,7 @@ import {BsEmojiSmile} from "react-icons/bs";
 const ChatSeller = () => {
 	const {sellerId} = useParams();
 	const dispatch = useDispatch();
-	const {sellers, activeSellers} = useSelector((state) => state.chat);
+	const {sellers, activeSellers, sellerAdminMessages} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
@@ -18,6 +18,8 @@ const ChatSeller = () => {
 	useEffect(() => {
 		dispatch(getSellers());
 	}, []);
+	
+	console.log(sellerAdminMessages);
 	
 	const handleInputSubmit = (e) => {
 		e.preventDefault();
@@ -88,16 +90,16 @@ const ChatSeller = () => {
 						<div className="py-4">
 							<div className="bg-slate-800 h-[calc(100vh-310px)] px-2 rounded-md overflow-y-auto">
 								{
-									sellerId ? [1, 2, 3, 4].map((item, index) => {
+									sellerId ? sellerAdminMessages.map((item, index) => {
 											if (item.senderId === sellerId) {
 												return (
 													<div key={index} className="w-full flex justify-start items-center">
 														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 															<div>
-																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
 															</div>
 															<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">
-																<span>How are you?</span>
+																<span>{item?.message}</span>
 															</div>
 														</div>
 													</div>
@@ -107,10 +109,10 @@ const ChatSeller = () => {
 													<div key={index} className="w-full flex justify-end items-center">
 														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 															<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
-																<span>How are you?</span>
+																<span>{item?.message}</span>
 															</div>
 															<div>
-																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
 															</div>
 														</div>
 													</div>

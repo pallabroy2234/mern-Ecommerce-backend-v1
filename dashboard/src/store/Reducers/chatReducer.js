@@ -174,6 +174,18 @@ export const chatReducer = createSlice({
 		builder.addCase(getSellers.pending, (state, _) => {
 			state.loader = true;
 		});
+		
+		// 	* SEND MESSAGE SELLER ADMIN
+		builder.addCase(sendMessageToSeller.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.sellerAdminMessages = [...state.sellerAdminMessages, payload.payload];
+		});
+		builder.addCase(sendMessageToSeller.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(sendMessageToSeller.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+		});
 	}
 });
 
