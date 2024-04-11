@@ -50,6 +50,7 @@ export const sendSellerMessage = createAsyncThunk(
 	}
 );
 
+// * GET SELLERS FOR ADMIN CHAT
 export const getSellers = createAsyncThunk(
 	"chat/getSellers",
 	async (_, {rejectWithValue, fulfillWithValue}) => {
@@ -59,12 +60,27 @@ export const getSellers = createAsyncThunk(
 			});
 			return fulfillWithValue(data);
 		} catch (e) {
-	
+			
 			return rejectWithValue(e.response.data);
 		}
 	}
 );
 
+//
+export const sendMessageToSeller = createAsyncThunk(
+	"chat/sendMessageToSeller",
+	async (info, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post("/dashboard/chat/admin/message-send-seller-admin", info, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 export const chatReducer = createSlice({
 	name: "chat",
@@ -81,7 +97,7 @@ export const chatReducer = createSlice({
 		sellerUserMessages: [],
 		currentSeller: {},
 		currentUser: {},
-		sellers: [],
+		sellers: []
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -94,8 +110,8 @@ export const chatReducer = createSlice({
 		updateUser: (state, {payload}) => {
 			state.activeUser = payload;
 		},
-		updateSellers : (state,{payload})=> {
-			state.activeSellers = payload
+		updateSellers: (state, {payload}) => {
+			state.activeSellers = payload;
 		}
 		
 	},
@@ -146,21 +162,21 @@ export const chatReducer = createSlice({
 			state.loader = true;
 		});
 		
-	// 	* GET SELLERS
-		builder.addCase(getSellers.fulfilled, (state, {payload})=> {
-			state.sellers = payload.payload
-			state.loader = false
+		// 	* GET SELLERS
+		builder.addCase(getSellers.fulfilled, (state, {payload}) => {
+			state.sellers = payload.payload;
+			state.loader = false;
 		});
-		builder.addCase(getSellers.rejected, (state, {payload})=> {
-			state.errorMessage = payload.message
-			state.loader = false
+		builder.addCase(getSellers.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+			state.loader = false;
 		});
-		builder.addCase(getSellers.pending, (state, _)=> {
-			state.loader = true
-		})
+		builder.addCase(getSellers.pending, (state, _) => {
+			state.loader = true;
+		});
 	}
 });
 
 
-export const {messageClear, updateMessage ,updateSellers, updateUser} = chatReducer.actions;
+export const {messageClear, updateMessage, updateSellers, updateUser} = chatReducer.actions;
 export default chatReducer.reducer;

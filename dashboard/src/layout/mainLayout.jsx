@@ -25,7 +25,6 @@ const MainLayout = () => {
 			dispatch(updateUser(user))
 		})
 		socket.on("active-seller", (sellers)=> {
-			console.log(sellers);
 			dispatch(updateSellers(sellers))
 		})
 	}, []);

@@ -2,18 +2,32 @@ import {useEffect, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellers} from "../../store/Reducers/chatReducer.js";
+import {getSellers, sendMessageToSeller} from "../../store/Reducers/chatReducer.js";
+import {Link, useParams} from "react-router-dom";
+import {BsEmojiSmile} from "react-icons/bs";
 
 
 const ChatSeller = () => {
+	const {sellerId} = useParams();
 	const dispatch = useDispatch();
 	const {sellers, activeSellers} = useSelector((state) => state.chat);
+	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
-	const sellerId = 32;
+	const [text, setText] = useState("");
 	
 	useEffect(() => {
 		dispatch(getSellers());
 	}, []);
+	
+	const handleInputSubmit = (e) => {
+		e.preventDefault();
+		dispatch(sendMessageToSeller({
+			senderId: userInfo._id,
+			receiverId: sellerId,
+			message: text,
+			senderName: "admin"
+		}));
+	};
 	
 	
 	return (
@@ -29,7 +43,7 @@ const ChatSeller = () => {
 							</div>
 							{
 								sellers && sellers.map((seller, index) => (
-									<div key={index} className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
+									<Link to={`/admin/dashboard/chat-sellers/${seller._id}`} key={index} className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
 										<div className="relative">
 											<div className="w-[50px] h-[50px] overflow-hidden ring-[2px] ring-white ring-offset-[2px]  rounded-full">
 												<img className="w-full h-full object-cover" src={seller?.image || "/public/images/admin.jpg"} alt={seller?.name} />
@@ -45,7 +59,7 @@ const ChatSeller = () => {
 												<h2 className="text-base font-semibold">{seller?.name}</h2>
 											</div>
 										</div>
-									</div>
+									</Link>
 								))
 							}
 						</div>
@@ -73,49 +87,47 @@ const ChatSeller = () => {
 						
 						<div className="py-4">
 							<div className="bg-slate-800 h-[calc(100vh-310px)] px-2 rounded-md overflow-y-auto">
-								{/* Received message */}
-								<div className="w-full flex justify-start items-center">
-									<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-										<div>
-											<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+								{
+									sellerId ? [1, 2, 3, 4].map((item, index) => {
+											if (item.senderId === sellerId) {
+												return (
+													<div key={index} className="w-full flex justify-start items-center">
+														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
+															<div>
+																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+															</div>
+															<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">
+																<span>How are you?</span>
+															</div>
+														</div>
+													</div>
+												);
+											} else {
+												return (
+													<div key={index} className="w-full flex justify-end items-center">
+														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
+															<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
+																<span>How are you?</span>
+															</div>
+															<div>
+																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+															</div>
+														</div>
+													</div>
+												);
+											}
+										}) :
+										<div className="w-full h-full flex justify-center items-center flex-col  gap-2 text-white">
+											<span><BsEmojiSmile /></span>
+											<span>Select seller</span>
 										</div>
-										<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">
-											<span>How are you?</span>
-										</div>
-									</div>
-								</div>
-								
-								{/* Send message */}
-								<div className="w-full flex justify-end items-center">
-									<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-										<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
-											<span>How are you?</span>
-										</div>
-										<div>
-											<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
-										</div>
-									</div>
-								</div>
-								
-								{/* Send Message */}
-								<div className="w-full flex justify-end items-center">
-									<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-										<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
-											<span>How are you?</span>
-										</div>
-										<div>
-											<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
-										</div>
-									</div>
-								</div>
-							
+								}
 							</div>
 						</div>
-						
 						{/* Write Message */}
-						<form className="flex gap-3  items-center">
-							<input className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
-							<button className="bg-cyan-500 shadow-lg hover:shadow-cyan-500/50 font-semibold w-[75px] h-[35px] rounded-md text-white flex justify-center items-center transition-all duration-300">Send</button>
+						<form onSubmit={(e)=> handleInputSubmit(e)} className="flex gap-3  items-center">
+							<input readOnly={sellerId ? false : true} onChange={(e)=> setText(e.target.value)} value={text} className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
+							<button disabled={sellerId ? false : true} className="bg-cyan-500 shadow-lg hover:shadow-cyan-500/50 font-semibold w-[75px] h-[35px] rounded-md text-white flex justify-center items-center transition-all duration-300">Send</button>
 						</form>
 					</div>
 				</div>
