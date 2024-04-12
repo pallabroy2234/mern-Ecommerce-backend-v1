@@ -1,11 +1,18 @@
-import {useState} from "react";
-import {IoMdClose} from "react-icons/io";
-import {FaList} from "react-icons/fa";
+import {useEffect} from "react";
+import {getCurrentSellerAdminMessages} from "../../store/Reducers/chatReducer.js";
+import {useDispatch} from "react-redux";
 
 
 const SellerToAdmin = () => {
-
-
+    const dispatch = useDispatch();
+    
+    
+    useEffect(() => {
+        if (sellerId) {
+            dispatch(getCurrentSellerAdminMessages(sellerId));
+        }
+        
+    }, [sellerId]);
     
     return (
         <div className="px-2 lg:px-7 pt-5">

@@ -28,7 +28,7 @@ const handleGetSellers = async (req, res) => {
 const handleSendMessageSellerAdmin = async (req, res) => {
 	try {
 		const {senderId, receiverId, message, senderName} = req.body;
-		if (!ObjectId.isValid(senderId) || !ObjectId.isValid(receiverId)) {
+		if (!ObjectId.isValid(receiverId)) {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Invalid  id",
@@ -72,19 +72,19 @@ const handleSendMessageSellerAdmin = async (req, res) => {
 	}
 };
 
-// * HANDLE GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/current-seller/:sellerId
+// * HANDLE GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/current-seller/:receiverId
 
 const handleGetCurrentSellerAdminMessages = async (req, res) => {
 	try {
 		const {id} = req;
-		const {sellerId} = req.params;
-		if (!ObjectId.isValid(id) || !ObjectId.isValid(sellerId)) {
+		const {receiverId} = req.params;
+		if (!ObjectId.isValid(id) || !ObjectId.isValid(receiverId)) {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Invalid id",
 			});
 		}
-		const sellerExist = await Seller.findOne({_id: sellerId});
+		const sellerExist = await Seller.findOne({_id: receiverId});
 		if (!sellerExist) {
 			return errorResponse(res, {
 				statusCode: 400,
@@ -98,12 +98,12 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 					$and: [
 						{
 							receiverId: {
-								$eq: new ObjectId(sellerId),
+								$eq: new ObjectId(receiverId),
 							},
 						},
 						{
 							senderId: {
-								$eq: new ObjectId(id),
+								$eq: "",
 							},
 						},
 					],
@@ -112,12 +112,12 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 					$and: [
 						{
 							receiverId: {
-								$eq: new ObjectId(id),
+								$eq: "",
 							},
 						},
 						{
 							senderId: {
-								$eq: new ObjectId(sellerId),
+								$eq: new ObjectId(receiverId),
 							},
 						},
 					],

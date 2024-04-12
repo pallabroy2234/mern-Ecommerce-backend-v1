@@ -10,7 +10,7 @@ import {BsEmojiSmile} from "react-icons/bs";
 const ChatSeller = () => {
 	const {sellerId} = useParams();
 	const dispatch = useDispatch();
-	const {sellers, activeSellers, sellerAdminMessages ,currentSeller} = useSelector((state) => state.chat);
+	const {sellers, activeSellers, sellerAdminMessages, currentSeller} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
@@ -20,23 +20,22 @@ const ChatSeller = () => {
 	}, []);
 	
 	
-	
 	const handleInputSubmit = (e) => {
 		e.preventDefault();
 		dispatch(sendMessageToSeller({
-			senderId: userInfo._id,
+			senderId: "",
 			receiverId: sellerId,
 			message: text,
 			senderName: "admin"
 		}));
+		setText("");
 	};
-	useEffect(()=> {
-		if(sellerId){
-			dispatch(getCurrentSellerAdminMessages(sellerId))
+	useEffect(() => {
+		if (sellerId) {
+			dispatch(getCurrentSellerAdminMessages(sellerId));
 		}
 		
-	},[sellerId])
-	
+	}, [sellerId]);
 	
 	
 	return (

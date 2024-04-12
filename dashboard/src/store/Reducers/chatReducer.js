@@ -85,9 +85,9 @@ export const sendMessageToSeller = createAsyncThunk(
 // * GET CURRENT SELLER AND WITH MESSAGES
 export const getCurrentSellerAdminMessages = createAsyncThunk(
 	"chat/getCurrentSellerAdminMessages",
-	async (sellerId, {rejectWithValue, fulfillWithValue}) => {
+	async (receiverId, {rejectWithValue, fulfillWithValue}) => {
 		try {
-			const {data} = await api.get(`/dashboard/chat/admin/current-seller/${sellerId}`, {
+			const {data} = await api.get(`/dashboard/chat/admin/current-seller/${receiverId}`, {
 				withCredentials: true
 			});
 			return fulfillWithValue(data);
