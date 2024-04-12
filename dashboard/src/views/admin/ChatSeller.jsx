@@ -2,7 +2,11 @@ import {useEffect, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentSellerAdminMessages, getSellers, sendMessageToSeller} from "../../store/Reducers/chatReducer.js";
+import {
+	getCurrentAdminMessages,
+	getSellers,
+	sendMessageToSeller
+} from "../../store/Reducers/chatReducer.js";
 import {Link, useParams} from "react-router-dom";
 import {BsEmojiSmile} from "react-icons/bs";
 
@@ -23,7 +27,6 @@ const ChatSeller = () => {
 	const handleInputSubmit = (e) => {
 		e.preventDefault();
 		dispatch(sendMessageToSeller({
-			senderId: "",
 			receiverId: sellerId,
 			message: text,
 			senderName: "admin"
@@ -32,7 +35,7 @@ const ChatSeller = () => {
 	};
 	useEffect(() => {
 		if (sellerId) {
-			dispatch(getCurrentSellerAdminMessages(sellerId));
+			dispatch(getCurrentAdminMessages(sellerId));
 		}
 		
 	}, [sellerId]);

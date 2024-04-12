@@ -3,6 +3,7 @@ const Seller = require("../../models/sellerModal");
 const SellerAdminMessage = require("../../models/chat/adminSellerMessagModal");
 const {
 	Types: {ObjectId},
+	Types,
 } = require("mongoose");
 
 // * HANDLE GET SELLERS || GET || /api/dashboard/chat/admin/get-sellers
@@ -27,7 +28,9 @@ const handleGetSellers = async (req, res) => {
 
 const handleSendMessageSellerAdmin = async (req, res) => {
 	try {
-		const {senderId, receiverId, message, senderName} = req.body;
+		const {id} = req;
+
+		const {receiverId, message, senderName} = req.body;
 		if (!ObjectId.isValid(receiverId)) {
 			return errorResponse(res, {
 				statusCode: 400,
@@ -44,7 +47,7 @@ const handleSendMessageSellerAdmin = async (req, res) => {
 		}
 
 		const createMessage = await SellerAdminMessage.create({
-			senderId: senderId,
+			senderId: new ObjectId(id),
 			senderName: senderName,
 			receiverId: receiverId,
 			receiverName: sellerExists.name,
@@ -76,16 +79,16 @@ const handleSendMessageSellerAdmin = async (req, res) => {
 
 const handleGetCurrentSellerAdminMessages = async (req, res) => {
 	try {
-		const {id} = req;
-		const {receiverId} = req.params;
-		if (!ObjectId.isValid(id) || !ObjectId.isValid(receiverId)) {
+		let {id} = req;
+		const {sellerId} = req.params;
+		if (!ObjectId.isValid(sellerId) || !ObjectId.isValid(id)) {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Invalid id",
 			});
 		}
-		const sellerExist = await Seller.findOne({_id: receiverId});
-		if (!sellerExist) {
+		const sellerExists = await Seller.findOne({_id: sellerId});
+		if (!sellerExists) {
 			return errorResponse(res, {
 				statusCode: 400,
 				message: "Seller not found",
@@ -98,12 +101,12 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 					$and: [
 						{
 							receiverId: {
-								$eq: new ObjectId(receiverId),
+								$eq: new ObjectId(sellerId),
 							},
 						},
 						{
 							senderId: {
-								$eq: "",
+								$eq: new ObjectId(id),
 							},
 						},
 					],
@@ -112,12 +115,12 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 					$and: [
 						{
 							receiverId: {
-								$eq: "",
+								$eq: new ObjectId(id),
 							},
 						},
 						{
 							senderId: {
-								$eq: new ObjectId(receiverId),
+								$eq: new ObjectId(sellerId),
 							},
 						},
 					],
@@ -130,7 +133,7 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 			message: "Messages fetched successfully",
 			payload: {
 				messages: messages,
-				currentSeller: sellerExist,
+				currentSeller: sellerExists,
 			},
 		});
 	} catch (e) {

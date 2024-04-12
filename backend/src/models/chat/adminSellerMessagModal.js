@@ -3,16 +3,16 @@ const {Schema, model} = require("mongoose");
 const adminSellerMessageSchema = new Schema(
 	{
 		senderId: {
-			type: String,
-			default: "",
+			type: Schema.Types.ObjectId,
+			require: true,
 		},
 		senderName: {
 			type: String,
 			require: true,
 		},
 		receiverId: {
-			type: String,
-			default: "",
+			type: Schema.Types.ObjectId,
+			require: true,
 		},
 		receiverName: {
 			type: String,

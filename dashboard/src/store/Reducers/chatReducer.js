@@ -83,11 +83,11 @@ export const sendMessageToSeller = createAsyncThunk(
 );
 
 // * GET CURRENT SELLER AND WITH MESSAGES
-export const getCurrentSellerAdminMessages = createAsyncThunk(
-	"chat/getCurrentSellerAdminMessages",
-	async (receiverId, {rejectWithValue, fulfillWithValue}) => {
+export const getCurrentAdminMessages = createAsyncThunk(
+	"chat/getCurrentAdminMessages",
+	async (sellerId, {rejectWithValue, fulfillWithValue}) => {
 		try {
-			const {data} = await api.get(`/dashboard/chat/admin/current-seller/${receiverId}`, {
+			const {data} = await api.get(`/dashboard/chat/admin/current-seller/${sellerId}`, {
 				withCredentials: true
 			});
 			return fulfillWithValue(data);
@@ -205,16 +205,16 @@ export const chatReducer = createSlice({
 		});
 		
 		// 	* GET CURRENT SELLER AND WITH MESSAGES
-		builder.addCase(getCurrentSellerAdminMessages.fulfilled, (state, {payload}) => {
+		builder.addCase(getCurrentAdminMessages.fulfilled, (state, {payload}) => {
 			state.loader = false;
-			state.sellerAdminMessages =payload.payload.messages;
+			state.sellerAdminMessages = payload.payload.messages;
 			state.currentSeller = payload.payload.currentSeller;
 		});
-		builder.addCase(getCurrentSellerAdminMessages.rejected, (state, {payload}) => {
+		builder.addCase(getCurrentAdminMessages.rejected, (state, {payload}) => {
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
-		builder.addCase(getCurrentSellerAdminMessages.pending, (state, _) => {
+		builder.addCase(getCurrentAdminMessages.pending, (state, _) => {
 			state.loader = true;
 		});
 	}
