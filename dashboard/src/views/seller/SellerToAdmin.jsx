@@ -20,6 +20,7 @@ const SellerToAdmin = () => {
 		dispatch(sendMessageToAdmin({
 			message: text
 		}));
+		setText("");
 	};
 	
 	return (
