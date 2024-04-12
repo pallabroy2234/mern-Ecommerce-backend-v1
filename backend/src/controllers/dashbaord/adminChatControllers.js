@@ -146,6 +146,7 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 	}
 };
 
+// * HANDLE GET SELLER MESSAGES || GET || /api/dashboard/chat/admin/get-seller-messages
 const handleGetSellerMessages = async (req, res) => {
 	try {
 		const {id} = req;
@@ -188,9 +189,54 @@ const handleGetSellerMessages = async (req, res) => {
 	}
 };
 
+const handleSendMessageAdmin = async (req, res) => {
+	try {
+		const {id} = req;
+		const {message} = req.body;
+		if (!ObjectId.isValid(id)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+
+		const sellerExists = await Seller.findOne({_id: id});
+		if (!sellerExists) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Please login first",
+			});
+		}
+		const admin = await AdminModal.findOne({}).select("-email");
+
+		const createMessage = await SellerAdminMessage.create({
+			senderId: new ObjectId(id),
+			senderName: sellerExists.name,
+			receiverId: admin._id,
+			receiverName: admin.role,
+			message: message,
+		});
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: "Message sent successfully",
+			payload: {
+				message: createMessage,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handle send message admin");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal server error",
+		});
+	}
+};
+
 module.exports = {
 	handleGetSellers,
 	handleSendMessageSellerAdmin,
 	handleGetCurrentSellerAdminMessages,
 	handleGetSellerMessages,
+	handleSendMessageAdmin,
 };

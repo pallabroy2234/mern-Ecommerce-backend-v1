@@ -1,18 +1,26 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellerMessages} from "../../store/Reducers/chatReducer.js";
+import {getSellerMessages, sendMessageToAdmin} from "../../store/Reducers/chatReducer.js";
 
 
 const SellerToAdmin = () => {
 	const dispatch = useDispatch();
 	const {sellerAdminMessages} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
+	const [text, setText] = useState("");
 	
 	useEffect(() => {
-	     if(userInfo){
-			 dispatch(getSellerMessages())
-		 }
+		if (userInfo) {
+			dispatch(getSellerMessages());
+		}
 	}, []);
+	
+	const handleInputSubmit = (e) => {
+		e.preventDefault();
+		dispatch(sendMessageToAdmin({
+			message: text
+		}));
+	};
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">
@@ -41,7 +49,7 @@ const SellerToAdmin = () => {
 												<div key={index} className="w-full flex justify-start items-center">
 													<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 														<div>
-															<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+															<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="admin" />
 														</div>
 														<div className="flex justify-center items-start flex-col bg-orange-500 shadow-lg shadow-orange-500/50  text-white py-1 px-2 rounded-sm">
 															<span>{item?.message}</span>
@@ -57,7 +65,7 @@ const SellerToAdmin = () => {
 															<span>{item?.message}</span>
 														</div>
 														<div>
-															<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+															<img src={userInfo?.image ? userInfo?.image : "/public/images/admin.jpg"} alt={userInfo?.name} className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" />
 														</div>
 													</div>
 												</div>
@@ -69,8 +77,8 @@ const SellerToAdmin = () => {
 						</div>
 						
 						{/* Write Message */}
-						<form className="flex gap-3  items-center">
-							<input className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
+						<form onSubmit={(e) => handleInputSubmit(e)} className="flex gap-3  items-center">
+							<input onChange={(e) => setText(e.target.value)} value={text} className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
 							<button className="bg-cyan-500 shadow-lg hover:shadow-cyan-500/50 font-semibold w-[75px] h-[35px] rounded-md text-white flex justify-center items-center transition-all duration-300">Send</button>
 						</form>
 					</div>

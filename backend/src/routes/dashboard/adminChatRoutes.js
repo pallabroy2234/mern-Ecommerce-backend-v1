@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleGetSellers, handleSendMessageSellerAdmin, handleGetCurrentSellerAdminMessages, handleGetSellerMessages} = require("../../controllers/dashbaord/adminChatControllers");
+const {handleGetSellers, handleSendMessageSellerAdmin, handleGetCurrentSellerAdminMessages, handleGetSellerMessages, handleSendMessageAdmin} = require("../../controllers/dashbaord/adminChatControllers");
 const {authMiddleware, isAdmin, isSeller} = require("../../middleware/authMiddleware");
 const adminChatRoutes = express.Router();
 
@@ -14,5 +14,8 @@ adminChatRoutes.get("/get-admin-messages/:sellerId", authMiddleware, isAdmin, ha
 
 // * GET SELLER MESSAGES || GET || /api/dashboard/chat/admin/get-seller-messages
 adminChatRoutes.get("/get-seller-messages", authMiddleware, isSeller, handleGetSellerMessages);
+
+// * SEND MESSAGE TO ADMIN || POST || /api/dashboard/chat/seller/message-send-admin
+adminChatRoutes.post("/message-send-admin", authMiddleware, isSeller, handleSendMessageAdmin);
 
 module.exports = adminChatRoutes;

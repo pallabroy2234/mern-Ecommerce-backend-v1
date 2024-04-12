@@ -115,6 +115,23 @@ export const getSellerMessages = createAsyncThunk(
 	}
 );
 
+// * SEND MESSAGE TO ADMIN
+export const sendMessageToAdmin = createAsyncThunk(
+	"chat/sendMessageToAdmin",
+	async (info, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post(`/dashboard/chat/admin/message-send-admin`, info, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {
@@ -231,6 +248,20 @@ export const chatReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(getCurrentAdminMessages.pending, (state, _) => {
+			state.loader = true;
+		});
+		
+		// 	* GET SELLER MESSAGES
+		builder.addCase(getSellerMessages.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.sellerAdminMessages = payload.payload.messages;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(getSellerMessages.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getSellerMessages.pending, (state, _) => {
 			state.loader = true;
 		});
 	}
