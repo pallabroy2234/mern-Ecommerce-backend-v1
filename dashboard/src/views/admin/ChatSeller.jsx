@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellers, sendMessageToSeller} from "../../store/Reducers/chatReducer.js";
+import {getCurrentSellerAdminMessages, getSellers, sendMessageToSeller} from "../../store/Reducers/chatReducer.js";
 import {Link, useParams} from "react-router-dom";
 import {BsEmojiSmile} from "react-icons/bs";
 
@@ -10,7 +10,7 @@ import {BsEmojiSmile} from "react-icons/bs";
 const ChatSeller = () => {
 	const {sellerId} = useParams();
 	const dispatch = useDispatch();
-	const {sellers, activeSellers, sellerAdminMessages} = useSelector((state) => state.chat);
+	const {sellers, activeSellers, sellerAdminMessages ,currentSeller} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
@@ -52,7 +52,7 @@ const ChatSeller = () => {
 							</div>
 							{
 								sellers && sellers.map((seller, index) => (
-									<Link to={`/admin/dashboard/chat-sellers/${seller._id}`} key={index} className={`h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer bg-slate-700`}>
+									<Link to={`/admin/dashboard/chat-sellers/${seller._id}`} key={index} className={` ${seller._id === sellerId ? "bg-slate-700" : ""} h-[60px] flex justify-start gap-2 items-center text-white px-2 py-8 mb-4 rounded-sm cursor-pointer `}>
 										<div className="relative">
 											<div className="w-[50px] h-[50px] overflow-hidden ring-[2px] ring-white ring-offset-[2px]  rounded-full">
 												<img className="w-full h-full object-cover" src={seller?.image || "/public/images/admin.jpg"} alt={seller?.name} />
@@ -82,10 +82,12 @@ const ChatSeller = () => {
 								sellerId && (
 									<div className="flex justify-start items-center gap-3">
 										<div className="relative">
-											<img className="w-[54px] h-[54px] ring-[3px] ring-green-500  max-w-[55px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
+											<div className="w-[54px] h-[54px] rounded-full overflow-hidden ring-2  ring-green-500">
+												<img src={currentSeller?.image ? currentSeller?.image : "/public/images/admin.jpg"} alt="" className="w-full h-full   object-cover" />
+											</div>
 											<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
-											<span>Pallab</span>
 										</div>
+										<span className="text-white">{currentSeller?.name}</span>
 									</div>
 								)
 							}

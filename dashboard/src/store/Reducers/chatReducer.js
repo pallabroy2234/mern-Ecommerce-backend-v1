@@ -203,6 +203,20 @@ export const chatReducer = createSlice({
 		builder.addCase(sendMessageToSeller.rejected, (state, {payload}) => {
 			state.errorMessage = payload.message;
 		});
+		
+		// 	* GET CURRENT SELLER AND WITH MESSAGES
+		builder.addCase(getCurrentSellerAdminMessages.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.sellerAdminMessages =payload.payload.messages;
+			state.currentSeller = payload.payload.currentSeller;
+		});
+		builder.addCase(getCurrentSellerAdminMessages.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getCurrentSellerAdminMessages.pending, (state, _) => {
+			state.loader = true;
+		});
 	}
 });
 
