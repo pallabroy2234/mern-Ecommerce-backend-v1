@@ -10,6 +10,6 @@ adminChatRoutes.get("/get-sellers", authMiddleware, isAdmin, handleGetSellers);
 adminChatRoutes.post("/message-send-seller-admin", authMiddleware, handleSendMessageSellerAdmin);
 
 // * GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/current-seller/:sellerId
-adminChatRoutes.get("/current-seller/:sellerId", authMiddleware, handleGetCurrentSellerAdminMessages);
+adminChatRoutes.get("/get-admin-messages/:sellerId", authMiddleware, isAdmin, handleGetCurrentSellerAdminMessages);
 
 module.exports = adminChatRoutes;
