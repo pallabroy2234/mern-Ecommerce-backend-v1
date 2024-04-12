@@ -19,7 +19,7 @@ const ChatSeller = () => {
 		dispatch(getSellers());
 	}, []);
 	
-	console.log(sellerAdminMessages);
+	
 	
 	const handleInputSubmit = (e) => {
 		e.preventDefault();
@@ -30,6 +30,13 @@ const ChatSeller = () => {
 			senderName: "admin"
 		}));
 	};
+	useEffect(()=> {
+		if(sellerId){
+			dispatch(getCurrentSellerAdminMessages(sellerId))
+		}
+		
+	},[sellerId])
+	
 	
 	
 	return (
@@ -75,8 +82,9 @@ const ChatSeller = () => {
 								sellerId && (
 									<div className="flex justify-start items-center gap-3">
 										<div className="relative">
-											<img className="w-[54px] h-[54px] ring-[3px] ring-green-500  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
+											<img className="w-[54px] h-[54px] ring-[3px] ring-green-500  max-w-[55px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
 											<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+											<span>Pallab</span>
 										</div>
 									</div>
 								)
@@ -127,8 +135,8 @@ const ChatSeller = () => {
 							</div>
 						</div>
 						{/* Write Message */}
-						<form onSubmit={(e)=> handleInputSubmit(e)} className="flex gap-3  items-center">
-							<input readOnly={sellerId ? false : true} onChange={(e)=> setText(e.target.value)} value={text} className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
+						<form onSubmit={(e) => handleInputSubmit(e)} className="flex gap-3  items-center">
+							<input readOnly={sellerId ? false : true} onChange={(e) => setText(e.target.value)} value={text} className="w-full flex justify-between px-3 border-slate-500 border items-center py-[8px] focus:border-blue-500 rounded-md outline-none bg-transparent text-white" type="text" placeholder="Input your message" />
 							<button disabled={sellerId ? false : true} className="bg-cyan-500 shadow-lg hover:shadow-cyan-500/50 font-semibold w-[75px] h-[35px] rounded-md text-white flex justify-center items-center transition-all duration-300">Send</button>
 						</form>
 					</div>

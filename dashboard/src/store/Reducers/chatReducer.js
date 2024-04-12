@@ -82,6 +82,23 @@ export const sendMessageToSeller = createAsyncThunk(
 	}
 );
 
+// * GET CURRENT SELLER AND WITH MESSAGES
+export const getCurrentSellerAdminMessages = createAsyncThunk(
+	"chat/getCurrentSellerAdminMessages",
+	async (sellerId, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/chat/admin/current-seller/${sellerId}`, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
 export const chatReducer = createSlice({
 	name: "chat",
 	initialState: {

@@ -72,7 +72,78 @@ const handleSendMessageSellerAdmin = async (req, res) => {
 	}
 };
 
+// * HANDLE GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/current-seller/:sellerId
+
+const handleGetCurrentSellerAdminMessages = async (req, res) => {
+	try {
+		const {id} = req;
+		const {sellerId} = req.params;
+		if (!ObjectId.isValid(id) || !ObjectId.isValid(sellerId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const sellerExist = await Seller.findOne({_id: sellerId});
+		if (!sellerExist) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Seller not found",
+			});
+		}
+
+		const messages = await SellerAdminMessage.find({
+			$or: [
+				{
+					$and: [
+						{
+							receiverId: {
+								$eq: new ObjectId(sellerId),
+							},
+						},
+						{
+							senderId: {
+								$eq: new ObjectId(id),
+							},
+						},
+					],
+				},
+				{
+					$and: [
+						{
+							receiverId: {
+								$eq: new ObjectId(id),
+							},
+						},
+						{
+							senderId: {
+								$eq: new ObjectId(sellerId),
+							},
+						},
+					],
+				},
+			],
+		});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Messages fetched successfully",
+			payload: {
+				messages: messages,
+				currentSeller: sellerExist,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handle get current seller admin messages");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal server error",
+		});
+	}
+};
+
 module.exports = {
 	handleGetSellers,
 	handleSendMessageSellerAdmin,
+	handleGetCurrentSellerAdminMessages,
 };
