@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {getSellerMessages} from "../../store/Reducers/chatReducer.js";
 
 
 const SellerToAdmin = () => {
@@ -8,7 +9,9 @@ const SellerToAdmin = () => {
 	const {userInfo} = useSelector((state) => state.auth);
 	
 	useEffect(() => {
-	
+	     if(userInfo){
+			 dispatch(getSellerMessages())
+		 }
 	}, []);
 	
 	return (

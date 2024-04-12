@@ -1,6 +1,7 @@
 const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const Seller = require("../../models/sellerModal");
 const SellerAdminMessage = require("../../models/chat/adminSellerMessagModal");
+const AdminModal = require("../../models/adminModel");
 const {
 	Types: {ObjectId},
 	Types,
@@ -75,7 +76,7 @@ const handleSendMessageSellerAdmin = async (req, res) => {
 	}
 };
 
-// * HANDLE GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/current-seller/:receiverId
+// * HANDLE GET CURRENT SELLER AND WITH MESSAGES || GET || /api/dashboard/chat/admin/get-admin-messages/:sellerId
 
 const handleGetCurrentSellerAdminMessages = async (req, res) => {
 	try {
@@ -145,8 +146,51 @@ const handleGetCurrentSellerAdminMessages = async (req, res) => {
 	}
 };
 
+const handleGetSellerMessages = async (req, res) => {
+	try {
+		const {id} = req;
+		const sellerExist = await Seller.findOne({_id: id});
+		if (!sellerExist) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Seller not found",
+			});
+		}
+
+		const messages = await SellerAdminMessage.find({
+			$or: [
+				{
+					receiverId: {
+						$eq: new ObjectId(id),
+					},
+				},
+				{
+					senderId: {
+						$eq: new ObjectId(id),
+					},
+				},
+			],
+		});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Messages fetched successfully",
+			payload: {
+				messages,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handle get seller messages");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal server error",
+		});
+	}
+};
+
 module.exports = {
 	handleGetSellers,
 	handleSendMessageSellerAdmin,
 	handleGetCurrentSellerAdminMessages,
+	handleGetSellerMessages,
 };

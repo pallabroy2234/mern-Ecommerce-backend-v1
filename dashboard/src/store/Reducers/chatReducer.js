@@ -66,7 +66,7 @@ export const getSellers = createAsyncThunk(
 	}
 );
 
-//
+// * SEND MESSAGE TO SELLER AND ADMIN ALSO
 export const sendMessageToSeller = createAsyncThunk(
 	"chat/sendMessageToSeller",
 	async (info, {rejectWithValue, fulfillWithValue}) => {
@@ -82,7 +82,7 @@ export const sendMessageToSeller = createAsyncThunk(
 	}
 );
 
-// * GET CURRENT SELLER AND WITH MESSAGES
+// * GET ADMIN MESSAGES AND CURRENT SELLER
 export const getCurrentAdminMessages = createAsyncThunk(
 	"chat/getCurrentAdminMessages",
 	async (sellerId, {rejectWithValue, fulfillWithValue}) => {
@@ -98,6 +98,22 @@ export const getCurrentAdminMessages = createAsyncThunk(
 	}
 );
 
+// * GET SELLER MESSAGES
+
+export const getSellerMessages = createAsyncThunk(
+	"chat/getSellerMessages",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/chat/admin/get-seller-messages`, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 export const chatReducer = createSlice({
 	name: "chat",
