@@ -4,13 +4,12 @@ import {FaList} from "react-icons/fa";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	getCurrentAdminMessages,
-	getSellers,
+	getSellers, messageClear,
 	sendMessageToSeller
 } from "../../store/Reducers/chatReducer.js";
 import {Link, useParams} from "react-router-dom";
 import {BsEmojiSmile} from "react-icons/bs";
 import {socket} from "../../utils/utils.js";
-import login from "../auth/Login.jsx";
 
 
 const ChatSeller = () => {
@@ -26,6 +25,7 @@ const ChatSeller = () => {
 	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
+
 	
 	useEffect(() => {
 		dispatch(getSellers());
@@ -42,16 +42,20 @@ const ChatSeller = () => {
 		setText("");
 	};
 	
+	// * REAL TIME SEND MESSAGE ADMIN TO SELLER
 	useEffect(() => {
 		if (sellerId) {
 			dispatch(getCurrentAdminMessages(sellerId));
+			
 		}
+		
 		
 	}, [sellerId]);
 	
 	useEffect(() => {
 		if (successMessage) {
-			socket.emit("send-message-to");
+			socket.emit("send-message-admin-to-seller", sellerAdminMessages[sellerAdminMessages.length - 1]);
+			dispatch(messageClear());
 		}
 	}, [successMessage]);
 	

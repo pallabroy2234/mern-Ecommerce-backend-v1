@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellerMessages, sendMessageToAdmin} from "../../store/Reducers/chatReducer.js";
+import {getSellerMessages, sendMessageToAdmin, updateSellerMessages} from "../../store/Reducers/chatReducer.js";
+import {socket} from "../../utils/utils.js";
 
 
 const SellerToAdmin = () => {
@@ -8,6 +9,7 @@ const SellerToAdmin = () => {
 	const {sellerAdminMessages} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
 	const [text, setText] = useState("");
+	const [receiveMessage, setReceiveMessage] = useState([]);
 	
 	useEffect(() => {
 		if (userInfo) {
@@ -22,6 +24,22 @@ const SellerToAdmin = () => {
 		}));
 		setText("");
 	};
+	
+	// * REAL TIME GET MESSAGE FROM ADMIN
+	
+	useEffect(() => {
+		socket.on("admin-message", (message) => {
+			setReceiveMessage(message);
+		});
+	}, []);
+	
+	// * REAL TIME UPDATE MESSAGE
+	useEffect(() => {
+		if (receiveMessage) {
+			dispatch(updateSellerMessages(receiveMessage));
+		}
+	}, [receiveMessage]);
+	
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">

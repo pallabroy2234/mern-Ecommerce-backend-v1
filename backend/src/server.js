@@ -17,7 +17,7 @@ const io = socketIo(server, {
 
 let allSeller = [];
 let allUser = [];
-let admin = {}
+let admin = {};
 
 //  * ADD SELLER
 const addSeller = (sellerId, socketId, userInfo) => {
@@ -43,10 +43,6 @@ const findUser = (userId) => {
 const findSeller = (sellerId) => {
 	return allSeller.find((seller) => seller.sellerId === sellerId);
 };
-
-
-
-
 
 // * DISCONNECT FUNCTION
 
@@ -94,9 +90,9 @@ io.on("connection", (socket) => {
 	// * ADD ADMIN
 	socket.on("addAdmin", (adminInfo) => {
 		delete adminInfo.email;
-		admin  = adminInfo;
+		admin = adminInfo;
 		admin.socketId = socket.id;
-		io.emit("active-seller", allSeller)
+		io.emit("active-seller", allSeller);
 	});
 
 	// 	* GET SELLER MESSAGE AND AFTER GETTING MESSAGE SEND TO USER
@@ -115,6 +111,16 @@ io.on("connection", (socket) => {
 			const seller = findSeller(message.receiverId);
 			if (seller !== undefined) {
 				socket.to(seller.socketId).emit("user-message", message);
+			}
+		}
+	});
+
+	// * GET MESSAGE ADMIN TO  SELLER
+	socket.on("send-message-admin-to-seller", (message) => {
+		if (message) {
+			const seller = findSeller(message.receiverId);
+			if (seller !== undefined) {
+				socket.to(seller.socketId).emit("admin-message", message);
 			}
 		}
 	});
