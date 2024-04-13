@@ -1,10 +1,13 @@
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getNavs} from "../navigation/index.jsx";
 import {BiLogOutCircle} from "react-icons/bi";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../store/Reducers/authReducer.js";
 
 const Sidebar = ({showSidebar, setShowSidebar}) => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {role}=useSelector((state)=> state.auth)
     const {pathname} = useLocation()
     const [allNav, setAllNav] = useState("")
@@ -14,6 +17,11 @@ const Sidebar = ({showSidebar, setShowSidebar}) => {
         setAllNav(navs)
     }, [role]);
 
+    const handleLogout= (e)=> {
+        dispatch(logout(navigate))
+        
+    }
+    
     return (
         <div>
             <div onClick={() => setShowSidebar(!showSidebar)} className={`fixed duration-200 ${showSidebar ? "visible" : "invisible"} w-screen h-screen bg-[#22292f80] top-0 left-0  z-10`}></div>
@@ -38,7 +46,7 @@ const Sidebar = ({showSidebar, setShowSidebar}) => {
                             ))
                         }
                         <li>
-                            <button className="text-white font-normal duration-200 px-[12px] py-[9px] flex justify-start  items-center gap-[16px] hover:pl-4 transition-all w-full mb-1">
+                            <button onClick={(e)=> handleLogout(e)}  type="button" className="text-white font-normal duration-200 px-[12px] py-[9px] flex justify-start  items-center gap-[16px] hover:pl-4 transition-all w-full mb-1">
                                 <span>
                                     <BiLogOutCircle/>
                                 </span>
