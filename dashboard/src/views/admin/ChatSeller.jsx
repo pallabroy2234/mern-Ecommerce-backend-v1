@@ -73,10 +73,10 @@ const ChatSeller = () => {
 	
 	// * UPDATE SELLER MESSAGE WITH REAL TIME
 	useEffect(() => {
-		if (receiveMessage) {
+		if (receiveMessage.length > 0) {
 			if (receiveMessage.senderId === sellerId && receiveMessage.receiverId === userInfo._id) {
 				dispatch(updateAdminMessages(receiveMessage));
-			} else{
+			} else {
 				// * Notification
 				toast.success(receiveMessage.senderName + " " + "send a message");
 			}
