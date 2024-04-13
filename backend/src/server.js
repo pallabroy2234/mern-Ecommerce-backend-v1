@@ -53,6 +53,13 @@ const disconnectUser = (socketId) => {
 	allUser = allUser.filter((user) => user.socketId !== socketId);
 };
 
+// * DISCONNECT ADMIN
+const disconnectAdmin = (socketId) => {
+	if (admin.socketId === socketId) {
+		admin = {};
+	}
+};
+
 io.on("connection", (socket) => {
 	console.log("Socket connected:  ", socket.id);
 
@@ -85,6 +92,7 @@ io.on("connection", (socket) => {
 		// 	* DISCONNECT SELLER
 		io.emit("active-seller", allSeller);
 		io.emit("active-user", allUser);
+		io.emit("active-admin", {status: true});
 	});
 
 	// * ADD ADMIN
@@ -93,6 +101,7 @@ io.on("connection", (socket) => {
 		admin = adminInfo;
 		admin.socketId = socket.id;
 		io.emit("active-seller", allSeller);
+		io.emit("active-admin", {status: true});
 	});
 
 	// 	* GET SELLER MESSAGE AND AFTER GETTING MESSAGE SEND TO USER
@@ -125,10 +134,21 @@ io.on("connection", (socket) => {
 		}
 	});
 
+	// * GET MESSAGE SELLER TO ADMIN
+	socket.on("send-message-seller-to-admin", (message) => {
+		if (message) {
+			if (admin.socketId && admin._id === message.receiverId) {
+				socket.to(admin.socketId).emit("receive-seller-message", message);
+			}
+		}
+	});
+
 	socket.on("disconnect", () => {
 		console.log("Socket disconnected:  ", socket.id);
 		disconnectSeller(socket.id);
 		disconnectUser(socket.id);
+		disconnectAdmin(socket.id);
+		io.emit("active-admin", {status: false});
 		io.emit("active-user", allUser);
 		io.emit("active-seller", allSeller);
 	});

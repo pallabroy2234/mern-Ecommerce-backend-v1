@@ -4,7 +4,7 @@ import {Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {socket} from "../utils/utils.js";
-import {updateSellers, updateUser} from "../store/Reducers/chatReducer.js";
+import {updateActiveAdminStatus, updateSellers, updateUser} from "../store/Reducers/chatReducer.js";
 
 const MainLayout = () => {
 	const dispatch = useDispatch()
@@ -26,6 +26,9 @@ const MainLayout = () => {
 		})
 		socket.on("active-seller", (sellers)=> {
 			dispatch(updateSellers(sellers))
+		})
+		socket.on("active-admin", (data)=> {
+			dispatch(updateActiveAdminStatus(data))
 		})
 	}, []);
 	

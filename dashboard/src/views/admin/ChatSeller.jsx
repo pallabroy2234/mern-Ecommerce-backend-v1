@@ -1,15 +1,16 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {IoMdClose} from "react-icons/io";
 import {FaList} from "react-icons/fa";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	getCurrentAdminMessages,
 	getSellers, messageClear,
-	sendMessageToSeller
+	sendMessageToSeller, updateAdminMessages
 } from "../../store/Reducers/chatReducer.js";
 import {Link, useParams} from "react-router-dom";
 import {BsEmojiSmile} from "react-icons/bs";
 import {socket} from "../../utils/utils.js";
+import toast from "react-hot-toast";
 
 
 const ChatSeller = () => {
@@ -25,12 +26,18 @@ const ChatSeller = () => {
 	const {userInfo} = useSelector((state) => state.auth);
 	const [show, setShow] = useState(true);
 	const [text, setText] = useState("");
-
+	const [receiveMessage, setReceiveMessage] = useState([]);
+	const lastMessageRef = useRef(null);
+	// * Scroll to bottom
+	useEffect(() => {
+		if (lastMessageRef.current) {
+			lastMessageRef.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+		}
+	}, [sellerAdminMessages]);
 	
 	useEffect(() => {
 		dispatch(getSellers());
 	}, []);
-	
 	
 	const handleInputSubmit = (e) => {
 		e.preventDefault();
@@ -41,23 +48,41 @@ const ChatSeller = () => {
 		}));
 		setText("");
 	};
-	
-	// * REAL TIME SEND MESSAGE ADMIN TO SELLER
 	useEffect(() => {
 		if (sellerId) {
 			dispatch(getCurrentAdminMessages(sellerId));
-			
 		}
-		
 		
 	}, [sellerId]);
 	
+	// * REAL TIME SEND MESSAGE ADMIN TO SELLER
 	useEffect(() => {
 		if (successMessage) {
 			socket.emit("send-message-admin-to-seller", sellerAdminMessages[sellerAdminMessages.length - 1]);
 			dispatch(messageClear());
 		}
 	}, [successMessage]);
+	
+	// * REAL TIME GET MESSAGE FROM SELLER
+	useEffect(() => {
+		socket.on("receive-seller-message", (message) => {
+			setReceiveMessage(message);
+			
+		});
+	}, []);
+	
+	// * UPDATE SELLER MESSAGE WITH REAL TIME
+	useEffect(() => {
+		if (receiveMessage) {
+			if (receiveMessage.senderId === sellerId && receiveMessage.receiverId === userInfo._id) {
+				dispatch(updateAdminMessages(receiveMessage));
+			} else{
+				// * Notification
+				toast.success(receiveMessage.senderName + " " + "send a message");
+			}
+		}
+	}, [receiveMessage]);
+	
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">
@@ -127,7 +152,7 @@ const ChatSeller = () => {
 									sellerId ? sellerAdminMessages.map((item, index) => {
 											if (item.senderId === sellerId) {
 												return (
-													<div key={index} className="w-full flex justify-start items-center">
+													<div key={index} ref={lastMessageRef} className="w-full flex justify-start items-center">
 														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 															<div>
 																<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="" />
@@ -140,7 +165,7 @@ const ChatSeller = () => {
 												);
 											} else {
 												return (
-													<div key={index} className="w-full flex justify-end items-center">
+													<div key={index} ref={lastMessageRef} className="w-full flex justify-end items-center">
 														<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 															<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
 																<span>{item?.message}</span>

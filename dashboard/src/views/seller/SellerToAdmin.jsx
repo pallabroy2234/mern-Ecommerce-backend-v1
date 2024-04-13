@@ -1,15 +1,29 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellerMessages, sendMessageToAdmin, updateSellerMessages} from "../../store/Reducers/chatReducer.js";
+import {
+	getSellerMessages,
+	messageClear,
+	sendMessageToAdmin,
+	updateSellerMessages,
+} from "../../store/Reducers/chatReducer.js";
 import {socket} from "../../utils/utils.js";
 
 
 const SellerToAdmin = () => {
 	const dispatch = useDispatch();
-	const {sellerAdminMessages} = useSelector((state) => state.chat);
+	const {sellerAdminMessages, successMessage ,activeAdmin} = useSelector((state) => state.chat);
 	const {userInfo} = useSelector((state) => state.auth);
 	const [text, setText] = useState("");
-	const [receiveMessage, setReceiveMessage] = useState([]);
+	const lastMessageRef = useRef(null);
+	
+	
+	// * Scroll to bottom
+	useEffect(() => {
+		if (lastMessageRef.current) {
+			lastMessageRef.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+		}
+	}, [sellerAdminMessages]);
+	
 	
 	useEffect(() => {
 		if (userInfo) {
@@ -26,19 +40,19 @@ const SellerToAdmin = () => {
 	};
 	
 	// * REAL TIME GET MESSAGE FROM ADMIN
-	
 	useEffect(() => {
 		socket.on("admin-message", (message) => {
-			setReceiveMessage(message);
+			dispatch(updateSellerMessages(message));
 		});
 	}, []);
 	
-	// * REAL TIME UPDATE MESSAGE
+	// * REAL TIME SEND MESSAGE SELLER TO ADMIN
 	useEffect(() => {
-		if (receiveMessage) {
-			dispatch(updateSellerMessages(receiveMessage));
+		if (successMessage) {
+			socket.emit("send-message-seller-to-admin", sellerAdminMessages[sellerAdminMessages.length - 1]);
+			dispatch(messageClear());
 		}
-	}, [receiveMessage]);
+	}, [successMessage]);
 	
 	
 	return (
@@ -52,7 +66,11 @@ const SellerToAdmin = () => {
 							<div className="flex justify-start items-center gap-3">
 								<div className="relative">
 									<img className="w-[54px] h-[54px] ring-[3px] ring-green-500  max-w-[55px] p-[2px] rounded-full" src="http://localhost:5173//public/images/admin.jpg" alt="" />
-									<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+									{/* Active Admin */}
+									{
+										activeAdmin &&
+										<div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+									}
 								</div>
 								<h2 className="text-white font-semibold">Support</h2>
 							</div>
@@ -65,7 +83,7 @@ const SellerToAdmin = () => {
 									sellerAdminMessages && sellerAdminMessages.map((item, index) => {
 										if (userInfo._id !== item.senderId) {
 											return (
-												<div key={index} className="w-full flex justify-start items-center">
+												<div key={index} ref={lastMessageRef} className="w-full flex justify-start items-center">
 													<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 														<div>
 															<img className="w-[38px] h-[38px] ring-[2px] ring-white  max-w-[38px] p-[2px] rounded-full" src="/public/images/admin.jpg" alt="admin" />
@@ -78,7 +96,7 @@ const SellerToAdmin = () => {
 											);
 										} else {
 											return (
-												<div key={index} className="w-full flex justify-end items-center">
+												<div key={index} ref={lastMessageRef} className="w-full flex justify-end items-center">
 													<div className="flex justify-start items-center gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
 														<div className="flex justify-center items-center flex-col bg-blue-500 shadow-lg shadow-blue-500/50  text-white py-1 px-2 rounded-sm">
 															<span>{item?.message}</span>

@@ -142,7 +142,7 @@ export const chatReducer = createSlice({
 		activeUser: [],
 		activeSellers: [],
 		messageNotifications: [],
-		activeAdmin: "",
+		activeAdmin: false,
 		sellerAdminMessages: [],
 		sellerUserMessages: [],
 		currentSeller: {},
@@ -165,7 +165,14 @@ export const chatReducer = createSlice({
 		},
 		updateSellerMessages : (state, {payload})=> {
 			state.sellerAdminMessages =[...state.sellerAdminMessages, payload];
+		},
+		updateAdminMessages : (state, {payload})=> {
+			state.sellerAdminMessages = [...state.sellerAdminMessages, payload];
+		},
+		updateActiveAdminStatus: (state, {payload})=> {
+		 state.activeAdmin = payload.status
 		}
+		
 		
 	},
 	extraReducers: builder => {
@@ -286,5 +293,5 @@ export const chatReducer = createSlice({
 });
 
 
-export const {messageClear, updateMessage, updateSellers, updateUser,updateSellerMessages} = chatReducer.actions;
+export const {messageClear,updateActiveAdminStatus,updateAdminMessages, updateMessage, updateSellers, updateUser,updateSellerMessages} = chatReducer.actions;
 export default chatReducer.reducer;
