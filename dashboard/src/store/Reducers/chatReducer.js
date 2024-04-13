@@ -229,6 +229,7 @@ export const chatReducer = createSlice({
 		builder.addCase(sendMessageToSeller.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.sellerAdminMessages = [...state.sellerAdminMessages, payload.payload];
+			state.successMessage = payload.message;
 		});
 		builder.addCase(sendMessageToSeller.pending, (state, _) => {
 			state.loader = true;
@@ -255,7 +256,7 @@ export const chatReducer = createSlice({
 		builder.addCase(getSellerMessages.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.sellerAdminMessages = payload.payload.messages;
-			state.successMessage = payload.message;
+			
 		});
 		builder.addCase(getSellerMessages.rejected, (state, {payload}) => {
 			state.loader = false;
