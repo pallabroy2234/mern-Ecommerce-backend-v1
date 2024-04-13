@@ -66,14 +66,15 @@ const ChatSeller = () => {
 	// * REAL TIME GET MESSAGE FROM SELLER
 	useEffect(() => {
 		socket.on("receive-seller-message", (message) => {
+		
 			setReceiveMessage(message);
-			
 		});
 	}, []);
 	
+	
 	// * UPDATE SELLER MESSAGE WITH REAL TIME
 	useEffect(() => {
-		if (receiveMessage.length > 0) {
+		if (receiveMessage.length !== 0) {
 			if (receiveMessage.senderId === sellerId && receiveMessage.receiverId === userInfo._id) {
 				dispatch(updateAdminMessages(receiveMessage));
 			} else {
