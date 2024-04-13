@@ -99,7 +99,7 @@ const returnRole = (token) => {
 
 
 // * Logout API
-export const logout = createAsyncThunk("auth/logout", async (navigate, {rejectWithValue, fulfillWithValue}) => {
+export const logout = createAsyncThunk("auth/logout", async (_, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get("/logout", {withCredentials: true});
 		localStorage.removeItem("accessToken");
@@ -116,12 +116,16 @@ export const authReducer = createSlice({
 		errorMessage: "",
 		loader: false,
 		userInfo: "",
+		logoutMessage: "",
+		logoutError : "",
 		role: returnRole(localStorage.getItem("accessToken")),
 		token: localStorage.getItem("accessToken")
 	}, reducers: {
 		messageClear: (state) => {
 			state.successMessage = "";
 			state.errorMessage = "";
+			state.logoutMessage = "";
+			state.logoutError = "";
 		}
 		
 	}, extraReducers: builder => {
@@ -192,11 +196,11 @@ export const authReducer = createSlice({
 		//     * Logout
 		builder.addCase(logout.fulfilled, (state, {payload}) => {
 			state.loader = false;
-			state.successMessage = payload.message;
+			state.logoutMessage = payload.message;
 		});
 		builder.addCase(logout.rejected, (state, {payload}) => {
 			state.loader = false;
-			state.errorMessage = payload.message;
+			state.logoutError = payload.message;
 		});
 		builder.addCase(logout.pending, (state, _) => {
 			state.loader = true;
