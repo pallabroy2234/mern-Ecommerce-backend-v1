@@ -121,7 +121,6 @@ const updateSellerStatus = async (req, res) => {
 
 const handleGetActiveSellers = async (req, res) => {
 	try {
-		const {id} = req;
 		const parPage = parseInt(req.query.parPage) || 5;
 		const currentPage = parseInt(req.query.currentPage) || 1;
 		const searchValue = req.query.searchValue || "";

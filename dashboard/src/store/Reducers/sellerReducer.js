@@ -108,6 +108,7 @@ export const sellerReducer = createSlice({
 			state.stateChangeLoader = false;
 			state.seller = payload.payload;
 		});
+	// 	* GET ACTIVE SELLERS
 	}
 	
 });
