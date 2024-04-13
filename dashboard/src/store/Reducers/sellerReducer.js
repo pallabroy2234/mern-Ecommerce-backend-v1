@@ -46,9 +46,9 @@ export const update_sellerStatus = createAsyncThunk(
 // * GET ACTIVE SELLERS
 export const getActiveSellers = createAsyncThunk(
 	"sellers/getActiveSellers",
-	async ({currentPage, searchValue,parPage}, {rejectWithValue, fulfillWithValue}) => {
+	async ({currentPage, searchValue, parPage}, {rejectWithValue, fulfillWithValue}) => {
 		try {
-			const {data} = await api.get(`/get-active-sellers?currentPage=${currentPage}&&searchValue=${searchValue}&&parPage=${parPage}`, {withCredentials: true});
+			const {data} = await api.get(`/get-active-sellers?currentPage=${currentPage || 1}&&searchValue=${searchValue || ""}&&parPage=${parPage || 5}`, {withCredentials: true});
 			return fulfillWithValue(data);
 		} catch (e) {
 			return rejectWithValue(e.response.data);
@@ -66,7 +66,9 @@ export const sellerReducer = createSlice({
 		stateChangeLoader: false,
 		sellers: [],
 		totalSellers: 0,
-		seller: "" || {}
+		seller: "" || {},
+		activeSellers: [],
+		pagination: {}
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -108,7 +110,22 @@ export const sellerReducer = createSlice({
 			state.stateChangeLoader = false;
 			state.seller = payload.payload;
 		});
-	// 	* GET ACTIVE SELLERS
+		// 	* GET ACTIVE SELLERS
+		builder.addCase(getActiveSellers.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.activeSellers = payload.payload.sellers;
+			state.pagination = payload.payload.pagination;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(getActiveSellers.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(getActiveSellers.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		
+		
 	}
 	
 });
