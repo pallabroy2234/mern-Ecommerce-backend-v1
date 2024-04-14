@@ -22,18 +22,21 @@ const handleGetAdminOrders = async (req, res) => {
 						as: "subOrders",
 					},
 				},
-			]);
+			])
+				.limit(parPage)
+				.skip(skipPage)
+				.sort({createdAt: -1});
 
 			return successResponse(res, {
 				payload: {
 					orders,
 					pagination: {
-						totalNumberOfSellers: orders.length,
+						totalNumberOfOrders: orders.length,
 						totalPages: Math.ceil(orders.length / parPage),
 						currentPage: currentPage,
 						previousPage: currentPage - 1 ? currentPage - 1 : null,
 						nextPage: currentPage + 1 <= Math.ceil(orders.length / parPage) ? currentPage + 1 : null,
-					}
+					},
 				},
 			});
 		}
