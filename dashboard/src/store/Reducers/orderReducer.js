@@ -27,7 +27,8 @@ export const orderReducer = createSlice({
 		loader: false,
 		totalOrders: 0,
 		order: {},
-		orders: []
+		orders: [],
+		pagination: {}
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -36,7 +37,21 @@ export const orderReducer = createSlice({
 		}
 	},
 	extraReducers: builder => {
-	
+		 // * GET ADMIN ORDERS
+	     builder.addCase(getAdminOrders.fulfilled, (state, {payload})=> {
+			 state.loader = false;
+			 state.orders = payload.payload.orders;
+			 state.pagination = payload.payload.pagination
+		 });
+		 builder.addCase(getAdminOrders.rejected, (state, {payload})=> {
+			 state.loader = false;
+			 state.errorMessage = payload.message;
+		 });
+		 builder.addCase(getAdminOrders.pending, (state, {payload})=> {
+			 state.loader = true;
+		 });
+		 
+		 
 	}
 	
 });

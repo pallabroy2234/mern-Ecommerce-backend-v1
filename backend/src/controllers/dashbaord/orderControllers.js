@@ -27,11 +27,13 @@ const handleGetAdminOrders = async (req, res) => {
 			return successResponse(res, {
 				payload: {
 					orders,
-					totalNumberOfSellers: orders.length,
-					totalPages: Math.ceil(orders.length / parPage),
-					currentPage: currentPage,
-					previousPage: currentPage - 1 ? currentPage - 1 : null,
-					nextPage: currentPage + 1 <= Math.ceil(orders.length / parPage) ? currentPage + 1 : null,
+					pagination: {
+						totalNumberOfSellers: orders.length,
+						totalPages: Math.ceil(orders.length / parPage),
+						currentPage: currentPage,
+						previousPage: currentPage - 1 ? currentPage - 1 : null,
+						nextPage: currentPage + 1 <= Math.ceil(orders.length / parPage) ? currentPage + 1 : null,
+					}
 				},
 			});
 		}
