@@ -200,9 +200,92 @@ const handleGetActiveSellers = async (req, res) => {
 	}
 };
 
+// * HANDLE GET DEACTIVE SELLERS BY QUERY || GET || /api/get-deactive-sellers
+const handleGetDeActiveSellers = async (req, res) => {
+	try {
+		const parPage = parseInt(req.query.parPage) || 5;
+		const currentPage = parseInt(req.query.currentPage) || 1;
+		const searchValue = req.query.searchValue || "";
+		const searchRegExp = new RegExp(".*" + searchValue + ".*", "i");
+		const skipPage = parseInt(parPage) * (parseInt(currentPage) - 1);
+
+		if (searchRegExp) {
+			const sellers = await Seller.find({
+				status: "deactive",
+				$or: [
+					{name: {$regex: searchRegExp}},
+					{
+						email: {
+							$regex: searchRegExp,
+						},
+					},
+					{"shopInfo.shopName": {$regex: searchRegExp}},
+					{
+						payment: {
+							$regex: searchRegExp,
+						},
+					},
+					{
+						"shopInfo.division": {
+							$regex: searchRegExp,
+						},
+					},
+					{"shopInfo.district": {$regex: searchRegExp}},
+				],
+			})
+				.skip(skipPage)
+				.limit(parseInt(parPage))
+				.sort({createdAt: -1});
+
+			const totalSellers = await Seller.find({
+				status: "deactive",
+				$or: [{name: {$regex: searchRegExp}}, {email: {$regex: searchRegExp}}, {"shopInfo.shopName": {$regex: searchRegExp}}, {payment: {$regex: searchRegExp}}, {"shopInfo.division": {$regex: searchRegExp}}, {"shopInfo.district": {$regex: searchRegExp}}],
+			}).countDocuments();
+
+			return successResponse(res, {
+				statusCode: 200,
+				payload: {
+					sellers,
+					pagination: {
+						totalNumberOfSellers: totalSellers,
+						totalPages: Math.ceil(totalSellers / parPage),
+						currentPage: currentPage,
+						previousPage: currentPage - 1 ? currentPage - 1 : null,
+						nextPage: currentPage + 1 <= Math.ceil(currentPage / parPage) ? currentPage + 1 : null,
+					},
+				},
+			});
+		} else {
+			const sellers = await Seller.find({status: "deactive"}).skip(skipPage).limit(parseInt(parPage)).sort({createdAt: -1});
+
+			const totalSellers = await Seller.find({status: "deactive"}).countDocuments();
+			return successResponse(res, {
+				statusCode: 200,
+				payload: {
+					sellers,
+					pagination: {
+						totalNumberOfSellers: totalSellers,
+						totalPages: Math.ceil(totalSellers / parPage),
+						currentPage: currentPage,
+						previousPage: currentPage - 1 ? currentPage - 1 : null,
+						nextPage: currentPage + 1 <= Math.ceil(currentPage / parPage) ? currentPage + 1 : null,
+					},
+				},
+			});
+		}
+	} catch (e) {
+		console.log(e.message, "handleGetDeActiveSellers");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	getRequestSellers,
 	getSellerById,
 	updateSellerStatus,
 	handleGetActiveSellers,
+	handleGetDeActiveSellers,
 };

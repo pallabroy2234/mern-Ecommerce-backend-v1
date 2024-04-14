@@ -1,15 +1,35 @@
 import {Link} from "react-router-dom";
 import { FaEye} from "react-icons/fa";
 import Pagination from "../Pagination.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {getActiveSellers, getDeActiveSellers} from "../../store/Reducers/sellerReducer.js";
+import {useDispatch, useSelector} from "react-redux";
 
 
 
 const DeactiveSellers= () => {
+    const dispatch = useDispatch()
+    const {userInfo} = useSelector(state => state.auth)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState("");
     const [parPage, setParPage] = useState(5);
     const [show, setShow] = useState(false)
+    
+    
+    useEffect(() => {
+        if (userInfo) {
+            const obj = {
+                parPage: parseInt(parPage),
+                currentPage: parseInt(currentPage),
+                searchValue: searchValue
+            };
+            dispatch(getDeActiveSellers(obj));
+        }
+    }, [searchValue, parPage, currentPage, userInfo]);
+    
+    
+    
+    
     
     return (
         <div  className="px-2 lg:px-7 pt-5">
@@ -21,7 +41,7 @@ const DeactiveSellers= () => {
                         <option value="15">15</option>
                         <option value="25">25</option>
                     </select>
-                    <input type="text" placeholder="Search" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white"/>
+                    <input onChange={(e)=> setSearchValue(e.target.value)} value={searchValue}  type="text" placeholder="Search" className="px-4 py-2 focus:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white"/>
                 </div>
                 
                 {/* table  */}

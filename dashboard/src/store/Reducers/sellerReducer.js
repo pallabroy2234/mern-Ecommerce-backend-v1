@@ -57,6 +57,19 @@ export const getActiveSellers = createAsyncThunk(
 );
 
 
+// * GET DEACTIVE SELLERS
+export const getDeActiveSellers = createAsyncThunk(
+	"sellers/getDeActiveSellers",
+	async ({currentPage, searchValue, parPage}, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/get-deActive-sellers?currentPage=${currentPage || 1}&&searchValue=${searchValue || ""}&&parPage=${parPage || 5}`, {withCredentials: true});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
 export const sellerReducer = createSlice({
 	name: "sellers",
 	initialState: {
