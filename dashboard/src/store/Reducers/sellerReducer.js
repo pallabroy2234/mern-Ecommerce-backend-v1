@@ -81,6 +81,7 @@ export const sellerReducer = createSlice({
 		totalSellers: 0,
 		seller: "" || {},
 		activeSellers: [],
+		deActiveSellers: [],
 		pagination: {}
 	},
 	reducers: {
@@ -138,6 +139,20 @@ export const sellerReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		
+		// 	* GET DEACTIVE SELLERS
+		builder.addCase(getDeActiveSellers.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.deActiveSellers = payload.payload.sellers;
+			state.pagination = payload.payload.pagination;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(getDeActiveSellers.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(getDeActiveSellers.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
 		
 	}
 	
