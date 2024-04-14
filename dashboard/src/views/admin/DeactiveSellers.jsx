@@ -81,7 +81,6 @@ const DeactiveSellers= () => {
                                     <td scope="row" className="px-4 py-2 font-normal whitespace-nowrap">
                                         <div className="flex justify-start items-center gap-4">
                                             <Link to={`/admin/dashboard/seller/details/${item?._id}`} className="p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-green-500/50"><FaEye /></Link>
-                                        
                                         </div>
                                     </td>
                                 </tr>
