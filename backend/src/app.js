@@ -32,6 +32,9 @@ app.use("/api", sellerRouter);
 
 // * DASHBOARD ROUTES
 app.use("/api/dashboard/chat/seller", require("./routes/dashboard/sellerChatRoutes"));
+app.use("/api/dashboard/order/" , require("./routes/dashboard/orderRoutes"))
+
+
 
 // * Frontend route
 app.use("/api/frontend", require("./routes/frontend/homeRoutes"));

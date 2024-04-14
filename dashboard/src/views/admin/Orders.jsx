@@ -1,21 +1,38 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {BsArrowBarDown} from "react-icons/bs";
 import {Link} from "react-router-dom";
 import Pagination from "../Pagination.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {getAdminOrders} from "../../store/Reducers/orderReducer.js";
 
 
 const Orders = () => {
+    const dispatch = useDispatch()
+    const{userInfo} = useSelector(state => state.auth)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchValue, setSearchValue] = useState("");
     const [parPage, setParPage] = useState(5);
     const [show, setShow] = useState(false)
+    
+    
+    useEffect(()=> {
+        if(userInfo){
+            dispatch(getAdminOrders({
+                currentPage : parseInt(currentPage),
+                parPage: parseInt(parPage),
+                searchValue: searchValue,
+            }))
+        }
+        
+    },[currentPage, parPage, searchValue])
+    
     
     return (
         <div className="px-2 lg:px-7 pt-5">
             <div className="w-full bg-[#283046] p-4 rounded-md">
                 {/* search Option */}
                 <div className="flex justify-between items-center">
-                    <select onChange={(e) => setParPage(parseInt(e.target.value))} className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
+                    <select onChange={(e) => setParPage(parseInt(e.target.value))} defaultValue={5} className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
                         <option value="5">5</option>
                         <option value="15">15</option>
                         <option value="25">25</option>

@@ -251,7 +251,7 @@ const handleGetDeActiveSellers = async (req, res) => {
 						totalPages: Math.ceil(totalSellers / parPage),
 						currentPage: currentPage,
 						previousPage: currentPage - 1 ? currentPage - 1 : null,
-						nextPage: currentPage + 1 <= Math.ceil(currentPage / parPage) ? currentPage + 1 : null,
+						nextPage: currentPage + 1 <= Math.ceil(totalSellers / parPage) ? currentPage + 1 : null,
 					},
 				},
 			});
@@ -268,7 +268,7 @@ const handleGetDeActiveSellers = async (req, res) => {
 						totalPages: Math.ceil(totalSellers / parPage),
 						currentPage: currentPage,
 						previousPage: currentPage - 1 ? currentPage - 1 : null,
-						nextPage: currentPage + 1 <= Math.ceil(currentPage / parPage) ? currentPage + 1 : null,
+						nextPage: currentPage + 1 <= Math.ceil(totalSellers / parPage) ? currentPage + 1 : null,
 					},
 				},
 			});
