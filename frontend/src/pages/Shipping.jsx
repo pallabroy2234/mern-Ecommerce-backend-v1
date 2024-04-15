@@ -15,8 +15,6 @@ const Shipping = () => {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
 
-	console.log(products);
-
 	const {userInfo} = useSelector((state) => state.auth);
 	const {successMessage, errorMessage, loader, orderId} = useSelector((state) => state.order);
 

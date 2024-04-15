@@ -94,7 +94,7 @@ const DeactiveSellers= () => {
                 <div className="w-full flex justify-end mt-4 bottom-4 right-4">
                     {
                         pagination.totalNumberOfSellers >= parPage ? (
-                            <Pagination pageNumber={currentPage} setPageNumber={setCurrentPage} totalItem={pagination.totalNumberOfSellers} parPage={parPage} showItem={5} />
+                            <Pagination pageNumber={currentPage} setPageNumber={setCurrentPage} totalItem={pagination.totalNumberOfSellers} parPage={parPage} showItem={pagination.totalPages} />
                         ) : null
                     }
                 </div>
