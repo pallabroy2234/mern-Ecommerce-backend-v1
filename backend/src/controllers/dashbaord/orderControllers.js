@@ -6,10 +6,10 @@ const UserOrderModal = require("../../models/userOrderModal");
 const handleGetAdminOrders = async (req, res) => {
 	try {
 		const parPage = parseInt(req.query.parPage) || 5;
-		const currentPage = parseInt(req.query.currentPage) || 1;
-		const searchValue = req.query.searchValue || "";
+		const page = parseInt(req.query.currentPage) || 1;
+		const searchValue = req.query.searchValue;
 		const searchRegExp = new RegExp(".*" + searchValue + ".*", "i");
-		const skipPage = parseInt(parPage) * (parseInt(currentPage) - 1);
+		const skipPage = parPage * (page - 1);
 
 		if (searchValue) {
 		} else {
@@ -22,20 +22,39 @@ const handleGetAdminOrders = async (req, res) => {
 						as: "subOrders",
 					},
 				},
-			])
-				.limit(parPage)
-				.skip(skipPage)
-				.sort({createdAt: -1});
+				{
+					$sort: {
+						createdAt: -1,
+					},
+				},
+				{
+					$skip: skipPage,
+				},
+				{
+					$limit: parPage,
+				},
+			]);
+
+			const totalOrder = await UserOrderModal.aggregate([
+				{
+					$lookup: {
+						from: "adminorders",
+						localField: "_id",
+						foreignField: "orderId",
+						as: "subOrders",
+					},
+				},
+			]);
 
 			return successResponse(res, {
 				payload: {
 					orders,
 					pagination: {
-						totalNumberOfOrders: orders.length,
-						totalPages: Math.ceil(orders.length / parPage),
-						currentPage: currentPage,
-						previousPage: currentPage - 1 ? currentPage - 1 : null,
-						nextPage: currentPage + 1 <= Math.ceil(orders.length / parPage) ? currentPage + 1 : null,
+						totalNumberOfOrders: totalOrder.length,
+						totalPages: Math.ceil(totalOrder.length / parPage),
+						currentPage: page,
+						previousPage: page - 1 ? page - 1 : null,
+						nextPage: page + 1 <= Math.ceil(totalOrder.length / parPage) ? page + 1 : null,
 					},
 				},
 			});
