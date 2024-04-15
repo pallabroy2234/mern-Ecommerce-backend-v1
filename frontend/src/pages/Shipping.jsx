@@ -15,6 +15,8 @@ const Shipping = () => {
 		state: {items, products, price, shippingFee},
 	} = useLocation();
 
+	console.log(products);
+
 	const {userInfo} = useSelector((state) => state.auth);
 	const {successMessage, errorMessage, loader, orderId} = useSelector((state) => state.order);
 
@@ -62,7 +64,7 @@ const Shipping = () => {
 	const handlePlaceOrder = () => {
 		dispatch(
 			placeOrder({
-				price,
+				price: parseInt(price),
 				products,
 				shippingFee,
 				shippingInfo: formData,

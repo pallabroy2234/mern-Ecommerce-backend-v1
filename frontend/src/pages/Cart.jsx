@@ -49,7 +49,7 @@ const Cart = () => {
 		navigate("/shipping", {
 			state: {
 				products: cartProducts,
-				price: price,
+				price: parseInt(price),
 				shippingFee: shippingFee,
 				items: buyProductItem,
 			},
@@ -144,7 +144,10 @@ const Cart = () => {
 																			-
 																		</button>
 																		<div className='px-3 text-[14px] flex justify-center items-center pt-1'>{item?.quantity}</div>
-																		<button onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)} disabled={item?.quantity >= item?.productInfo?.stock + 1} className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
+																		<button
+																			onClick={() => handleQuantityIncrement(item?.quantity, item?.productInfo?.stock, item?.cartId)}
+																			disabled={item?.quantity >= item?.productInfo?.stock + 1}
+																			className='px-3 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer'>
 																			+
 																		</button>
 																	</div>

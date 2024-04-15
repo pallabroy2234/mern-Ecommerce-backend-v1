@@ -44,7 +44,8 @@ const handlePaymentCheck = async (id) => {
 const handlePlaceOrder = async (req, res) => {
 	try {
 		const {price, shippingFee, products, shippingInfo, userId} = req.body;
-
+		console.log(price, "price");
+		console.log(products, "products");
 		let adminOrderData = [];
 		let cartId = [];
 		let userOrderProducts = [];
@@ -86,6 +87,7 @@ const handlePlaceOrder = async (req, res) => {
 			const price = products[i].price;
 			const sellerId = products[i].sellerId;
 
+			console.log(price);
 			// 	* formatting Product seller wise
 			let sellerProducts = [];
 

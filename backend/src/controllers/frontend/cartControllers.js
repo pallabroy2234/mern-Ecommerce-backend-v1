@@ -27,6 +27,7 @@ const handleAddToCart = async (req, res) => {
 				},
 			],
 		});
+
 		if (product) {
 			return errorResponse(res, {
 				statusCode: 404,
@@ -143,10 +144,9 @@ const handleGetCartProducts = async (req, res) => {
 			cartProductCount = cartProductCount + quantity;
 			buyProductItem = buyProductItem + quantity;
 			const {price, discount} = stockProduct[i].products[0];
-
 			if (discount !== 0) {
-				// calculatePrice += Math.floor((price * (100 - discount)) / 100) * quantity;
-				calculatePrice = calculatePrice + (price - Math.floor((price * discount) / 100)) * quantity;
+				calculatePrice += Math.floor((price * (100 - discount)) / 100) * quantity;
+				// calculatePrice = calculatePrice + (price - Math.floor((price * discount) / 100)) * quantity;
 			} else {
 				// calculatePrice += price * quantity;
 				calculatePrice = calculatePrice + price * quantity;
@@ -163,7 +163,8 @@ const handleGetCartProducts = async (req, res) => {
 				if (uniqueSellerId[i] === stockProduct[j].products[0].sellerId.toString()) {
 					let tempPrice = 0;
 					if (tempProduct.discount !== 0) {
-						tempPrice = tempProduct.price - Math.floor((tempProduct.price * (100 - tempProduct.discount)) / 100);
+						// tempPrice = tempProduct.price - Math.floor((tempProduct.price * (100 - tempProduct.discount)) / 100);
+						tempPrice = tempProduct.price - Math.floor((tempProduct.price * tempProduct.discount) / 100);
 					} else {
 						tempPrice = tempProduct.price;
 					}
@@ -202,7 +203,7 @@ const handleGetCartProducts = async (req, res) => {
 			message: "Cart Products",
 			payload: {
 				cartProducts: sellerProducts,
-				price: calculatePrice,
+				price: parseInt(calculatePrice),
 				cartProductCount,
 				shippingFee: 85 * sellerProducts.length,
 				outOfStockProducts,
