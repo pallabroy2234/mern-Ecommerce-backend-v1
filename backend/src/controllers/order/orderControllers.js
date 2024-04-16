@@ -44,7 +44,6 @@ const handlePaymentCheck = async (id) => {
 const handlePlaceOrder = async (req, res) => {
 	try {
 		const {price, shippingFee, products, shippingInfo, userId} = req.body;
-		console.log(price, "price");
 		console.log(products, "products");
 		let adminOrderData = [];
 		let cartId = [];
@@ -55,6 +54,7 @@ const handlePlaceOrder = async (req, res) => {
 			const product = products[i].products;
 			for (let j = 0; j < product.length; j++) {
 				let tempUserOrderProductInfo = product[j].productInfo;
+				tempUserOrderProductInfo.quantity = product[j].quantity;
 				userOrderProducts.push(tempUserOrderProductInfo);
 				if (product[j].cartId) {
 					cartId.push(product[j].cartId);
