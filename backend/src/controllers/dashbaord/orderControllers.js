@@ -72,6 +72,7 @@ const handleGetAdminOrders = async (req, res) => {
 	}
 };
 
+// * GET ADMIN ORDER DETAILS || GET || /api/dashboard/order/admin/get-order-details/:orderId
 const handleGEtAdminOrderDetails = async (req, res) => {
 	try {
 		const {orderId} = req.params;
@@ -114,7 +115,61 @@ const handleGEtAdminOrderDetails = async (req, res) => {
 	}
 };
 
+// * GET SELLER ORDER DETAILS || GET || /api/dashboard/order/seller/get-order-details/:orderId
+
+const handleGetSellerOrderDetails = (req, res) => {
+	try {
+		const {orderId} = req.params;
+
+		console.log(orderId);
+	} catch (error) {
+		console.log(error.message, "handleGetAdminOrders");
+		if (error instanceof mongoose.Error.CastError) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		return errorResponse(res, {
+			statusCode: 500,
+			message: error.message || "Internal server error",
+		});
+	}
+};
+
+// * HANDLE UPDATE ADMIN ORDER STATUS || PUT || /api/dashboard/order/admin/update-order-status/:orderId
+const handleUpdateAdminOrderStatus = async (req, res) => {
+	try {
+		const {orderId} = req.params;
+		const {status} = req.body;
+
+		const order = await AdminOrderModal.findOneAndUpdate({orderId: orderId}, {deliveryStatus: status}, {new: true});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Order status updated",
+			payload: {
+				order,
+			},
+		});
+	} catch (error) {
+		console.log(error.message, "handleGetAdminOrders");
+		if (error instanceof mongoose.Error.CastError) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		return errorResponse(res, {
+			statusCode: 500,
+			message: error.message || "Internal server error",
+		});
+	}
+};
+
 module.exports = {
 	handleGetAdminOrders,
 	handleGEtAdminOrderDetails,
+	handleGetSellerOrderDetails,
+	handleUpdateAdminOrderStatus,
 };

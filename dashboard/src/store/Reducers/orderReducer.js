@@ -26,7 +26,23 @@ export const getAdminOrderDetails = createAsyncThunk(
 			const {data} = await api.get(`/dashboard/order/admin/get-order-details/${orderId}`, {
 				withCredentials: true
 			});
-			console.log(data);
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
+//
+export const updateAdminOrderStatus = createAsyncThunk(
+	"order/updateAdminOrderStatus",
+	async ({orderId, info}, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.put(`/dashboard/order/admin/update-order-status/${orderId}`, info, {
+				withCredentials: true
+			});
 			return fulfillWithValue(data);
 		} catch (e) {
 			console.log(e.response.data);

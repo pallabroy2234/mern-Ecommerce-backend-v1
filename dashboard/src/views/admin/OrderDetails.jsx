@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
-import {getAdminOrderDetails} from "../../store/Reducers/orderReducer.js";
+import {useEffect, useState} from "react";
+import {getAdminOrderDetails, updateAdminOrderStatus} from "../../store/Reducers/orderReducer.js";
 
 
 const OrderDetails = () => {
@@ -9,7 +9,7 @@ const OrderDetails = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
 	const {order} = useSelector((state) => state.order);
-	
+	const [status, setStatus] = useState("");
 	
 	useEffect(() => {
 		if (userInfo) {
@@ -24,18 +24,30 @@ const OrderDetails = () => {
 		return name;
 	};
 	
+	useEffect(() => {
+		if (order) {
+			setStatus(order?.deliveryStatus);
+		}
+	}, [order]);
+	
+	const handleChangeStatus = (e) => {
+		dispatch(updateAdminOrderStatus({orderId, info: {status: e.target.value}}));
+		setStatus(e.target.value);
+	};
+	console.log(orderId);
+	console.log(order)
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">
 			<div className="w-full bg-[#283046] p-4 rounded-md">
 				<div className="flex justify-between items-center p-4">
 					<h2 className="text-xl text-white">Order Details</h2>
-					<select name="" id="" className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
-						<option value="">pending</option>
-						<option value="">processing</option>
-						<option value="">warehouse</option>
-						<option value="">placed</option>
-						<option value="">cancelled</option>
+					<select onChange={(e) => handleChangeStatus(e)} value={status} name="" id="" className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
+						<option value="pending">pending</option>
+						<option value="processing">processing</option>
+						<option value="warehouse">warehouse</option>
+						<option value="placed">placed</option>
+						<option value="cancelled">cancelled</option>
 					</select>
 				</div>
 				
@@ -96,7 +108,7 @@ const OrderDetails = () => {
 												</div>
 												{
 													item?.products && item?.products?.map((product, index) => (
-														<div className="flex gap-3 text-md mt-3">
+														<div key={index} className="flex gap-3 text-md mt-3">
 															<div className="w-[100px] h-[70px]">
 																<img className="w-full h-full object-cover" src={product?.images[0].url} alt="" />
 															</div>
