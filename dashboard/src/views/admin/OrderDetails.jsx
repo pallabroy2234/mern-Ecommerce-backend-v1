@@ -36,6 +36,7 @@ const OrderDetails = () => {
 	};
 	console.log(orderId);
 	console.log(order)
+	console.log(status)
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">
