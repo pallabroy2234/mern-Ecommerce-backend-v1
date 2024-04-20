@@ -34,9 +34,7 @@ const OrderDetails = () => {
 		dispatch(updateAdminOrderStatus({orderId, info: {status: e.target.value}}));
 		setStatus(e.target.value);
 	};
-	console.log(orderId);
-	console.log(order)
-	console.log(status)
+
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">
