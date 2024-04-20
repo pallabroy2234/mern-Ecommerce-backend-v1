@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleGetAdminOrders, handleGEtAdminOrderDetails, handleGetSellerOrderDetails, handleUpdateAdminOrderStatus} = require("../../controllers/dashbaord/orderControllers");
+const {handleGetAdminOrders, handleGEtAdminOrderDetails, handleGetSellerOrderDetails, handleUpdateAdminOrderStatus, handleGetSellerOrders} = require("../../controllers/dashbaord/orderControllers");
 const {authMiddleware, isAdmin, isSeller} = require("../../middleware/authMiddleware");
 const orderRouter = express.Router();
 
@@ -18,5 +18,8 @@ orderRouter.put("/admin/update-order-status/:orderId", authMiddleware, isAdmin, 
 
 // * GET SELLER ORDER DETAILS || GET || /api/dashboard/order/seller/get-order-details/:orderId
 orderRouter.get("/seller/get-order-details/:orderId", authMiddleware, isSeller, handleGetSellerOrderDetails);
+
+// * GET SELLER ORDERS || GET || /api/dashboard/order/seller/get-orders?currentPage=1&&parPage=5&&searchValue=""
+orderRouter.get("/seller/get-orders", authMiddleware, isSeller, handleGetSellerOrders);
 
 module.exports = orderRouter;

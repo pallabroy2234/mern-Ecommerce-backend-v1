@@ -17,6 +17,21 @@ export const getAdminOrders = createAsyncThunk(
 	}
 );
 
+// * GET SELLER ORDERS || GET || /api/order/seller/get-orders
+export const getSellerOrders = createAsyncThunk(
+	"order/getSellerOrders",
+	async ({parPage, currentPage, searchValue}, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/order/seller/get-orders?currentPage=${currentPage || 1}&&parPage=${parPage || 5}&&searchValue=${searchValue || ""}`, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
 
 // * GET ADMIN ORDER DETAILS || GET || /api/order/admin/get-order-details/:orderId
 export const getAdminOrderDetails = createAsyncThunk(
@@ -96,18 +111,33 @@ export const orderReducer = createSlice({
 		builder.addCase(getAdminOrderDetails.pending, (state, {payload}) => {
 			state.loader = true;
 		});
-	// 	* UPDATE ADMIN ORDER STATUS
-		builder.addCase(updateAdminOrderStatus.fulfilled, (state,{payload} )=> {
-			state.loader =false;
+		// 	* UPDATE ADMIN ORDER STATUS
+		builder.addCase(updateAdminOrderStatus.fulfilled, (state, {payload}) => {
+			state.loader = false;
 			state.successMessage = payload.message;
-		})
-		builder.addCase(updateAdminOrderStatus.rejected, (state, {payload})=> {
+		});
+		builder.addCase(updateAdminOrderStatus.rejected, (state, {payload}) => {
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
-		builder.addCase(updateAdminOrderStatus.pending, (state, _)=> {
+		builder.addCase(updateAdminOrderStatus.pending, (state, _) => {
 			state.loader = true;
-		})
+		});
+		
+		// 	* GET SELLER ORDER
+		builder.addCase(getSellerOrders.fulfilled, (state, {payload}) => {
+			state.orders = payload.payload.orders;
+			state.pagination = payload.payload.pagination;
+			state.successMessage = payload.message;
+			state.loader = false;
+		});
+		builder.addCase(getSellerOrders.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+			state.loader = false;
+		});
+		builder.addCase(getSellerOrders.pending, (state, _) => {
+			state.loader = true;
+		});
 		
 	}
 	

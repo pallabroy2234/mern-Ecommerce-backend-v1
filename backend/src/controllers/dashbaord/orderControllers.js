@@ -169,9 +169,61 @@ const handleUpdateAdminOrderStatus = async (req, res) => {
 	}
 };
 
+// * HANDLE GET SELLER ORDERS || GET || /api/dashboard/order/seller/get-orders?currentPage=1&&parPage=5&&searchValue=""
+
+const handleGetSellerOrders = async (req, res) => {
+	try {
+		const {id} = req;
+		const parPage = parseInt(req.query.parPage) || 5;
+		const page = parseInt(req.query.currentPage) || 1;
+		const searchValue = req.query.searchValue;
+		const searchRegExp = new RegExp(".*" + searchValue + ".*", "i");
+		const skipPage = parPage * (page - 1);
+
+		if (searchValue) {
+		
+		} else {
+			const orders = await AdminOrderModal.find({sellerId: new ObjectId(id)})
+				.skip(skipPage)
+				.limit(parPage)
+				.sort({createdAt: -1});
+
+			const totalOrders = await AdminOrderModal.find({sellerId: new ObjectId(id)}).countDocuments();
+
+			return successResponse(res, {
+				statusCode: 200,
+				message: "order fetch successfully",
+				payload: {
+					orders,
+					pagination: {
+						totalNumberOfOrders: totalOrders,
+						totalPages: Math.ceil(totalOrders / parPage),
+						currentPage: page,
+						previousPage: page - 1 ? page - 1 : null,
+						nextPage: page + 1 <= Math.ceil(totalOrders / parPage) ? page + 1 : null,
+					},
+				},
+			});
+		}
+	} catch (error) {
+		if (error instanceof mongoose.Error.CastError) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+
+		return errorResponse(res, {
+			statusCode: 500,
+			message: error.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleGetAdminOrders,
 	handleGEtAdminOrderDetails,
 	handleGetSellerOrderDetails,
 	handleUpdateAdminOrderStatus,
+	handleGetSellerOrders,
 };
