@@ -35,7 +35,7 @@ export const getAdminOrderDetails = createAsyncThunk(
 );
 
 
-//
+// * UPDATE ADMIN ORDER STATUS || PUT || /api/order/admin/update-order-status/:orderId
 export const updateAdminOrderStatus = createAsyncThunk(
 	"order/updateAdminOrderStatus",
 	async ({orderId, info}, {rejectWithValue, fulfillWithValue}) => {
@@ -96,6 +96,18 @@ export const orderReducer = createSlice({
 		builder.addCase(getAdminOrderDetails.pending, (state, {payload}) => {
 			state.loader = true;
 		});
+	// 	* UPDATE ADMIN ORDER STATUS
+		builder.addCase(updateAdminOrderStatus.fulfilled, (state,{payload} )=> {
+			state.loader =false;
+			state.successMessage = payload.message;
+		})
+		builder.addCase(updateAdminOrderStatus.rejected, (state, {payload})=> {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(updateAdminOrderStatus.pending, (state, _)=> {
+			state.loader = true;
+		})
 		
 	}
 	

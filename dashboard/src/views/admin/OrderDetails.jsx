@@ -1,14 +1,15 @@
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import {getAdminOrderDetails, updateAdminOrderStatus} from "../../store/Reducers/orderReducer.js";
+import {getAdminOrderDetails, messageClear, updateAdminOrderStatus} from "../../store/Reducers/orderReducer.js";
+import toast from "react-hot-toast";
 
 
 const OrderDetails = () => {
 	const {orderId} = useParams();
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector((state) => state.auth);
-	const {order} = useSelector((state) => state.order);
+	const {order, successMessage, errorMessage} = useSelector((state) => state.order);
 	const [status, setStatus] = useState("");
 	
 	useEffect(() => {
@@ -34,7 +35,19 @@ const OrderDetails = () => {
 		dispatch(updateAdminOrderStatus({orderId, info: {status: e.target.value}}));
 		setStatus(e.target.value);
 	};
-
+	
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+		
+	}, [successMessage, errorMessage]);
+	
 	
 	return (
 		<div className="px-2 lg:px-7 pt-5">

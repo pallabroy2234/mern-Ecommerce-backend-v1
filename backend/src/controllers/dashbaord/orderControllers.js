@@ -143,7 +143,9 @@ const handleUpdateAdminOrderStatus = async (req, res) => {
 		const {orderId} = req.params;
 		const {status} = req.body;
 
-		const order = await AdminOrderModal.findOneAndUpdate({orderId: orderId}, {deliveryStatus: status}, {new: true});
+		const order = await UserOrderModal.findByIdAndUpdate(orderId, {
+			deliveryStatus: status,
+		});
 
 		return successResponse(res, {
 			statusCode: 200,
