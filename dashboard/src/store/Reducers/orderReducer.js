@@ -50,6 +50,23 @@ export const getAdminOrderDetails = createAsyncThunk(
 );
 
 
+//  * GET SELLER ORDER DETAILS || GET || /api/order/seller/get-order-details/:orderId
+export const getSellerOrderDetails = createAsyncThunk(
+	"order/getSellerOrderDetails",
+	async (orderId, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/order/seller/get-order-details/${orderId}`, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
 // * UPDATE ADMIN ORDER STATUS || PUT || /api/order/admin/update-order-status/:orderId
 export const updateAdminOrderStatus = createAsyncThunk(
 	"order/updateAdminOrderStatus",
@@ -60,7 +77,21 @@ export const updateAdminOrderStatus = createAsyncThunk(
 			});
 			return fulfillWithValue(data);
 		} catch (e) {
-			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+// * UPDATE SELLER ORDER STATUS || PUT || /api/order/seller/update-order-status/:orderId
+export const updateSellerOrderStatus = createAsyncThunk(
+	"order/updateSellerOrderStatus",
+	async ({orderId, info}, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.put(`/dashboard/order/seller/update-order-status/${orderId}`, info, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
 			return rejectWithValue(e.response.data);
 		}
 	}
@@ -99,7 +130,7 @@ export const orderReducer = createSlice({
 			state.loader = true;
 		});
 		
-		// 	 * GET ORDER DETAILS
+		// 	 * GET ADMIN ORDER DETAILS
 		builder.addCase(getAdminOrderDetails.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.order = payload.payload.order;
@@ -136,6 +167,32 @@ export const orderReducer = createSlice({
 			state.loader = false;
 		});
 		builder.addCase(getSellerOrders.pending, (state, _) => {
+			state.loader = true;
+		});
+		
+		// 	* GET SELLER ORDER DETAILS
+		builder.addCase(getSellerOrderDetails.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.order = payload.payload.order;
+		});
+		builder.addCase(getSellerOrderDetails.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getSellerOrderDetails.pending, (state, {payload}) => {
+			state.loader = true;
+		});
+		
+		// 	* UPDATE SELLER ORDER STATUS
+		builder.addCase(updateSellerOrderStatus.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+		});
+		builder.addCase(updateSellerOrderStatus.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(updateSellerOrderStatus.pending, (state, _) => {
 			state.loader = true;
 		});
 		

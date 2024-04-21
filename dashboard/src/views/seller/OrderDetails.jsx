@@ -1,17 +1,72 @@
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {
+    getAdminOrderDetails,
+    getSellerOrderDetails,
+    messageClear,
+    updateAdminOrderStatus, updateSellerOrderStatus
+} from "../../store/Reducers/orderReducer.js";
+import toast from "react-hot-toast";
 
 
 const OrderDetails = () => {
+    const {orderId} = useParams();
+    const dispatch = useDispatch();
+    const {userInfo} = useSelector((state) => state.auth);
+    const {order, successMessage, errorMessage} = useSelector((state) => state.order);
+    const [status, setStatus] = useState("");
+    
+    console.log(orderId);
+    
+    useEffect(() => {
+        if (userInfo) {
+            dispatch(getSellerOrderDetails(orderId));
+        }
+    }, [orderId]);
+    
+    // const handleTruncText = (text) => {
+    //     if (text.length > 40) {
+    //         return text.slice(0, 40) + "...";
+    //     }
+    //     return name;
+    // };
+    
+    useEffect(() => {
+        if (order) {
+            setStatus(order?.deliveryStatus);
+        }
+    }, [order]);
+    
+    const handleChangeStatus = (e) => {
+        dispatch(updateSellerOrderStatus({orderId, info: {status: e.target.value}}));
+        setStatus(e.target.value);
+    };
+    
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());
+        }
+        
+    }, [successMessage, errorMessage]);
+    
+    
+    
     return (
         <div className="px-2 lg:px-7 pt-5">
             <div className="w-full bg-[#283046] p-4 rounded-md">
                 <div className="flex justify-between items-center p-4">
                     <h2 className="text-xl text-white">Order Details</h2>
-                    <select name="" id="" className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
-                        <option value="">pending</option>
-                        <option value="">processing</option>
-                        <option value="">warehouse</option>
-                        <option value="">placed</option>
-                        <option value="">cancelled</option>
+                    <select onChange={(e)=> handleChangeStatus(e)} value={status} name="" id="" className="px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white">
+                        <option value="pending">pending</option>
+                        <option value="processing">processing</option>
+                        <option value="warehouse">warehouse</option>
+                        <option value="cancelled">cancelled</option>
                     </select>
                 </div>
                 
