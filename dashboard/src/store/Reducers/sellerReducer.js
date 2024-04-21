@@ -75,14 +75,16 @@ export const getDeActiveSellers = createAsyncThunk(
 
 export const createStripeConnectAccount = createAsyncThunk(
 	"sellers/createStripeConnectAccount",
-	async (_, {rejectWithValue, fulfillWithValue}) => {
+	async () => {
 		try {
 			const {data} = await api.get("/payment/seller/connect-account", {
 				withCredentials: true
 			});
-			return fulfillWithValue(data);
+			console.log(data);
+			// return fulfillWithValue(data);
 		} catch (e) {
-			return rejectWithValue(e.response.data);
+			console.log(e.response.data);
+			// return rejectWithValue(e.response.data);
 		}
 	}
 );
