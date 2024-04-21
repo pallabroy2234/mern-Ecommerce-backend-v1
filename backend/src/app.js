@@ -32,9 +32,10 @@ app.use("/api", sellerRouter);
 
 // * DASHBOARD ROUTES
 app.use("/api/dashboard/chat/seller", require("./routes/dashboard/sellerChatRoutes"));
-app.use("/api/dashboard/order/" , require("./routes/dashboard/orderRoutes"))
+app.use("/api/dashboard/order/", require("./routes/dashboard/orderRoutes"));
 
-
+// * PAYMENT ROUTES
+app.use("/api/payment/", require("./routes/payment/paymentRoutes"));
 
 // * Frontend route
 app.use("/api/frontend", require("./routes/frontend/homeRoutes"));

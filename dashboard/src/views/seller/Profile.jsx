@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {messageClear, profile_image_upload, profile_info_add} from "../../store/Reducers/authReducer.js";
 import {overrideStyle} from "../../utils/utils.js";
 import toast from "react-hot-toast";
+import {createStripeConnectAccount} from "../../store/Reducers/sellerReducer.js";
 
 
 const Profile = () => {
@@ -47,7 +48,12 @@ const Profile = () => {
         }
     }, [errorMessage, successMessage])
     
-    const status = "active";
+    
+    // * HANDLE PAYMENT ACTIVE
+    const handlePaymentActive = ()=> {
+        dispatch(createStripeConnectAccount())
+    }
+
     
     
     return (
@@ -107,9 +113,9 @@ const Profile = () => {
                                 <div className="flex gap-2">
                                     <span>Payment Account : </span>
                                     <p>
-                                        {status === "active" ?
+                                        {userInfo?.paymentStatus === "active" ?
                                             <span className="text-white text-xs cursor-pointer font-normal bg-red-500 ml-2 px-2 py-0.5 rounded">{userInfo?.payment}</span> :
-                                            <span className="text-white text-xs cursor-pointer font-normal bg-blue-500 ml-2 px-2 py-0.5 rounded">click active</span>}
+                                            <button onClick={handlePaymentActive} type="button" className="text-white text-xs cursor-pointer font-normal bg-blue-500 ml-2 px-2 py-0.5 rounded">click active</button>}
                                     </p>
                                 </div>
                             </div>

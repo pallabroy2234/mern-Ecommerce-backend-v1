@@ -70,6 +70,24 @@ export const getDeActiveSellers = createAsyncThunk(
 	}
 );
 
+
+// *
+
+export const createStripeConnectAccount = createAsyncThunk(
+	"sellers/createStripeConnectAccount",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get("/payment/seller/connect-account", {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+
 export const sellerReducer = createSlice({
 	name: "sellers",
 	initialState: {
