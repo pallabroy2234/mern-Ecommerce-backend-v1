@@ -159,7 +159,6 @@ export const orderReducer = createSlice({
 		builder.addCase(getSellerOrders.fulfilled, (state, {payload}) => {
 			state.orders = payload.payload.orders;
 			state.pagination = payload.payload.pagination;
-			state.successMessage = payload.message;
 			state.loader = false;
 		});
 		builder.addCase(getSellerOrders.rejected, (state, {payload}) => {
@@ -186,7 +185,8 @@ export const orderReducer = createSlice({
 		// 	* UPDATE SELLER ORDER STATUS
 		builder.addCase(updateSellerOrderStatus.fulfilled, (state, {payload}) => {
 			state.loader = false;
-			state.successMessage = payload.message;
+			state.successMessage = payload.message
+		
 		});
 		builder.addCase(updateSellerOrderStatus.rejected, (state, {payload}) => {
 			state.loader = false;
