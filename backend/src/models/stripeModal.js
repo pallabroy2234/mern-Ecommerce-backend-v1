@@ -18,5 +18,5 @@ const stripeSchema = new Schema(
 	{timestamps: true},
 );
 
-const stripeModal = model("users", stripeSchema);
+const stripeModal = model("stripes", stripeSchema);
 module.exports = stripeModal;

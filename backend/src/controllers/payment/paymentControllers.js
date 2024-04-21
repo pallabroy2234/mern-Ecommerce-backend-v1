@@ -1,4 +1,5 @@
 const {errorResponse} = require("../../helper/responseHelper");
+const StripeModal = require("../../models/stripeModal");
 
 // * HANDLE SELLER STRIPE CONNECT ACCOUNT || GET || /api/payment/seller/connect-account
 
