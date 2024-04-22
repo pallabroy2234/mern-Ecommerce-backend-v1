@@ -190,17 +190,17 @@ export const sellerReducer = createSlice({
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
-		// builder.addCase(activeSellerStripeAccount.rejected, (state, {payload}) => {
-		// 	state.errorMessage = payload.message;
-		// 	state.loader = false;
-		// });
-		// builder.addCase(activeSellerStripeAccount.pending, (state, _) => {
-		// 	state.loader = true;
-		// });
-		// builder.addCase(activeSellerStripeAccount.fulfilled, (state, {payload}) => {
-		// 	state.loader = false;
-		// 	state.successMessage = payload.message;
-		// });
+		builder.addCase(activeSellerStripeAccount.rejected, (state, {payload}) => {
+			state.errorMessage = payload.message;
+			state.loader = false;
+		});
+		builder.addCase(activeSellerStripeAccount.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(activeSellerStripeAccount.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+		});
 		
 	}
 	

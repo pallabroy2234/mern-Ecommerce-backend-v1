@@ -19,7 +19,7 @@ const Success = () => {
 			dispatch(activeSellerStripeAccount(activecode));
 		}
 	}, [activecode, userInfo]);
-	console.log(userInfo);
+
 	
 	const handleRedirectDashboard = () => {
 		dispatch(messageClear());
