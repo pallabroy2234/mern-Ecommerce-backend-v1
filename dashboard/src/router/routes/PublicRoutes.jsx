@@ -1,4 +1,5 @@
 import {lazy} from "react";
+import Success from "../../views/Success.jsx";
 // import NoFound from "../../views/No-found.jsx";
 // import Home from "../../views/Home.jsx";
 // import Login from "../../views/auth/Login.jsx";
@@ -35,6 +36,10 @@ const PublicRoutes = [
         public: true,
     },
     {
+        path: "/success?",
+        element: <Success/>,
+    },
+    {
         path: "*",
         element: <NoFound/>,
     },
@@ -42,6 +47,8 @@ const PublicRoutes = [
         path: "/unauthorized",
         element: <UnAuthorized/>,
     },
+    
+    
 ];
 
 export default PublicRoutes;

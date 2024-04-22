@@ -71,7 +71,7 @@ export const getDeActiveSellers = createAsyncThunk(
 );
 
 
-// *
+// *  CONNECT STRIPE ACCOUNT
 
 export const createStripeConnectAccount = createAsyncThunk(
 	"sellers/createStripeConnectAccount",
@@ -85,6 +85,23 @@ export const createStripeConnectAccount = createAsyncThunk(
 		} catch (e) {
 			console.log(e.response.data);
 			// return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+// *
+export const activeSellerStripeAccount = createAsyncThunk(
+	"sellers/activeSellerStripeAccount",
+	async (activeCode, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.put(`/payment/seller/active-account/${activeCode}`, {}, {
+				withCredentials: true
+			});
+			console.log(data);
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
 		}
 	}
 );
@@ -173,6 +190,17 @@ export const sellerReducer = createSlice({
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
+		// builder.addCase(activeSellerStripeAccount.rejected, (state, {payload}) => {
+		// 	state.errorMessage = payload.message;
+		// 	state.loader = false;
+		// });
+		// builder.addCase(activeSellerStripeAccount.pending, (state, _) => {
+		// 	state.loader = true;
+		// });
+		// builder.addCase(activeSellerStripeAccount.fulfilled, (state, {payload}) => {
+		// 	state.loader = false;
+		// 	state.successMessage = payload.message;
+		// });
 		
 	}
 	
