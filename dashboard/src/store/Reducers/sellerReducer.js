@@ -80,7 +80,7 @@ export const createStripeConnectAccount = createAsyncThunk(
 			const {data} = await api.get("/payment/seller/connect-account", {
 				withCredentials: true
 			});
-			console.log(data);
+			window.location.href = data.payload.url;
 			// return fulfillWithValue(data);
 		} catch (e) {
 			console.log(e.response.data);
