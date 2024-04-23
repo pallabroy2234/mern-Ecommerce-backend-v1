@@ -8,7 +8,6 @@ const Payment = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [paymentMethod, setPaymentMethod] = useState("stripe");
-
 	const {
 		state: {items, price, userId, orderId},
 	} = location;

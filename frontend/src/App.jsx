@@ -22,6 +22,7 @@ import OrderDetails from "./components/dashboard/OrderDetails.jsx";
 import Chat from "./components/dashboard/Chat.jsx";
 import io from "socket.io-client";
 import {updateSeller} from "./store/reducers/chatReducer.js";
+import ConfirmOrder from "./pages/ConfirmOrder.jsx";
 
 const socket = io("http://localhost:3000");
 
@@ -52,6 +53,7 @@ function App() {
 				<Route path='/shipping' element={<Shipping />} />
 				<Route path='/payment' element={<Payment />} />
 				<Route path='/product/details/:slug' element={<Details />} />
+				<Route path='/order/confirm?' element={<ConfirmOrder />} />
 
 				<Route path='/dashboard' element={<ProtectUser />}>
 					<Route path='' element={<Dashboard />}>
