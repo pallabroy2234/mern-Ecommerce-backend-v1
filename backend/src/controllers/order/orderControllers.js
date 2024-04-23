@@ -8,6 +8,7 @@ const {mongoose} = require("mongoose");
 const {
 	Types: {ObjectId},
 } = mongoose;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // *** If User not payment time wise than delete cartProducts
 
@@ -315,9 +316,51 @@ const handleGetOrderDetails = async (req, res) => {
 	}
 };
 
+// *** HANDLE CREATE PAYMENT || POST || /api/frontend/product/order/create-payment
+
+const handleCreatePayment = async (req, res) => {
+	try {
+		const {price} = req.body;
+		if (!price) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Price is required",
+			});
+		}
+
+		const payment = await stripe.paymentIntents.create({
+			amount: parseInt(price) * 100,
+			currency: "usd",
+			automatic_payment_methods: {
+				enabled: true,
+			},
+		});
+
+		if (!payment) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Payment failed",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Payment created successfully",
+			payload: payment.client_secret,
+		});
+	} catch (e) {
+		console.log(e.message, "handleCreatePayment");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handlePlaceOrder,
 	handleGetRecentOrders,
 	handleGetMyOrders,
 	handleGetOrderDetails,
+	handleCreatePayment,
 };

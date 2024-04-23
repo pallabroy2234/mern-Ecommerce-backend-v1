@@ -19,7 +19,7 @@ const CheckOutForm = ({orderId}) => {
 			return;
 		}
 		setIsLoading(true);
-		const {error} = await stripe.confirmAcssDebitPayment({
+		const {error} = await stripe.confirmPayment({
 			elements,
 			confirmParams: {
 				return_url: "http://localhost:5174/order/confirm",
@@ -36,9 +36,9 @@ const CheckOutForm = ({orderId}) => {
 
 	return (
 		<form id='paymnt-form' onSubmit={(e) => handlePaymentSubmit(e)}>
-			<LinkAuthenticationElement id='link-authentication-element' onChange={(e) => setEmail(e.targe.value)} />
+			<LinkAuthenticationElement id='link-authentication-element' />
 			<PaymentElement id='payment-element' options={paymentElementOption} />
-			<button disabled={isLoading || !stripe || !elements} id='submit' className='px-10 py-[6px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-white'>
+			<button disabled={isLoading || !stripe || !elements} id='submit' className='px-10 mt-2 py-[6px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg bg-orange-500 text-white'>
 				<span id='button-text'>{isLoading ? <div>Loading...</div> : "Pay Now"}</span>
 			</button>
 			{message && <div>{message}</div>}

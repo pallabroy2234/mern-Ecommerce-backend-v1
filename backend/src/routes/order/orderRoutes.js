@@ -1,5 +1,5 @@
 const express = require("express");
-const {handlePlaceOrder, handleGetRecentOrders, handleGetMyOrders, handleGetOrderDetails} = require("../../controllers/order/orderControllers");
+const {handlePlaceOrder, handleGetRecentOrders, handleGetMyOrders, handleGetOrderDetails, handleCreatePayment} = require("../../controllers/order/orderControllers");
 const {isLoggedIn, authMiddleware} = require("../../middleware/frontend/authMiddleware");
 const {placeOrderValidator} = require("../../validator/order/orderValidator");
 const {runValidation} = require("../../validator");
@@ -17,5 +17,7 @@ orderRoutes.get("/get-myOrders/:userId/:status", isLoggedIn, handleGetMyOrders);
 // * GET ORDER DETAILS || GET || /api/frontend/product/order/get-orderDetails/:orderId
 orderRoutes.get("/get-orderDetails/:orderId", isLoggedIn, authMiddleware, handleGetOrderDetails);
 
+// *** CREATE PAYMENT || POST  || /api/frontend/product/order/create-payment
+orderRoutes.post("/create-payment", isLoggedIn, authMiddleware, handleCreatePayment);
 
 module.exports = orderRoutes;
