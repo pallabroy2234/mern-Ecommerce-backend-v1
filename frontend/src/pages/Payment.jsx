@@ -1,13 +1,14 @@
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Headers from "../components/Headers.jsx";
 import Footer from "../components/Footer.jsx";
-import {useState} from "react";
-import * as stripe from "stripe";
+import {useEffect, useState} from "react";
 import Stripe from "../components/Stripe.jsx";
 
 const Payment = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [paymentMethod, setPaymentMethod] = useState("stripe");
+
 	const {
 		state: {items, price, userId, orderId},
 	} = location;
@@ -65,7 +66,7 @@ const Payment = () => {
 								{/* Payment Method 	*/}
 								{paymentMethod === "stripe" && (
 									<div>
-										<Stripe orderId={orderId} price={price} />
+										<Stripe orderId={orderId || ""} price={price} />
 									</div>
 								)}
 
