@@ -19,40 +19,42 @@ const Payment = () => {
 				<div className='customContainer py-16 mt-4'>
 					<div className='flex flex-wrap md:flex-col-reverse'>
 						{/* left section */}
-						<div className='w-7/12 md:w-full'>
+						<div className='w-7/12 md:w-full md:mt-4'>
 							<div className='pr-2 md:pr-0'>
 								<div className='flex flex-wrap justify-between'>
 									{/* Stripe */}
-									<div onClick={() => setPaymentMethod("stripe")} className={`w-[20%] border border-r cursor-pointer py-8 px-12 ${paymentMethod === "stripe" ? "bg-white" : "bg-slate-100"}`}>
+									<div onClick={() => setPaymentMethod("stripe")} className={`w-[20%]  mb-3 border border-r cursor-pointer py-8 px-12 ${paymentMethod === "stripe" ? "bg-white" : "bg-slate-100"}`}>
 										<div className='flex flex-col gap-[3px] justify-center items-center'>
-											<div className=''>
+											<div className='w-[40px] h-[40px]'>
 												<img src={"images/payment/stripe.png"} className='w-full h-full object-cover' alt={"stripe"} />
 											</div>
 											<span className='text-slate-600'>Stripe</span>
 										</div>
 									</div>
 									{/* Bkash */}
-									<div onClick={() => setPaymentMethod("bkash")} className={`w-[20%] border border-r cursor-pointer py-8 px-12 ${paymentMethod === "bkash" ? "bg-white" : "bg-slate-100"}`}>
+									<div onClick={() => setPaymentMethod("bkash")} className={`w-[20%]  mb-3 border border-r cursor-pointer py-8 px-12 ${paymentMethod === "bkash" ? "bg-white" : "bg-slate-100"}`}>
 										<div className='flex flex-col gap-[3px] justify-center items-center'>
-											<div className=''>
+											<div className='w-[40px] h-[40px]'>
 												<img src={"images/payment/bkash.png"} className='w-full h-full object-cover' alt={"bkash"} />
 											</div>
 											<span className='text-slate-600'>Bkash</span>
 										</div>
 									</div>
 									{/* Nogod */}
-									<div onClick={() => setPaymentMethod("nogod")} className={`w-[20%] border border-r cursor-pointer py-8 px-12 ${paymentMethod === "nogod" ? "bg-white" : "bg-slate-100"}`}>
+									<div onClick={() => setPaymentMethod("nogod")} className={`w-[20%] mb-3 border border-r cursor-pointer py-8 px-12 ${paymentMethod === "nogod" ? "bg-white" : "bg-slate-100"}`}>
 										<div className='flex flex-col gap-[3px] justify-center items-center'>
 											<div className=''>
-												<img src={"images/payment/nogod.png"} className='w-full h-full object-cover' alt={"nogod"} />
+												<div className='w-[40px] h-[40px]'>
+													<img src={"images/payment/nogod.png"} className='w-full h-full object-cover' alt={"nagad"} />
+												</div>
 											</div>
 											<span className='text-slate-600'>Nogod</span>
 										</div>
 									</div>
 									{/* Roket */}
-									<div onClick={() => setPaymentMethod("rocket")} className={`w-[20%] border border-r cursor-pointer py-8 px-12 ${paymentMethod === "rocket" ? "bg-white" : "bg-slate-100"}`}>
+									<div onClick={() => setPaymentMethod("rocket")} className={`w-[20%]  mb-3 border border-r cursor-pointer py-8 px-12 ${paymentMethod === "rocket" ? "bg-white" : "bg-slate-100"}`}>
 										<div className='flex flex-col gap-[3px] justify-center items-center'>
-											<div className=''>
+											<div className='w-[40px] h-[40px]'>
 												<img src={"images/payment/rocket.png"} className='w-full h-full object-cover' alt={"rocket"} />
 											</div>
 											<span className='text-slate-600'>Rocket</span>
