@@ -44,7 +44,6 @@ const handlePaymentCheck = async (id) => {
 const handlePlaceOrder = async (req, res) => {
 	try {
 		const {price, shippingFee, products, shippingInfo, userId} = req.body;
-		console.log(products, "products");
 		let adminOrderData = [];
 		let cartId = [];
 		let userOrderProducts = [];
