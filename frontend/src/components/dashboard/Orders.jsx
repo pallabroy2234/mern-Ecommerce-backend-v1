@@ -95,17 +95,19 @@ const Orders = () => {
 										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap text-ellipsis capitalize'>
 											{item?.paymentStatus}
 										</td>
-										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap  text-ellipsis'>
+										<td scope='row' className='px-6 py-4 font-medium whitespace-nowrap'>
 											{item?.deliveryStatus}
 										</td>
 										<td scope='row' className='px-6 py-4'>
-											<div className='flex flex-row'>
+											<div className='flex flex-row flex-nowrap'>
 												<Link to={`/dashboard/order/details/${item?._id}`}>
 													<span className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded'>View</span>
 												</Link>
-												<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>
-													Pay Now
-												</button>
+												{item?.paymentStatus !== "paid" && (
+													<button onClick={() => handleRedirect(item)} className='bg-green-100 text-green-800 text-sm font-normal mr-2 px-2.5 py-[1px] whitespace-nowrap rounded cursor-pointer'>
+														Pay Now
+													</button>
+												)}
 											</div>
 										</td>
 									</tr>

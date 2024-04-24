@@ -32,9 +32,6 @@ const ConfirmOrder = () => {
 				case "requires_payment_method":
 					setMessage("failed");
 					break;
-				case "failed":
-					setMessage("Payment was failed");
-					break;
 				default:
 					setMessage("Payment was failed");
 			}
