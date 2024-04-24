@@ -20,16 +20,17 @@ const ConfirmOrder = () => {
 		if (!clientSecret) {
 			return;
 		}
-		stripe.retrievePaymentIntent(clientSecret).then((paymentIntent) => {
+		stripe.retrievePaymentIntent(clientSecret).then(({paymentIntent}) => {
+			console.log(paymentIntent.status);
 			switch (paymentIntent.status) {
-				case "success":
-					setMessage("Payment was successful");
+				case "succeeded":
+					setMessage("succeeded");
 					break;
 				case "processing":
-					setMessage("Payment is processing");
+					setMessage("processing");
 					break;
 				case "requires_payment_method":
-					setMessage("Payment was failed");
+					setMessage("failed");
 					break;
 				case "failed":
 					setMessage("Payment was failed");
@@ -54,7 +55,7 @@ const ConfirmOrder = () => {
 	const handleConfirmPayment = async () => {
 		try {
 			const orderId = localStorage.getItem("orderId");
-			const {data} = await axios.get(`http://localhost:3000/api/frontend/product/order/confirm-payment/${orderId}`, {withCredentials: true});
+			await axios.get(`http://localhost:3000/api/frontend/product/order/confirm-payment/${orderId}`, {withCredentials: true});
 			localStorage.removeItem("orderId");
 			setLoader(false);
 		} catch (e) {
@@ -64,7 +65,7 @@ const ConfirmOrder = () => {
 	};
 
 	useEffect(() => {
-		if (message === "success") {
+		if (message === "succeeded") {
 			handleConfirmPayment();
 		}
 	}, [message]);
@@ -74,17 +75,17 @@ const ConfirmOrder = () => {
 			{message === "failed" || message === "processing" ? (
 				<div className='flex flex-col justify-center items-center'>
 					<img src={"./public/images/error.png"} alt='error' />
-					<Link to={"/dashboard/orders"} className='px-5 py-2 bg-green-500 rounded-sm text-white mt-2'>
+					<Link to={"/dashboard/orders"} className='px-5 py-2 bg-green-500 rounded-sm text-white mt-4'>
 						Back to Dashboard
 					</Link>
 				</div>
-			) : message === "success" ? (
+			) : message === "succeeded" ? (
 				loader ? (
 					<FadeLoader />
 				) : (
 					<div className='flex flex-col justify-center items-center'>
-						<img src={"./public/images/success.png"} alt='success' />
-						<Link to={"/dashboard/orders"} className='px-5 py-2 bg-green-500 rounded-sm text-white mt-2'>
+						<img src={"../public/images/success.png"} alt='success' />
+						<Link to={"/dashboard/orders"} className='px-5  py-2 bg-green-500 rounded-sm text-white mt-4'>
 							Back to Dashboard
 						</Link>
 					</div>

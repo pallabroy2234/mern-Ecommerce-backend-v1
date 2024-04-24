@@ -3,6 +3,8 @@ const AdminOrder = require("../../models/adminOrderModal");
 const UserOrder = require("../../models/userOrderModal");
 const User = require("../../models/userModal");
 const CartProducts = require("../../models/cartModal");
+const ShopWalletModal = require("../../models/shopWalletModal");
+const SellerWalletModal = require("../../models/sellerWalletModal");
 const moment = require("moment");
 const {mongoose} = require("mongoose");
 const {
@@ -396,10 +398,29 @@ const handleConfirmPayment = async (req, res) => {
 
 		const userOrders = await UserOrder.findById(orderId);
 		const adminOrders = await AdminOrder.find({orderId: new ObjectId(orderId)});
-
-		const time = moment(Date.now()).format("LLL");
-
+		const time = moment(Date.now()).format("l");
 		const splitTime = time.split("/");
+		// * SHOP WALLET
+		const shopWallet = await ShopWalletModal.create({
+			amount: userOrders.price,
+			year: splitTime[2],
+			month: splitTime[0],
+		});
+
+		// 	* SELLER WALLET
+		for (let i = 0; i < adminOrders.length; i++) {
+			await SellerWalletModal.create({
+				sellerId: adminOrders[i].sellerId,
+				amount: adminOrders[i].price,
+				year: splitTime[2],
+				month: splitTime[0],
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Payment confirmed successfully",
+		});
 	} catch (e) {
 		console.log(e.message, "handleConfirmPayment");
 		return errorResponse(res, {

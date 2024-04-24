@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getMyOrders, messageClear} from "../../store/reducers/orderReducer.js";
 import toast from "react-hot-toast";
@@ -7,6 +7,7 @@ import {FadeLoader} from "react-spinners";
 
 const Orders = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const {userInfo} = useSelector((state) => state.auth);
 	const {myOrders, myOrder, errorMessage, loader} = useSelector((state) => state.order);
 	const [state, setState] = useState("all");
@@ -34,7 +35,7 @@ const Orders = () => {
 		}
 		navigate("/payment", {
 			state: {
-				price: items.price,
+				price: item.price,
 				items,
 				orderId: item._id,
 			},

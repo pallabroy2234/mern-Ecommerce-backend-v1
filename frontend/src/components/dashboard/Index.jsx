@@ -21,7 +21,7 @@ const Index = () => {
 		}
 		navigate("/payment", {
 			state: {
-				price: items.price,
+				price: item.price,
 				items,
 				orderId: item._id,
 			},
