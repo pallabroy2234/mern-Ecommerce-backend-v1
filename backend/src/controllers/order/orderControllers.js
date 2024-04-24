@@ -357,10 +357,63 @@ const handleCreatePayment = async (req, res) => {
 	}
 };
 
+// *** HANDLE CONFIRM PAYMENT || GET || /api/frontend/product/order/confirm-payment/:orderId
+
+const handleConfirmPayment = async (req, res) => {
+	try {
+		const {orderId} = req.params;
+		if (!ObjectId.isValid(orderId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid Order Id",
+			});
+		}
+
+		const userOrder = await UserOrder.findByIdAndUpdate(orderId, {
+			paymentStatus: "paid",
+			deliveryStatus: "pending",
+		});
+		if (!userOrder) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Order not found",
+			});
+		}
+
+		const adminOrderUpdate = await AdminOrder.updateMany(
+			{orderId: new ObjectId(orderId)},
+			{
+				paymentStatus: "paid",
+				deliveryStatus: "pending",
+			},
+		);
+		if (!adminOrderUpdate) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Order not found",
+			});
+		}
+
+		const userOrders = await UserOrder.findById(orderId);
+		const adminOrders = await AdminOrder.find({orderId: new ObjectId(orderId)});
+
+		const time = moment(Date.now()).format("LLL");
+
+		const splitTime = time.split("/");
+	} catch (e) {
+		console.log(e.message, "handleConfirmPayment");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handlePlaceOrder,
 	handleGetRecentOrders,
 	handleGetMyOrders,
 	handleGetOrderDetails,
 	handleCreatePayment,
+	handleConfirmPayment,
 };
