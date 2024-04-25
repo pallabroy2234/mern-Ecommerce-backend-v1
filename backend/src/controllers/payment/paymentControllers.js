@@ -2,8 +2,13 @@ require("dotenv").config();
 const {errorResponse, successResponse} = require("../../helper/responseHelper");
 const StripeModal = require("../../models/stripeModal");
 const SellerModal = require("../../models/sellerModal");
+const SellerWalletModal = require("../../models/sellerWalletModal");
+const ShopWalletModal = require("../../models/shopWalletModal");
 const {v4: uuidv4} = require("uuid");
 const mongoose = require("mongoose");
+const {
+	Types: {ObjectId},
+} = mongoose;
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // * HANDLE SELLER STRIPE CONNECT ACCOUNT || GET || /api/payment/seller/connect-account
@@ -104,7 +109,52 @@ const handleSellerActiveAccount = async (req, res) => {
 	}
 };
 
+// * HANDLE GET SELLER PAYMENT DETAILS || GET || /api/payment/seller/get-payment-details
+
+const handleSellerPaymentDetails = async (req, res) => {
+	try {
+		const {id} = req;
+		if (!ObjectId.isValid(id)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const sellerExists = await SellerModal.findOne({_id: id});
+		if (!sellerExists) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Please register  first",
+			});
+		}
+
+		const amount = await SellerWalletModal.aggregate([
+			{$match: {sellerId: new ObjectId(id)}},
+			{
+				$group: {
+					_id: "$sellerId",
+					totalAmount: {$sum: "$amount"},
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					totalAmount: 1,
+				},
+			},
+		]);
+
+		console.log(amount);
+	} catch (e) {
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleSellerConnectAccount,
 	handleSellerActiveAccount,
+	handleSellerPaymentDetails,
 };

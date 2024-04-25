@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleSellerConnectAccount, handleSellerActiveAccount} = require("../../controllers/payment/paymentControllers");
+const {handleSellerConnectAccount, handleSellerActiveAccount, handleSellerPaymentDetails} = require("../../controllers/payment/paymentControllers");
 const {authMiddleware, isSeller} = require("../../middleware/authMiddleware");
 const paymentRoutes = express.Router();
 
@@ -9,5 +9,8 @@ paymentRoutes.get("/seller/connect-account", authMiddleware, isSeller, handleSel
 
 // * SELLER STRIPE ACTIVE ACCOUNT || PUT || /api/payment/seller/active-account/:activecode
 paymentRoutes.put("/seller/active-account/:activecode", authMiddleware, isSeller, handleSellerActiveAccount);
+
+// * GET SELLER PAYMENT DETAILS || GET || /api/payment/seller/get-payment-details
+paymentRoutes.get("/seller/get-payment-details", authMiddleware, isSeller, handleSellerPaymentDetails);
 
 module.exports = paymentRoutes;

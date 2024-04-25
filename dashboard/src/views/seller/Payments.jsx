@@ -1,6 +1,8 @@
-import React, {forwardRef} from 'react';
+import React, {forwardRef, useEffect} from "react";
 import {BsCurrencyDollar} from "react-icons/bs";
 import {FixedSizeList as List} from "react-window";
+import {useDispatch, useSelector} from "react-redux";
+import {getSellerPaymentDetails} from "../../store/Reducers/paymentReducer.js";
 
 
 const handleOnWheel = ({deltaY}) => {
@@ -12,6 +14,17 @@ const outerElementType = forwardRef((props, ref) => (
 ))
 
 const Payments = () => {
+    const dispatch = useDispatch();
+    const {successMessage, errorMessage, loader, pendingWithdraw, successWithdraw, totalAmount, withdrawAmount, pendingAmount, availableAmount} = useSelector(state => state.payment)
+    const {userInfo} = useSelector(state => state.auth)
+    
+    useEffect(() => {
+        if(userInfo){
+            dispatch(getSellerPaymentDetails())
+        }
+    }, []);
+    
+    
     
     const Row = ({index, style}) => {
         return (
@@ -34,7 +47,7 @@ const Payments = () => {
                 {/* column-1 */}
                 <div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-white">
-                        <h2 className="text-lg font-bold mb-2">$6543</h2>
+                        <h2 className="text-lg font-bold mb-2">${totalAmount}</h2>
                         <span className="text-sm font-normal">Total Sales</span>
                     </div>
                     <div className="w-[46px] h-[47px] rounded-full bg-[#28c76f1f] flex justify-center items-center text-xl">
@@ -45,7 +58,7 @@ const Payments = () => {
                 {/* column -2 */}
                 <div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-white">
-                        <h2 className="text-lg font-bold mb-2">$20</h2>
+                        <h2 className="text-lg font-bold mb-2">${availableAmount}</h2>
                         <span className="text-sm font-normal">Available Amount</span>
                     </div>
                     <div className="w-[46px] h-[47px] rounded-full bg-[#e000e81f] flex justify-center items-center text-xl">
@@ -56,7 +69,7 @@ const Payments = () => {
                 {/* column -3 */}
                 <div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-white">
-                        <h2 className="text-lg font-bold mb-2">$50</h2>
+                        <h2 className="text-lg font-bold mb-2">${withdrawAmount}</h2>
                         <span className="text-sm font-normal">Withdraw Amount</span>
                     </div>
                     <div className="w-[46px] h-[47px] rounded-full bg-[#00cfe81f] flex justify-center items-center text-xl">
@@ -67,7 +80,7 @@ const Payments = () => {
                 {/* column -4 */}
                 <div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-white">
-                        <h2 className="text-lg font-bold mb-2">$12</h2>
+                        <h2 className="text-lg font-bold mb-2">${pendingAmount}</h2>
                         <span className="text-sm font-normal">Pending Amount</span>
                     </div>
                     <div className="w-[46px] h-[47px] rounded-full bg-[#7367f01f] flex justify-center items-center text-xl">
