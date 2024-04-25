@@ -216,8 +216,61 @@ const handleSellerPaymentDetails = async (req, res) => {
 	}
 };
 
+const handleSendWithdrawRequest = async (req, res) => {
+	try {
+		const {id} = req;
+		const amount = parseInt(req.body.amount);
+		if (!ObjectId.isValid(id)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		if (amount < 0 || amount === 0) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Please provide amount",
+			});
+		}
+		const sellerExists = await SellerModal.findOne({_id: id});
+		if (!sellerExists) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Please register first",
+			});
+		}
+
+		const withdraw = await WithdrawRequestModal.create({
+			sellerId: new ObjectId(id),
+			amount: parseInt(amount),
+		});
+
+		if (!withdraw) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Withdraw request failed",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: "Withdraw request send successfully",
+			payload: {
+				withdraw: withdraw,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleSendWithdrawRequest");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleSellerConnectAccount,
 	handleSellerActiveAccount,
 	handleSellerPaymentDetails,
+	handleSendWithdrawRequest,
 };

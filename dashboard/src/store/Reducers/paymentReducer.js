@@ -16,6 +16,21 @@ export const getSellerPaymentDetails = createAsyncThunk(
 	}
 );
 
+export const sendWithdrawRequest = createAsyncThunk(
+	"payment/sendWithdrawRequest",
+	async (amount, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post("/payment/seller/send-withdraw-request", {amount}, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
 export const paymentReducer = createSlice({
 	name: "payment",
 	initialState: {
@@ -54,6 +69,22 @@ export const paymentReducer = createSlice({
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
+	// 	* SEND WITHDRAW REQUEST
+		builder.addCase(sendWithdrawRequest.fulfilled, (state, {payload})=> {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.pendingWithdraw = [...state.pendingWithdraw, payload.payload.withdraw]
+			state.availableAmount = state.availableAmount - payload.payload.withdraw.amount;
+			state.pendingAmount = state.pendingAmount + payload.payload.withdraw.amount;
+		});
+		builder.addCase(sendWithdrawRequest.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(sendWithdrawRequest.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		
 	}
 	
 });

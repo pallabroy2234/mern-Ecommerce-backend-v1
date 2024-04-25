@@ -1,5 +1,5 @@
 const express = require("express");
-const {handleSellerConnectAccount, handleSellerActiveAccount, handleSellerPaymentDetails} = require("../../controllers/payment/paymentControllers");
+const {handleSellerConnectAccount, handleSellerActiveAccount, handleSellerPaymentDetails, handleSendWithdrawRequest} = require("../../controllers/payment/paymentControllers");
 const {authMiddleware, isSeller} = require("../../middleware/authMiddleware");
 const paymentRoutes = express.Router();
 
@@ -12,5 +12,8 @@ paymentRoutes.put("/seller/active-account/:activecode", authMiddleware, isSeller
 
 // * GET SELLER PAYMENT DETAILS || GET || /api/payment/seller/get-payment-details
 paymentRoutes.get("/seller/get-payment-details", authMiddleware, isSeller, handleSellerPaymentDetails);
+
+// * SEND WITHDRAW REQUEST || POST || /api/payment/seller/send-withdraw-request
+paymentRoutes.post("/seller/send-withdraw-request", authMiddleware, isSeller, handleSendWithdrawRequest);
 
 module.exports = paymentRoutes;
