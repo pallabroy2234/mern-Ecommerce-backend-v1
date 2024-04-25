@@ -24,8 +24,6 @@ const Payments = () => {
         }
     }, []);
     
-    
-    
     const Row = ({index, style}) => {
         return (
             <div style={style} className="flex text-sm">
