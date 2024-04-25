@@ -71,9 +71,11 @@ export const paymentReducer = createSlice({
 		});
 	// 	* SEND WITHDRAW REQUEST
 		builder.addCase(sendWithdrawRequest.fulfilled, (state, {payload})=> {
+			const newPendingWithdraw = [payload.payload.withdraw, ...state.pendingWithdraw];
 			state.loader = false;
 			state.successMessage = payload.message;
-			state.pendingWithdraw = [...state.pendingWithdraw, payload.payload.withdraw]
+			state.pendingWithdraw = newPendingWithdraw;
+			// state.pendingWithdraw.unshift(payload.payload.withdraw)
 			state.availableAmount = state.availableAmount - payload.payload.withdraw.amount;
 			state.pendingAmount = state.pendingAmount + payload.payload.withdraw.amount;
 		});

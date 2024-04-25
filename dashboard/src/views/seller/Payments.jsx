@@ -4,6 +4,8 @@ import {FixedSizeList as List} from "react-window";
 import {useDispatch, useSelector} from "react-redux";
 import {getSellerPaymentDetails, messageClear, sendWithdrawRequest} from "../../store/Reducers/paymentReducer.js";
 import toast from "react-hot-toast";
+import moment from "moment";
+
 
 
 const handleOnWheel = ({deltaY}) => {
@@ -79,15 +81,28 @@ const Payments = () => {
 		return (
 			<div style={style} className="flex text-sm">
 				<div className="w-[25%] p-2 whitespace-nowrap">{index + 1}</div>
-				<div className="w-[25%] p-2 whitespace-nowrap">$1212</div>
+				<div className="w-[25%] p-2 whitespace-nowrap">${pendingWithdraw[index]?.amount}</div>
 				<div className="w-[25%] p-2 whitespace-nowrap">
-					<span className="py-[1px] px-[5px] bg-slate-700 text-blue-500 rounded-md text-xs">pending</span>
+					<span className="py-[1px] px-[5px] bg-slate-700 text-blue-500 rounded-md text-xs">{pendingWithdraw[index]?.status}</span>
 				</div>
-				<div className="w-[25%] p-2 whitespace-nowrap">19 Nov 2023</div>
+				<div className="w-[25%] p-2 whitespace-nowrap">{moment(pendingWithdraw[index]?.createdAt).format("LL")}</div>
 			</div>
 		);
 	};
 	
+	
+	const SuccessRow = ({index, style}) => {
+		return (
+			<div style={style} className="flex text-sm">
+				<div className="w-[25%] p-2 whitespace-nowrap">{index + 1}</div>
+				<div className="w-[25%] p-2 whitespace-nowrap">${successWithdraw[index]?.amount}</div>
+				<div className="w-[25%] p-2 whitespace-nowrap">
+					<span className="py-[1px] px-[5px] bg-slate-700 text-blue-500 rounded-md text-xs">{successWithdraw[index]?.status}</span>
+				</div>
+				<div className="w-[25%] p-2 whitespace-nowrap">{moment(successWithdraw[index]?.createdAt).format("LL")}</div>
+			</div>
+		);
+	};
 	
 	return (
 		<div className="px-2 md:px-7 py-5">
@@ -131,7 +146,7 @@ const Payments = () => {
 							{
 								<List style={{
 									minWidth: "340px"
-								}} className="List" height={450} itemCount={100} itemSize={35} outerElementType={outerElementType}>
+								}} className="List" height={450} itemCount={pendingWithdraw.length} itemSize={35} outerElementType={outerElementType}>
 									{Row}
 								</List>
 							}
@@ -154,8 +169,8 @@ const Payments = () => {
 								<List style={{
 									minWidth: "340px",
 									overflowY: "auto"
-								}} className="List" height={550} itemCount={100} itemSize={35} outerElementType={outerElementType}>
-									{Row}
+								}} className="List" height={550} itemCount={successWithdraw.length} itemSize={35} outerElementType={outerElementType}>
+									{SuccessRow}
 								</List>
 							}
 						</div>

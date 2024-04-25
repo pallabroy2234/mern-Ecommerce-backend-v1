@@ -164,8 +164,18 @@ const handleSellerPaymentDetails = async (req, res) => {
 				},
 			},
 			{
+				$unwind: "$pendingWithdraw",
+			},
+			{
 				$sort: {
-					createdAt: -1,
+					"pendingWithdraw.createdAt": -1,
+				},
+			},
+			{
+				$group: {
+					_id: "$_id",
+					pendingAmount: {$first: "$pendingAmount"},
+					pendingWithdraw: {$push: "$pendingWithdraw"},
 				},
 			},
 		]);
@@ -196,7 +206,17 @@ const handleSellerPaymentDetails = async (req, res) => {
 			},
 			{
 				$sort: {
-					createdAt: -1,
+					"successWithdraw.createdAt": -1,
+				},
+			},
+			{
+				$unwind: "$successWithdraw",
+			},
+			{
+				$group: {
+					_id: "$_id",
+					withdrawAmount: {$first: "$withdrawAmount"},
+					successWithdraw: {$push: "$successWithdraw"},
 				},
 			},
 		]);
