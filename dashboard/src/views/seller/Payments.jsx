@@ -2,7 +2,8 @@ import React, {forwardRef, useEffect, useState} from "react";
 import {BsCurrencyDollar} from "react-icons/bs";
 import {FixedSizeList as List} from "react-window";
 import {useDispatch, useSelector} from "react-redux";
-import {getSellerPaymentDetails, sendWithdrawRequest} from "../../store/Reducers/paymentReducer.js";
+import {getSellerPaymentDetails, messageClear, sendWithdrawRequest} from "../../store/Reducers/paymentReducer.js";
+import toast from "react-hot-toast";
 
 
 const handleOnWheel = ({deltaY}) => {
@@ -45,7 +46,15 @@ const Payments = () => {
 	};
 	
 	// * SUCCESS MESSAGE OR ERROR MESSAGE
-	
+	useEffect(() => {
+		if(successMessage){
+			toast.success(successMessage);
+			dispatch(messageClear())
+		}if(errorMessage){
+			toast.error(errorMessage);
+			dispatch(messageClear())
+		}
+	}, [successMessage, errorMessage]);
 	
 	
 	const cardContent = [
@@ -102,8 +111,8 @@ const Payments = () => {
 						<form onSubmit={(e) => handlePaymentRequest(e)}>
 							<div className="flex gap-3 flex-wrap">
 								<input onChange={(e) => setAmount(e.target.value)} value={amount} required type="number" min="0" className="md:w-[79%] px-4 py-2 hover:border-indigo-500 border outline-none  bg-[#283046] border-slate-700 rounded-md text-white" name="amount" />
-								<button type="submit" className="bg-indigo-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-8 py-2 text-sm">
-									Submit
+								<button disabled={loader} type="submit" className="bg-indigo-500 disabled:cursor-not-allowed  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-8 py-2 text-sm">
+									{loader ? "Loading..." : "Send"}
 								</button>
 							</div>
 						</form>
