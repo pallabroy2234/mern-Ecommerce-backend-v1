@@ -163,6 +163,11 @@ const handleSellerPaymentDetails = async (req, res) => {
 					pendingWithdraw: {$push: "$$ROOT"},
 				},
 			},
+			{
+				$sort: {
+					createdAt: -1,
+				},
+			},
 		]);
 
 		const withdrawAmount = await WithdrawRequestModal.aggregate([
@@ -187,6 +192,11 @@ const handleSellerPaymentDetails = async (req, res) => {
 					_id: "$sellerId",
 					withdrawAmount: {$sum: "$amount"},
 					successWithdraw: {$push: "$$ROOT"},
+				},
+			},
+			{
+				$sort: {
+					createdAt: -1,
 				},
 			},
 		]);
