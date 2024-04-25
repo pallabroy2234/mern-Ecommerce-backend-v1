@@ -4,6 +4,7 @@ const StripeModal = require("../../models/stripeModal");
 const SellerModal = require("../../models/sellerModal");
 const SellerWalletModal = require("../../models/sellerWalletModal");
 const ShopWalletModal = require("../../models/shopWalletModal");
+const WithdrawRequestModal = require("../../models/withdrawRequestModal");
 const {v4: uuidv4} = require("uuid");
 const mongoose = require("mongoose");
 const {
@@ -136,15 +137,77 @@ const handleSellerPaymentDetails = async (req, res) => {
 					totalAmount: {$sum: "$amount"},
 				},
 			},
+		]);
+
+		const pendingWithdrawAmount = await WithdrawRequestModal.aggregate([
 			{
-				$project: {
-					_id: 0,
-					totalAmount: 1,
+				$match: {
+					$and: [
+						{
+							sellerId: {
+								$eq: new ObjectId(id),
+							},
+						},
+						{
+							status: {
+								$eq: "pending",
+							},
+						},
+					],
+				},
+			},
+			{
+				$group: {
+					_id: "$sellerId",
+					pendingAmount: {$sum: "$amount"},
+					pendingWithdraw: {$push: "$$ROOT"},
 				},
 			},
 		]);
 
-		console.log(amount);
+		const withdrawAmount = await WithdrawRequestModal.aggregate([
+			{
+				$match: {
+					$and: [
+						{
+							sellerId: {
+								$eq: new ObjectId(id),
+							},
+						},
+						{
+							status: {
+								$eq: "success",
+							},
+						},
+					],
+				},
+			},
+			{
+				$group: {
+					_id: "$sellerId",
+					withdrawAmount: {$sum: "$amount"},
+					successWithdraw: {$push: "$$ROOT"},
+				},
+			},
+		]);
+
+		let availableAmount = 0;
+		if (amount.length > 0) {
+			availableAmount = amount[0].totalAmount - (pendingWithdrawAmount.length > 0 ? pendingWithdrawAmount[0].pendingAmount : 0) - (withdrawAmount.length > 0 ? withdrawAmount[0].withdrawAmount : 0);
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Seller Payment Details",
+			payload: {
+				totalAmount: amount.length > 0 ? amount[0].totalAmount : 0,
+				availableAmount: availableAmount,
+				withdrawAmount: withdrawAmount.length > 0 ? withdrawAmount[0].withdrawAmount : 0,
+				pendingAmount: pendingWithdrawAmount.length > 0 ? pendingWithdrawAmount[0].pendingAmount : 0,
+				pendingWithdraw: pendingWithdrawAmount.length > 0 ? pendingWithdrawAmount[0].pendingWithdraw : [],
+				successWithdraw: withdrawAmount.length > 0 ? withdrawAmount[0].successWithdraw : [],
+			},
+		});
 	} catch (e) {
 		return errorResponse(res, {
 			statusCode: 500,
