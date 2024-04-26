@@ -205,13 +205,14 @@ const handleSellerPaymentDetails = async (req, res) => {
 				},
 			},
 			{
+				$unwind: "$successWithdraw",
+			},
+			{
 				$sort: {
 					"successWithdraw.createdAt": -1,
 				},
 			},
-			{
-				$unwind: "$successWithdraw",
-			},
+
 			{
 				$group: {
 					_id: "$_id",
