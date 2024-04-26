@@ -321,10 +321,80 @@ const handleAdminSellerPaymentRequest = async (req, res) => {
 	}
 };
 
+// * HANDLE CONFIRM PAYMENT REQUEST || POST || /api/payment/admin/confirm-payment-request
+
+const handleConfirmPaymentRequest = async (req, res) => {
+	try {
+		const {paymentId} = req.body;
+		if (!ObjectId.isValid(paymentId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const payment = await WithdrawRequestModal.findOne({
+			_id: paymentId,
+			status: "pending",
+		});
+
+		if (!payment) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Payment request not found",
+			});
+		}
+
+		const findStripeId = await StripeModal.findOne({sellerId: payment.sellerId});
+
+		if (!findStripeId) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Stripe account not found",
+			});
+		}
+
+		const transfer = await stripe.transfers.create({
+			amount: payment.amount * 100,
+			currency: "usd",
+			destination: findStripeId.stripeId,
+		});
+
+		if (!transfer) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Payment transfer failed",
+			});
+		}
+
+		const updatePaymentStatus = await WithdrawRequestModal.findByIdAndUpdate(paymentId, {status: "success"});
+		if (!updatePaymentStatus) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Payment status update failed",
+			});
+		}
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Payment request confirm successfully",
+			payload: {
+				payment: updatePaymentStatus,
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleConfirmPaymentRequest");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleSellerConnectAccount,
 	handleSellerActiveAccount,
 	handleSellerPaymentDetails,
 	handleSendWithdrawRequest,
 	handleAdminSellerPaymentRequest,
+	handleConfirmPaymentRequest,
 };

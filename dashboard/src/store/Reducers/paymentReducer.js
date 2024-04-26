@@ -47,6 +47,21 @@ export const getAdminSellerPaymentRequest = createAsyncThunk(
 	}
 );
 
+// * ADMIN -> CONFIRM PAYMENT REQUEST || POST || /api/payment/admin/confirm-payment-request
+export const confirmPaymentRequest = createAsyncThunk(
+	"payment/confirmPaymentRequest",
+	async (paymentId, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post("/payment/admin/confirm-payment-request", {paymentId}, {
+				withCredentials: true
+			});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
 
 export const paymentReducer = createSlice({
 	name: "payment",
@@ -117,6 +132,9 @@ export const paymentReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		
+		builder.addCase(confirmPaymentRequest.pending, (state, _) => {
+			state.loader = true;
+		});
 	}
 	
 });
