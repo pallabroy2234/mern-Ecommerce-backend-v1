@@ -334,13 +334,12 @@ const handleConfirmPaymentRequest = async (req, res) => {
 		}
 		const payment = await WithdrawRequestModal.findOne({
 			_id: paymentId,
-			status: "pending",
 		});
 
-		if (!payment) {
+		if (payment.status === "success") {
 			return errorResponse(res, {
 				statusCode: 400,
-				message: "Payment request not found",
+				message: "Payment already confirmed",
 			});
 		}
 
@@ -349,7 +348,7 @@ const handleConfirmPaymentRequest = async (req, res) => {
 		if (!findStripeId) {
 			return errorResponse(res, {
 				statusCode: 400,
-				message: "Stripe account not found",
+				message: "Seller stripe account not found",
 			});
 		}
 
