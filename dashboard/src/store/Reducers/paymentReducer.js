@@ -131,13 +131,19 @@ export const paymentReducer = createSlice({
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
-	// 	* ADMIN -> CONFIRM PAYMENT REQUEST
-		builder.addCase(confirmPaymentRequest.fulfilled, (state, {payload})=> {
+		// 	* ADMIN -> CONFIRM PAYMENT REQUEST
+		builder.addCase(confirmPaymentRequest.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.successMessage = payload.message;
 			state.pendingWithdraw = state.pendingWithdraw.filter(pending => pending._id !== payload.payload.payment._id);
-		})
-		
+		});
+		builder.addCase(confirmPaymentRequest.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(confirmPaymentRequest.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
 	}
 	
 });

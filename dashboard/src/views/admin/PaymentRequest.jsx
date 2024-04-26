@@ -1,8 +1,14 @@
 import {FixedSizeList as List} from "react-window";
 import {forwardRef, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {confirmPaymentRequest, getAdminSellerPaymentRequest} from "../../store/Reducers/paymentReducer.js";
+import {
+	confirmPaymentRequest,
+	getAdminSellerPaymentRequest,
+	messageClear
+} from "../../store/Reducers/paymentReducer.js";
 import moment from "moment";
+import {toast} from "react-hot-toast";
+
 
 const handleOnWheel = ({deltaY}) => {
 	console.log("handleOnWheel", deltaY);
@@ -33,11 +39,21 @@ const PaymentRequest = () => {
 	
 	// * HANDLE CONFIRM PAYMENT
 	const handleConfirmPayment = (paymentId) => {
-		console.log(paymentId);
-		setPaymentId(paymentId)
+		setPaymentId(paymentId);
 		dispatch(confirmPaymentRequest(paymentId));
 	};
-
+	
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [successMessage, errorMessage]);
+	
 	
 	const Row = ({index, style}) => {
 		return (
