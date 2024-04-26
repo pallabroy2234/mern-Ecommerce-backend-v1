@@ -16,6 +16,7 @@ export const getSellerPaymentDetails = createAsyncThunk(
 	}
 );
 
+// * SEND WITHDRAW REQUEST || POST || /api/payment/seller/send-withdraw-request
 export const sendWithdrawRequest = createAsyncThunk(
 	"payment/sendWithdrawRequest",
 	async (amount, {rejectWithValue, fulfillWithValue}) => {
@@ -30,6 +31,24 @@ export const sendWithdrawRequest = createAsyncThunk(
 		}
 	}
 );
+
+// * GET ADMIN-SELLER'S PAYMENT REQUEST || GET || /api/payment/admin/get-payment-request
+export const getAdminSellerPaymentRequest = createAsyncThunk(
+	"payment/getAdminSellerPaymentRequest",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get("/payment/admin/get-payment-request", {
+				withCredentials: true
+			});
+			console.log(data);
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
 
 export const paymentReducer = createSlice({
 	name: "payment",

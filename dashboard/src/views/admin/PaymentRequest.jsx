@@ -1,5 +1,7 @@
 import {FixedSizeList as List} from "react-window";
-import {forwardRef} from "react";
+import {forwardRef, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getAdminSellerPaymentRequest} from "../../store/Reducers/paymentReducer.js";
 
 const handleOnWheel = ({deltaY}) => {
     console.log("handleOnWheel", deltaY)
@@ -11,6 +13,20 @@ const outerElementType = forwardRef((props, ref) => (
 
 
 const PaymentRequest = () => {
+    const dispatch = useDispatch()
+    const {userInfo} = useSelector(state => state.auth);
+    const {
+        successMessage,
+        errorMessage,
+        loader,
+        pendingWithdraw,
+    } = useSelector(state => state.payment);
+    
+    useEffect(() => {
+        if(userInfo){
+            dispatch(getAdminSellerPaymentRequest())
+        }
+    }, []);
     
     const Row = ({index, style}) => {
         return (

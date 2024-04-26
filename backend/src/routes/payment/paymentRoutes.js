@@ -1,9 +1,11 @@
 const express = require("express");
-const {handleSellerConnectAccount, handleSellerActiveAccount, handleSellerPaymentDetails, handleSendWithdrawRequest} = require("../../controllers/payment/paymentControllers");
-const {authMiddleware, isSeller} = require("../../middleware/authMiddleware");
+const {handleSellerConnectAccount, handleSellerActiveAccount, handleSellerPaymentDetails, handleSendWithdrawRequest,
+	handleAdminSellerPaymentRequest
+} = require("../../controllers/payment/paymentControllers");
+const {authMiddleware, isSeller, isAdmin} = require("../../middleware/authMiddleware");
 const paymentRoutes = express.Router();
 
-// * SELLER PAYMENT
+// *--------------------------------- SELLER PAYMENT ROUTES ---------------------------------//
 // * CONNECT ACCOUNT || GET || /api/payment/seller/connect-account
 paymentRoutes.get("/seller/connect-account", authMiddleware, isSeller, handleSellerConnectAccount);
 
@@ -15,5 +17,11 @@ paymentRoutes.get("/seller/get-payment-details", authMiddleware, isSeller, handl
 
 // * SEND WITHDRAW REQUEST || POST || /api/payment/seller/send-withdraw-request
 paymentRoutes.post("/seller/send-withdraw-request", authMiddleware, isSeller, handleSendWithdrawRequest);
+
+
+// *--------------------------------- ADMIN PAYMENT ROUTES ---------------------------------//
+
+// * GET ADMIN-SELLER'S PAYMENT REQUEST || GET || /api/payment/admin/get-payment-request
+paymentRoutes.get("/admin/get-payment-request", authMiddleware, isAdmin, handleAdminSellerPaymentRequest)
 
 module.exports = paymentRoutes;

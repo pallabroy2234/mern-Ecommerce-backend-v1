@@ -246,6 +246,7 @@ const handleSellerPaymentDetails = async (req, res) => {
 	}
 };
 
+// * HANDLE SEND WITHDRAW REQUEST || POST || /api/payment/seller/send-withdraw-request
 const handleSendWithdrawRequest = async (req, res) => {
 	try {
 		const {id} = req;
@@ -298,9 +299,32 @@ const handleSendWithdrawRequest = async (req, res) => {
 	}
 };
 
+// * HANDLE ADMIN-SELLER'S PAYMENT REQUEST || GET || /api/payment/admin/get-payment-request
+
+const handleAdminSellerPaymentRequest = async (req, res) => {
+	try {
+		const withdrawRequest = await WithdrawRequestModal.find({status: "pending"}).sort({createdAt: -1});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Seller's payment request",
+			payload: {
+				withdrawRequest: withdrawRequest || [],
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleAdminSellerPaymentRequest");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleSellerConnectAccount,
 	handleSellerActiveAccount,
 	handleSellerPaymentDetails,
 	handleSendWithdrawRequest,
+	handleAdminSellerPaymentRequest,
 };
