@@ -45,6 +45,22 @@ export const dashboardReducer = createSlice({
 		}
 		
 	}, extraReducers: builder => {
+		builder.addCase(getSellerDashboardData.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.totalSales = payload.payload.totalSale;
+			state.totalOrders = payload.payload.totalOrder;
+			state.totalProducts = payload.payload.totalProducts;
+			state.totalPendingOrders = payload.payload.totalPendingOrder;
+			state.recentOrders = payload.payload.recentOrders;
+			state.recentMessages = payload.payload.message;
+		});
+		builder.addCase(getSellerDashboardData.pending, (state) => {
+			state.loader = true;
+		});
+		builder.addCase(getSellerDashboardData.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
 	}
 });
 

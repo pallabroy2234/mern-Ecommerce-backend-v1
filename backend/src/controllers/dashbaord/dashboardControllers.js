@@ -36,7 +36,7 @@ const handleGetSellerDashboardData = async (req, res) => {
 		const totalOrder = await AdminOrderModal.find({sellerId: new ObjectId(id)}).countDocuments();
 
 		const totalPendingOrder = await AdminOrderModal.find({
-			$and: [{sellerId: {$eq: new ObjectId(id)}}, {deliveryStatus: {$eq: "Pending"}}],
+			$and: [{sellerId: {$eq: new ObjectId(id)}}, {deliveryStatus: {$eq: "pending"}}],
 		}).countDocuments();
 
 		const message = await SellerUserChatModal.find({$or: [{senderId: id}, {receiverId: id}]})
@@ -52,7 +52,7 @@ const handleGetSellerDashboardData = async (req, res) => {
 			message: "Seller Dashboard Data",
 			payload: {
 				totalSale: totalSale.length > 0 ? totalSale[0].totalAmount : 0,
-				totalProduct: totalProduct || 0,
+				totalProducts: totalProduct || 0,
 				totalOrder: totalOrder || 0,
 				totalPendingOrder: totalPendingOrder || 0,
 				message: message || [],

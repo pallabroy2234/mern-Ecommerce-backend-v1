@@ -7,16 +7,17 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getSellerDashboardData} from "../../store/Reducers/dashboardReducer.js";
+import {FadeLoader} from "react-spinners";
 
 const SellerDashboard = () => {
 	const dispatch = useDispatch();
 	const {userInfo} = useSelector(state => state.auth);
 	const {
+		loader,
 		totalSales,
 		totalOrders,
 		totalProducts,
 		totalPendingOrders,
-		totalSellers,
 		recentOrders,
 		recentMessages
 	} = useSelector(state => state.dashboard);
@@ -92,56 +93,57 @@ const SellerDashboard = () => {
 		}
 	};
 	
+	
+	const metrics = [
+		{
+			value: totalSales,
+			label: "Total Sales",
+			icon: <BsCurrencyDollar className="text-[#28c76f] shadow-lg" />,
+			bgColor: "#28c76f1f"
+		},
+		{
+			value: totalProducts,
+			label: "Total Products",
+			icon: <RiProductHuntLine className="text-[#cd00e8] shadow-lg" />,
+			bgColor: "#e000e81f"
+		},
+		{
+			value: totalOrders,
+			label: "Orders",
+			icon: <FaShoppingCart className="text-[#00cfe8] shadow-lg" />,
+			bgColor: "#00cfe81f"
+		},
+		{
+			value: totalPendingOrders,
+			label: "Pending Orders",
+			icon: <AiOutlineShoppingCart className="text-[#7367f0] shadow-lg" />,
+			bgColor: "#7367f01f"
+		}
+	];
+	
+	
 	return (
 		<div className="px-2 md:px-7 py-5">
-			{/*  card   */}
+			{
+				loader &&
+				<div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-black opacity-40 z-[999]">
+					<FadeLoader color="#ffff" />
+				</div>
+			}
+			{/* Card */}
 			<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-7">
-				{/* column-1 */}
-				<div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
-					<div className="flex flex-col justify-start items-start text-white">
-						<h2 className="text-3xl font-bold mb-2">$6543</h2>
-						<span className="text-md font-medium">Total Sales</span>
-					</div>
-					<div className="w-[46px] h-[47px] rounded-full bg-[#28c76f1f] flex justify-center items-center text-xl">
-						<BsCurrencyDollar className="text-[#28c76f] shadow-lg" />
-					</div>
-				</div>
-				{/* column -2 */}
-				
-				<div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
-					<div className="flex flex-col justify-start items-start text-white">
-						<h2 className="text-3xl font-bold mb-2">20</h2>
-						<span className="text-md font-medium">Total Products</span>
-					</div>
-					<div className="w-[46px] h-[47px] rounded-full bg-[#e000e81f] flex justify-center items-center text-xl">
-						<RiProductHuntLine className="text-[#cd00e8] shadow-lg" />
-					</div>
-				</div>
-				
-				{/* column -3 */}
-				
-				<div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
-					<div className="flex flex-col justify-start items-start text-white">
-						<h2 className="text-3xl font-bold mb-2">50</h2>
-						<span className="text-md font-medium">Orders</span>
-					</div>
-					<div className="w-[46px] h-[47px] rounded-full bg-[#00cfe81f] flex justify-center items-center text-xl">
-						<FaShoppingCart className="text-[#00cfe8] shadow-lg" />
-					</div>
-				</div>
-				
-				{/* column -4 */}
-				
-				<div className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
-					<div className="flex flex-col justify-start items-start text-white">
-						<h2 className="text-3xl font-bold mb-2">12</h2>
-						<span className="text-md font-medium">Pending Orders</span>
-					</div>
-					<div className="w-[46px] h-[47px] rounded-full bg-[#7367f01f] flex justify-center items-center text-xl">
-						<AiOutlineShoppingCart className="text-[#7367f0] shadow-lg" />
-					</div>
-				</div>
-			
+				{
+					metrics && metrics.map((metric, index) => (
+						<div key={index} className="flex justify-between items-center p-5 bg-[#283046] rounded-md gap-3">
+							<div className="flex flex-col justify-start items-start text-white">
+								<h2 className="text-3xl font-bold mb-2">{metric.value}</h2>
+								<span className="text-md font-medium">{metric.label}</span>
+							</div>
+							<div className={`w-[46px] h-[47px] rounded-full bg-[${metric.bgColor}] flex justify-center items-center text-xl`}>
+								{metric.icon}
+							</div>
+						</div>
+					))}
 			</div>
 			
 			{/*   chart and message section    */}
