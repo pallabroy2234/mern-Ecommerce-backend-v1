@@ -5,9 +5,10 @@ import {AiOutlineShoppingCart} from "react-icons/ai";
 import Chart from "react-apexcharts";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getSellerDashboardData} from "../../store/Reducers/dashboardReducer.js";
 import {FadeLoader} from "react-spinners";
+import moment from "moment";
 
 const SellerDashboard = () => {
 	const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const SellerDashboard = () => {
 		series: [
 			{
 				name: "Orders",
-				data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 20, 80, 40]
+				data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 60, 20, 77]
 			},
 			{
 				name: "Revenue",
@@ -159,55 +160,52 @@ const SellerDashboard = () => {
 					<div className="w-full bg-[#283046] p-4 rounded-md text-white">
 						<div className="flex justify-between items-center">
 							<h2 className="font-semibold text-lg text-white pb-3">Recent customer message</h2>
-							<Link className="font-semibold text-sm  text-white">View all</Link>
+							{
+								recentMessages.length > 0 ? (
+									<Link to={`/seller/dashboard/chat-customer/${recentMessages[0]?.senderId}`} className="font-semibold text-sm  text-white">View all</Link>
+								) : (
+									<Link to="/seller/dashboard/chat-customer" className="font-semibold text-sm  text-white">View all</Link>
+								)
+							}
 						</div>
 						<div className="flex flex-col gap-2 pt-6 text-white">
 							<ol className="relative border-1 border-slate-600 ml-4">
-								<li className="mb-3 ml-6">
-									<div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#00d1e848] rounded-full z-10">
-										<img src="../../../public/images/admin.jpg" className="rounded-full w-full h-full shadow-lg" alt="" />
-									</div>
-									<div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-md">
-										<div className="flex justify-between items-center mb-2">
-											<Link className="text-md font-normal">Customer Names</Link>
-											<time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">4 days ago</time>
-										</div>
-										<div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-											How are you?
-										</div>
-									</div>
-								</li>
-								
-								<li className="mb-3 ml-6">
-									<div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#00d1e848] rounded-full z-10">
-										<img src="../../../public/images/admin.jpg" className="rounded-full w-full h-full shadow-lg" alt="" />
-									</div>
-									<div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-md">
-										<div className="flex justify-between items-center mb-2">
-											<Link className="text-md font-normal">Sellers Names</Link>
-											<time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">4 days ago</time>
-										</div>
-										<div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-											How are you?
-										</div>
-									</div>
-								</li>
-								
-								
-								<li className="mb-3 ml-6">
-									<div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#00d1e848] rounded-full z-10">
-										<img src="../../../public/images/admin.jpg" className="rounded-full w-full h-full shadow-lg" alt="" />
-									</div>
-									<div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-md">
-										<div className="flex justify-between items-center mb-2">
-											<Link className="text-md font-normal">Seller Name</Link>
-											<time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">4 days ago</time>
-										</div>
-										<div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-											How are you?
-										</div>
-									</div>
-								</li>
+								{
+									recentMessages && recentMessages?.map((item, index) => (
+										<li key={index} className="mb-3 ml-6">
+											<div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 bg-[#00d1e848] rounded-full z-10">
+												{
+													item.senderId === userInfo?._id ? (
+														<img src={userInfo?.image || "../../../public/images/admin.jpg"} className="rounded-full w-full h-full shadow-lg" alt="" />
+													) : (
+														<img src="../../../public/images/seller.png" className="rounded-full w-full h-full shadow-lg" alt="" />
+													)
+												}
+											</div>
+											<div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-md">
+												<div className="flex justify-between items-center mb-2">
+													{
+														item.senderId === userInfo?._id ? (
+															<Link to={`/seller/dashboard/chat-customer/${item?.receiverId}`} className="text-md font-normal">
+																{item.senderName}
+															</Link>
+														) : (
+															<Link to={`/seller/dashboard/chat-customer/${item?.senderId}`} className="text-md font-normal">
+																{item.senderName}
+															</Link>
+														)
+													}
+													<time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
+														{moment(item.createdAt).fromNow()}
+													</time>
+												</div>
+												<div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
+													{item?.message}
+												</div>
+											</div>
+										</li>
+									))
+								}
 							</ol>
 						</div>
 					</div>
@@ -218,7 +216,7 @@ const SellerDashboard = () => {
 			<div className="w-full bg-[#283046] p-4 rounded-md mt-6">
 				<div className="flex justify-between items-center">
 					<h2 className="font-semibold text-lg text-white pb-3">Recent Orders</h2>
-					<Link className="font-semibold text-sm  text-white">View all</Link>
+					<Link to={"/seller/dashboard/orders"} className="font-semibold text-sm  text-white">View all</Link>
 				</div>
 				
 				{/* table */}
@@ -226,27 +224,27 @@ const SellerDashboard = () => {
 					<table className="w-full text-sm text-white text-left">
 						<thead className="text-sm text-white uppercase border-slate-700 border-b">
 						<tr>
-							<th scope="col" className="py-3 px-4">Order Id</th>
-							<th scope="col" className="py-3 px-4">Price</th>
-							<th scope="col" className="py-3 px-4">Payment Status</th>
-							<th scope="col" className="py-3 px-4">Order Status</th>
-							<th scope="col" className="py-3 px-4">Action</th>
+							<th scope="col" className="py-3 px-4 whitespace-nowrap">Order Id</th>
+							<th scope="col" className="py-3 px-4 whitespace-nowrap">Price</th>
+							<th scope="col" className="py-3 px-4 whitespace-nowrap">Payment Status</th>
+							<th scope="col" className="py-3 px-4 whitespace-nowrap">Order Status</th>
+							<th scope="col" className="py-3 px-4 whitespace-nowrap">Action</th>
 						</tr>
 						</thead>
 						<tbody>
 						{
-							[1, 2, 3, 4, 5].map((item, index) => (
+							recentOrders && recentOrders?.map((order, index) => (
 								<tr key={index}>
-									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">6555021a8c3cbf2c56421e31</td>
-									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">$1231</td>
+									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">{order?._id}</td>
+									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">${order?.price}</td>
 									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">
-										<span>Pending</span>
+										<span>{order?.paymentStatus}</span>
 									</td>
 									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">
-										<span>Pending</span>
+										<span>{order?.deliveryStatus}</span>
 									</td>
 									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">
-										<Link>View</Link>
+										<Link to={`/seller/dashboard/order/details/${order?._id}`}>View</Link>
 									</td>
 								</tr>
 							))
