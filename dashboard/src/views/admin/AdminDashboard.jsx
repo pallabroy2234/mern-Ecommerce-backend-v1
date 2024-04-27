@@ -230,7 +230,6 @@ const AdminDashboard = () => {
 						</tr>
 						</thead>
 						<tbody>
-						
 						{
 							recentOrders && recentOrders?.map((item, index) => (
 								<tr key={index}>
@@ -243,7 +242,7 @@ const AdminDashboard = () => {
 										<span>{item?.deliveryStatus}</span>
 									</td>
 									<td scope="row" className="px-4 py-4 font-medium whitespace-nowrap">
-										<Link to={`/admin/dashboard/order/details/${item?.orderId}`}>View</Link>
+										<Link to={`/admin/dashboard/order/details/${item?._id}`}>View</Link>
 									</td>
 								</tr>
 							))

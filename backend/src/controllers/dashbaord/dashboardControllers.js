@@ -95,7 +95,7 @@ const handleGetAdminDashboardData = async (req, res) => {
 			.limit(3)
 			.sort({createdAt: -1});
 
-		const recentOrders = await AdminOrderModal.find({}).limit(5).sort({createdAt: -1});
+		const recentOrders = await UserOrderModal.find({}).limit(5).sort({createdAt: -1});
 
 		return successResponse(res, {
 			statusCode: 200,
