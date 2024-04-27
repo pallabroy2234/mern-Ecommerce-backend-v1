@@ -45,6 +45,7 @@ export const dashboardReducer = createSlice({
 		}
 		
 	}, extraReducers: builder => {
+		// * GET SELLER DASHBOARD DATA
 		builder.addCase(getSellerDashboardData.fulfilled, (state, {payload}) => {
 			state.loader = false;
 			state.totalSales = payload.payload.totalSale;
@@ -61,6 +62,24 @@ export const dashboardReducer = createSlice({
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
+		// 	* GET ADMIN DASHBOARD DATA
+		builder.addCase(getAdminDashboardData.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.totalSales = payload.payload.totalSale;
+			state.totalOrders = payload.payload.totalOrder;
+			state.totalProducts = payload.payload.totalProducts;
+			state.totalSellers = payload.payload.totalSellers;
+			state.recentOrders = payload.payload.recentOrders;
+			state.recentMessages = payload.payload.message;
+		});
+		builder.addCase(getAdminDashboardData.pending, (state) => {
+			state.loader = true;
+		});
+		builder.addCase(getAdminDashboardData.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		
 	}
 });
 
