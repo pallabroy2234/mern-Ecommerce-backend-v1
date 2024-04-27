@@ -4,8 +4,33 @@ import {FaUsers} from "react-icons/fa";
 import {AiOutlineShoppingCart} from "react-icons/ai";
 import Chart from "react-apexcharts";
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getAdminDashboardData} from "../../store/Reducers/dashboardReducer.js";
 
 const AdminDashboard = () => {
+    const dispatch = useDispatch();
+    const {userInfo} = useSelector(state => state.auth);
+    const {
+        loader,
+        totalSales,
+        totalOrders,
+        totalProducts,
+        totalPendingOrders,
+        recentOrders,
+        recentMessages
+    } = useSelector(state => state.dashboard);
+    
+    useEffect(() => {
+        if(userInfo){
+            if(userInfo.role === "admin"){
+                dispatch(getAdminDashboardData())
+            }
+        }
+    }, []);
+    
+    
+    
     const state = {
         series: [
             {
@@ -66,6 +91,7 @@ const AdminDashboard = () => {
             ]
         }
     }
+    
     return (
         <div className="px-2 md:px-7 py-5">
             {/*  card   */}

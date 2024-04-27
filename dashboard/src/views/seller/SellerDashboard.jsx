@@ -11,9 +11,7 @@ import {FadeLoader} from "react-spinners";
 import moment from "moment";
 
 const SellerDashboard = () => {
-	const dispatch = useDispatch();
-	const {userInfo} = useSelector(state => state.auth);
-	const {
+	const dispatch = useDispatch();const {
 		loader,
 		totalSales,
 		totalOrders,
@@ -22,6 +20,8 @@ const SellerDashboard = () => {
 		recentOrders,
 		recentMessages
 	} = useSelector(state => state.dashboard);
+	const {userInfo} = useSelector(state => state.auth);
+	
 	
 	// * CALL API
 	useEffect(() => {
