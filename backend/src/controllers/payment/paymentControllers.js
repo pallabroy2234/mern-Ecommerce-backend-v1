@@ -224,7 +224,8 @@ const handleSellerPaymentDetails = async (req, res) => {
 
 		let availableAmount = 0;
 		if (amount.length > 0) {
-			availableAmount = amount[0].totalAmount - (pendingWithdrawAmount.length > 0 ? pendingWithdrawAmount[0].pendingAmount : 0) - (withdrawAmount.length > 0 ? withdrawAmount[0].withdrawAmount : 0);
+			const total = (pendingWithdrawAmount.length > 0 ? pendingWithdrawAmount[0].pendingAmount : 0) + (withdrawAmount.length > 0 ? withdrawAmount[0].withdrawAmount : 0);
+			availableAmount = amount[0].totalAmount - total;
 		}
 
 		return successResponse(res, {
