@@ -2,12 +2,24 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-// * GET SELLER DASHBOARD DATA || GET ||
+// * GET SELLER DASHBOARD DATA || GET || /api/dashboard/seller/get-seller-dashboard-data
 export const getSellerDashboardData = createAsyncThunk(
 	"dashboard/getSellerDashboardData",
 	async (_, {rejectWithValue, fulfillWithValue}) => {
 		try {
-			const {data} = await api.get("/logout", {withCredentials: true});
+			const {data} = await api.get("/dashboard/seller/get-seller-dashboard-data", {withCredentials: true});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	});
+
+// * GET ADMIN DASHBOARD DATA  || GET || /api/dashboard/admin/get-admin-dashboard-data
+export const getAdminDashboardData = createAsyncThunk(
+	"dashboard/getAdminDashboardData",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get("/dashboard/admin/get-admin-dashboard-data", {withCredentials: true});
 			return fulfillWithValue(data);
 		} catch (e) {
 			return rejectWithValue(e.response.data);
