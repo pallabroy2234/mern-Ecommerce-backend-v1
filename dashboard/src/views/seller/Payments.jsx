@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import moment from "moment";
 
 
-
 const handleOnWheel = ({deltaY}) => {
 	console.log("handleOnWheel", deltaY);
 };
@@ -42,19 +41,25 @@ const Payments = () => {
 	// * HANDLE PAYMENT REQUEST
 	const handlePaymentRequest = (e) => {
 		e.preventDefault();
-		console.log(amount);
-		dispatch(sendWithdrawRequest(amount));
-		setAmount("");
+		if (userInfo) {
+			if (availableAmount < 20) {
+				dispatch(sendWithdrawRequest(amount));
+				setAmount("");
+			} else {
+				toast.error("You can't withdraw less than $20");
+			}
+		}
 	};
 	
 	// * SUCCESS MESSAGE OR ERROR MESSAGE
 	useEffect(() => {
-		if(successMessage){
+		if (successMessage) {
 			toast.success(successMessage);
-			dispatch(messageClear())
-		}if(errorMessage){
+			dispatch(messageClear());
+		}
+		if (errorMessage) {
 			toast.error(errorMessage);
-			dispatch(messageClear())
+			dispatch(messageClear());
 		}
 	}, [successMessage, errorMessage]);
 	

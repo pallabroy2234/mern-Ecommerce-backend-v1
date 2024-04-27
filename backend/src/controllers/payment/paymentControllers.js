@@ -249,6 +249,7 @@ const handleSellerPaymentDetails = async (req, res) => {
 };
 
 // * HANDLE SEND WITHDRAW REQUEST || POST || /api/payment/seller/send-withdraw-request
+
 const handleSendWithdrawRequest = async (req, res) => {
 	try {
 		const {id} = req;
@@ -259,10 +260,10 @@ const handleSendWithdrawRequest = async (req, res) => {
 				message: "Invalid id",
 			});
 		}
-		if (amount < 0 || amount === 0) {
+		if (amount <= 0) {
 			return errorResponse(res, {
 				statusCode: 400,
-				message: "Please provide amount",
+				message: "Please provide a valid amount greater than zero",
 			});
 		}
 		const sellerExists = await SellerModal.findOne({_id: id});
@@ -273,6 +274,75 @@ const handleSendWithdrawRequest = async (req, res) => {
 			});
 		}
 
+		// Get available amount
+		const amountDetails = await SellerWalletModal.aggregate([
+			{$match: {sellerId: new ObjectId(id)}},
+			{
+				$group: {
+					_id: "$sellerId",
+					totalAmount: {$sum: "$amount"},
+				},
+			},
+		]);
+
+		let availableAmount = 0;
+		if (amountDetails.length > 0) {
+			const totalPendingAmount = await WithdrawRequestModal.aggregate([
+				{
+					$match: {
+						$and: [
+							{
+								sellerId: {$eq: new ObjectId(id)},
+							},
+							{
+								status: {$eq: "pending"},
+							},
+						],
+					},
+				},
+				{
+					$group: {
+						_id: "$sellerId",
+						pendingAmount: {$sum: "$amount"},
+					},
+				},
+			]);
+
+			const totalWithdrawnAmount = await WithdrawRequestModal.aggregate([
+				{
+					$match: {
+						$and: [
+							{
+								sellerId: {$eq: new ObjectId(id)},
+							},
+							{
+								status: {$eq: "success"},
+							},
+						],
+					},
+				},
+				{
+					$group: {
+						_id: "$sellerId",
+						withdrawnAmount: {$sum: "$amount"},
+					},
+				},
+			]);
+
+			const pendingAmount = totalPendingAmount.length > 0 ? totalPendingAmount[0].pendingAmount : 0;
+			const withdrawnAmount = totalWithdrawnAmount.length > 0 ? totalWithdrawnAmount[0].withdrawnAmount : 0;
+
+			availableAmount = amountDetails[0].totalAmount - (pendingAmount + withdrawnAmount);
+		}
+
+		if (amount > availableAmount) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Requested amount exceeds available balance",
+			});
+		}
+
+		// Create withdrawal request
 		const withdraw = await WithdrawRequestModal.create({
 			sellerId: new ObjectId(id),
 			amount: parseInt(amount),
@@ -287,7 +357,7 @@ const handleSendWithdrawRequest = async (req, res) => {
 
 		return successResponse(res, {
 			statusCode: 201,
-			message: "Withdraw request send successfully",
+			message: "Withdraw request sent successfully",
 			payload: {
 				withdraw: withdraw,
 			},
