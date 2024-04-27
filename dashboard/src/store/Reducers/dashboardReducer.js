@@ -1,24 +1,31 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
-import {jwtDecode} from "jwt-decode";
 
 
-// export const logout = createAsyncThunk("auth/logout", async (_, {rejectWithValue, fulfillWithValue}) => {
-// 	try {
-// 		const {data} = await api.get("/logout", {withCredentials: true});
-// 		localStorage.removeItem("accessToken");
-// 		return fulfillWithValue(data);
-// 	} catch (e) {
-// 		return rejectWithValue(e.response.data);
-// 	}
-// });
-
+// * GET SELLER DASHBOARD DATA || GET ||
+export const getSellerDashboardData = createAsyncThunk(
+	"dashboard/getSellerDashboardData",
+	async (_, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get("/logout", {withCredentials: true});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	});
 
 export const dashboardReducer = createSlice({
 	name: "dashboard", initialState: {
 		successMessage: "",
 		errorMessage: "",
-		loader: false
+		loader: false,
+		totalSales: 0,
+		totalOrders: 0,
+		totalProducts: 0,
+		totalPendingOrders: 0,
+		totalSellers: 0,
+		recentOrders: [],
+		recentMessages: []
 	}, reducers: {
 		messageClear: (state) => {
 			state.successMessage = "";
