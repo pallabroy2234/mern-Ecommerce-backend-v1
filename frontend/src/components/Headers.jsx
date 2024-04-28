@@ -44,11 +44,11 @@ const Headers = () => {
 	};
 
 	useEffect(() => {
-		if (userInfo) {
+		if (userInfo !== "") {
 			dispatch(getCartProducts(userInfo.id));
 			dispatch(getWishList(userInfo.id));
 		}
-	}, [userInfo]);
+	}, []);
 
 	return (
 		<div className='w-full bg-white'>

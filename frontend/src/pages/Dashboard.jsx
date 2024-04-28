@@ -1,16 +1,42 @@
 import Headers from "../components/Headers.jsx";
 import Footer from "../components/Footer.jsx";
 import {FaList} from "react-icons/fa";
-import {useState} from "react";
-import {Link, Outlet} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import {RxDashboard} from "react-icons/rx";
 import {RiProductHuntLine} from "react-icons/ri";
 import {BsChat, BsHeart} from "react-icons/bs";
 import {TfiLock} from "react-icons/tfi";
 import {BiLogInCircle} from "react-icons/bi";
+import {useDispatch, useSelector} from "react-redux";
+import {logout, messageClear, userReset} from "../store/reducers/authReducer.js";
+import toast from "react-hot-toast";
+import {resetCart} from "../store/reducers/cartReducer.js";
 
 const Dashboard = () => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [filterShow, setFilterShow] = useState(false);
+	const {userInfo, successMessage, errorMessage} = useSelector((state) => state.auth);
+
+	const handleLogout = () => {
+		if (userInfo) {
+			dispatch(logout());
+		}
+	};
+
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+			dispatch(userReset());
+			dispatch(resetCart());
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+		}
+	}, [errorMessage, successMessage, userInfo]);
 
 	return (
 		<div>
@@ -78,7 +104,9 @@ const Dashboard = () => {
 									<span className='text-xl'>
 										<BiLogInCircle />
 									</span>
-									<button className='block'>Logout</button>
+									<button onClick={handleLogout} type='button' className='block cursor-pointer'>
+										Logout
+									</button>
 								</li>
 							</ul>
 						</div>
