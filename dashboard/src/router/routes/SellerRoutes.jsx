@@ -13,6 +13,8 @@ import EditProduct from "../../views/seller/EditProduct.jsx";
 import OrderDetails from "../../views/seller/OrderDetails.jsx";
 import Pending from "../../views/seller/Pending.jsx";
 import Deactive from "../../views/seller/Deactive.jsx";
+import AddBanner from "../../views/seller/AddBanner.jsx";
+import Banners from "../../views/seller/Banners.jsx";
 
 
 const SellerDashboard = lazy(() => import("../../views/seller/SellerDashboard.jsx"));
@@ -101,5 +103,17 @@ export const sellerRoutes = [
         element: <Profile/>,
         role: "seller",
         visibility: ["active", "deactive", "pending"],
+    },
+    {
+        path: "/seller/dashboard/add-banner",
+        element: <AddBanner/>,
+        role: "seller",
+        status: "active"
+    },
+    {
+        path: "/seller/dashboard/banners",
+        element: <Banners/>,
+        role: "seller",
+           status: "active"
     },
 ]

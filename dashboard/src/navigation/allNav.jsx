@@ -89,36 +89,51 @@ export const allNav = [
         icon: <RiProductHuntLine/>,
         role: "seller",
         path: "/seller/dashboard/discount-products"
-    }, {
+    },
+    {
         id: 13,
+        title: "Add Banner",
+        icon: <AiOutlinePlus/>,
+        role: "seller",
+        path: "/seller/dashboard/add-banner"
+    },
+    {
+        id: 14,
+        title: "All Banner",
+        icon: <AiOutlinePlus/>,
+        role: "seller",
+        path: "/seller/dashboard/banners"
+    },
+    {
+        id: 15,
         title: "Orders",
         icon: <AiOutlineShoppingCart/>,
         role: "seller",
         path: "/seller/dashboard/orders"
     },
     {
-        id: 14,
+        id: 16,
         title: "Payments",
         icon: <BsCurrencyDollar/>,
         role: "seller",
         path: "/seller/dashboard/payments"
     },
     {
-        id: 15,
+        id: 17,
         title: "Chat Customer",
         icon: <BsChat/>,
         role: "seller",
         path: "/seller/dashboard/chat-customer"
     },
     {
-        id: 16,
+        id: 18,
         title: "Chat Support",
         icon: <CiChat1/>,
         role: "seller",
         path: "/seller/dashboard/chat-support"
     },
     {
-        id: 17,
+        id: 19,
         title: "Profile",
         icon: <FaUsers/>,
         role: "seller",
