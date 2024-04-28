@@ -6,8 +6,10 @@ import {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {IoIosCall} from "react-icons/io";
 import {useDispatch, useSelector} from "react-redux";
+import {getCartProducts, getWishList} from "../store/reducers/cartReducer.js";
 
 const Headers = () => {
+	const dispatch = useDispatch();
 	const {categories} = useSelector((state) => state.home);
 	const {userInfo} = useSelector((state) => state.auth);
 	const {cartProductCount, wishListCount} = useSelector((state) => state.cart);
@@ -32,6 +34,21 @@ const Headers = () => {
 			navigate("/login");
 		}
 	};
+
+	const handleRedirectWishListPage = () => {
+		if (userInfo) {
+			navigate("/dashboard/wishlist");
+		} else {
+			navigate("/login");
+		}
+	};
+
+	useEffect(() => {
+		if (userInfo) {
+			dispatch(getCartProducts(userInfo.id));
+			dispatch(getWishList(userInfo.id));
+		}
+	}, [userInfo]);
 
 	return (
 		<div className='w-full bg-white'>
@@ -143,12 +160,12 @@ const Headers = () => {
 									</li>
 								</ul>
 								<div className='flex md-lg:hidden justify-center items-center gap-5'>
-									<Link to={"/dashboard/wishlist"} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
+									<div onClick={handleRedirectWishListPage} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
 										<span className='text-xl text-red-500'>
 											<AiFillHeart />
 										</span>
 										{wishListCount > 0 ? <div className='w-[20px] h-[20px] absolute bg-green-500 rounded-full text-white flex text-[12px] justify-center items-center -top-[3px] -right-[5px]'>{wishListCount}</div> : null}
-									</Link>
+									</div>
 									<div onClick={handleRedirectCartPage} className='relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-[#e2e2e2]'>
 										<span className='text-xl text-orange-500'>
 											<AiFillShopping />
