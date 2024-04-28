@@ -27,7 +27,7 @@ const Dashboard = () => {
 				<div className='h-full mx-auto'>
 					<div className='py-5 flex md-lg:w-[90%] mx-auto relative'>
 						{/* left section */}
-						<div className={`rounded-md z-50 md-lg:absolute ${filterShow ? "-left-4" : "-left-[360px]"} w-[270px] ml-4 bg-white`}>
+						<div className={`rounded-md z-[9999] shadow-lg md-lg:absolute ${filterShow ? "-left-4" : "-left-[360px]"} w-[270px] ml-4 bg-white`}>
 							<ul className='py-2 text-slate-600 px-4'>
 								<li className='flex justify-start items-center gap-2 py-2'>
 									<span className='text-xl'>
