@@ -92,48 +92,41 @@ export const allNav = [
     },
     {
         id: 13,
-        title: "Add Banner",
-        icon: <BiSolidCloudUpload/>,
-        role: "seller",
-        path: "/seller/dashboard/add-banner"
-    },
-    {
-        id: 14,
         title: "All Banner",
         icon: <BsImages/>,
         role: "seller",
         path: "/seller/dashboard/banners"
     },
     {
-        id: 15,
+        id: 14,
         title: "Orders",
         icon: <AiOutlineShoppingCart/>,
         role: "seller",
         path: "/seller/dashboard/orders"
     },
     {
-        id: 16,
+        id: 15,
         title: "Payments",
         icon: <BsCurrencyDollar/>,
         role: "seller",
         path: "/seller/dashboard/payments"
     },
     {
-        id: 17,
+        id: 16,
         title: "Chat Customer",
         icon: <BsChat/>,
         role: "seller",
         path: "/seller/dashboard/chat-customer"
     },
     {
-        id: 18,
+        id: 17,
         title: "Chat Support",
         icon: <CiChat1/>,
         role: "seller",
         path: "/seller/dashboard/chat-support"
     },
     {
-        id: 19,
+        id: 18,
         title: "Profile",
         icon: <FaUsers/>,
         role: "seller",

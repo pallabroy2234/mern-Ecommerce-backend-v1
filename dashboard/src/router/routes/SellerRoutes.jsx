@@ -105,7 +105,7 @@ export const sellerRoutes = [
         visibility: ["active", "deactive", "pending"],
     },
     {
-        path: "/seller/dashboard/add-banner",
+        path: "/seller/dashboard/add-banner/:productId",
         element: <AddBanner/>,
         role: "seller",
         status: "active"

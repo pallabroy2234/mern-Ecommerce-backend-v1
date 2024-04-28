@@ -5,6 +5,7 @@ import {FaEdit, FaEye, FaTrash} from "react-icons/fa";
 import Pagination from "../Pagination.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import { get_products} from "../../store/Reducers/productReducer.js";
+import {GiKnightBanner} from "react-icons/gi";
 
 
 const Products = () => {
@@ -82,10 +83,13 @@ const Products = () => {
                                     <td scope="row" className="px-4 py-2 font-medium whitespace-nowrap">
                                         <div className="flex justify-start items-center gap-4">
                                             <Link to={`/seller/dashboard/edit-product/${item?._id}`} className="p-[6px] bg-yellow-500 rounded-sm hover:shadow-lg hover:shadow-yellow-500/50"><FaEdit/></Link>
-                                            <Link className="p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-yellow-500/50"><FaEye/></Link>
+                                            <div className="p-[6px] bg-green-500 rounded-sm hover:shadow-lg hover:shadow-yellow-500/50"><FaEye/></div>
                                             <button className="p-[6px] bg-red-500 rounded-sm hover:shadow-lg hover:shadow-red-500/50">
                                                 <FaTrash/>
                                             </button>
+                                            <Link to={`/seller/dashboard/add-banner/${item?._id}`} className="p-[6px] bg-cyan-500 rounded-sm hover:shadow-lg hover:shadow-cyan-500/50">
+                                                <GiKnightBanner/>
+                                            </Link>
                                         </div>
                                     </td>
                                 </tr>
