@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from "react";
 import io from "socket.io-client";
 import {addFriend, messageClear, sendMessageSeller, updateMessage} from "../../store/reducers/chatReducer.js";
 import toast from "react-hot-toast";
+import {FaList} from "react-icons/fa";
 
 const socket = io("http://localhost:3000");
 const Chat = () => {
@@ -18,6 +19,7 @@ const Chat = () => {
 	const [receiverMessage, setReceiverMessage] = useState("");
 	// const [activeSeller, setActiveSeller] = useState([]);
 	const lastMessageRef = useRef(null);
+	const [show, setShow] = useState(false);
 
 	// * Scroll to bottom
 	useEffect(() => {
@@ -86,15 +88,15 @@ const Chat = () => {
 
 	return (
 		<div className='bg-white p-3 rounded-md'>
-			<div className='w-full flex'>
-				<div className='w-[230px]'>
-					<div className='flex justify-start gap-3 items-center text-slate-600 text-xl h-[50px]'>
+			<div className='w-full flex relative'>
+				<div className={`${show ? "-left-2 shadow-lg bottom-0 " : "-left-[350px]"} w-[230px] md-lg:absolute z-[999] md-lg:bg-white md-lg:h-full transition-all duration-300`}>
+					<div className='flex justify-start pl-1 gap-3 items-center text-slate-600 text-xl h-[50px]'>
 						<span>
 							<AiOutlineMessage />
 						</span>
-						<span>Message</span>
+						<span className=''>Message</span>
 					</div>
-					<div className='w-full flex flex-col text-slate-600 py-4 gap-1 h-[400px] pr-3'>
+					<div className='w-full flex flex-col text-slate-600 py-4 gap-1 h-[400px] pr-3 overflow-y-auto'>
 						{myFriends &&
 							myFriends.map((item, index) => (
 								<Link key={index} to={`/dashboard/chat/${item?.friendId}`} className={`flex gap-2 relative justify-start items-center pl-2 py-[8px] border border-cyan-500 rounded-md hover:mr-4  transition-all duration-300 ${item.friendId === sellerId ? "mr-4" : "mr-0"} `}>
@@ -108,15 +110,20 @@ const Chat = () => {
 					</div>
 				</div>
 
-				<div className='w-[calc(100%-230px)]'>
+				<div className='w-[calc(100%-230px)] md-lg:w-full'>
 					{currentFriend ? (
 						<div className='w-full h-full'>
-							<div className='flex relative justify-start gap-3 items-center text-slate-600 text-xl h-[50px]'>
-								<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-offset-2 ring-cyan-500'>
-									<img className='w-full h-full object-cover' src={currentFriend?.image} alt='' />
+							<div className='flex relative justify-between items-center text-slate-600 text-xl h-[60px]'>
+								<div className='flex justify-between items-center gap-3'>
+									<div className='w-[40px] h-[40px] rounded-full relative overflow-hidden ring-2 ring-offset-2 ring-cyan-500'>
+										<img className='w-full h-full object-cover' src={currentFriend?.image} alt='' />
+									</div>
+									{activeSeller.some((seller) => seller.sellerId === currentFriend.friendId) && <div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-2 left-[32px] z-20'></div>}
+									<span className='text-base'>{currentFriend?.sellerName}</span>
 								</div>
-								{activeSeller.some((seller) => seller.sellerId === currentFriend.friendId) && <div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-2 left-[32px] z-20'></div>}
-								<span className='text-base'>{currentFriend?.sellerName}</span>
+								<button onClick={() => setShow(!show)} className='w-[40px] h-[40px] md-lg:flex hidden justify-center items-center rounded-md bg-sky-600 text-white cursor-pointer'>
+									<FaList />
+								</button>
 							</div>
 							<div className='h-[400px] w-full bg-slate-100 p-3 rounded-md overflow-y-auto'>
 								<div className='h-full w-full flex  flex-col gap-5'>
@@ -171,9 +178,9 @@ const Chat = () => {
 							</form>
 						</div>
 					) : (
-						<div className='w-full h-full flex justify-center items-center text-xl font-bold  text-slate-600'>
+						<button onClick={() => setShow(!show)} className='w-full h-[400px] flex justify-center items-center text-xl font-bold  text-slate-600'>
 							<span>Select seller</span>
-						</div>
+						</button>
 					)}
 				</div>
 			</div>

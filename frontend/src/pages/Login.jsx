@@ -106,7 +106,7 @@ const Login = () => {
 									</Link>
 								</p>
 								<p>
-									<a className='text-blue-500' target='_blank' href='http://localhost:5173/login'>
+									<a className='text-blue-500 pr-1' target='_blank' href='http://localhost:5173/login'>
 										Login
 									</a>
 									Seller Account
