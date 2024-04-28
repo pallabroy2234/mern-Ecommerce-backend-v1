@@ -1,7 +1,7 @@
 import {AiFillDashboard, AiOutlinePlus, AiOutlineShopping, AiOutlineShoppingCart} from "react-icons/ai";
-import {BiCategory, BiLoaderCircle} from "react-icons/bi";
+import {BiCategory, BiLoaderCircle, BiSolidCloudUpload} from "react-icons/bi";
 import {FiUsers} from "react-icons/fi";
-import {BsChat, BsCurrencyDollar} from "react-icons/bs";
+import {BsChat, BsCurrencyDollar, BsImages} from "react-icons/bs";
 import {CiChat1} from "react-icons/ci";
 import {RiProductHuntLine} from "react-icons/ri";
 import {FaUsers} from "react-icons/fa";
@@ -93,14 +93,14 @@ export const allNav = [
     {
         id: 13,
         title: "Add Banner",
-        icon: <AiOutlinePlus/>,
+        icon: <BiSolidCloudUpload/>,
         role: "seller",
         path: "/seller/dashboard/add-banner"
     },
     {
         id: 14,
         title: "All Banner",
-        icon: <AiOutlinePlus/>,
+        icon: <BsImages/>,
         role: "seller",
         path: "/seller/dashboard/banners"
     },
