@@ -1,9 +1,25 @@
-import {Link} from "react-router-dom";
-import {useState} from "react";
+import {Link, useParams} from "react-router-dom";
 import {BiSolidCloudUpload} from "react-icons/bi";
+import {useState} from "react";
 
 const AddBanner = () => {
-
+	const {productId} = useParams();
+	const [imageShow, setImageShow] = useState("");
+	const [banner, setBanner] = useState("");
+	
+	
+	const handleImage = (e) => {
+		const files = e.target.files;
+		const length = files.length;
+		console.log(length);
+		console.log(files);
+		if (length > 0) {
+			setBanner(files[0]);
+			setImageShow(URL.createObjectURL(files[0]));
+		}
+		
+	};
+	
 	
 	return (
 		<div className="px-2 md:px-7 py-5">
@@ -21,8 +37,19 @@ const AddBanner = () => {
 								<span className="text-4xl"><BiSolidCloudUpload /></span>
 								<span>Select Banner Image</span>
 							</label>
-							<input type="file" id="image" name="image" className="hidden" accept="image" />
+							<input onChange={(e) => handleImage(e)} type="file" id="image" name="image" className="hidden" accept="image" />
 						</div>
+						
+						{
+							imageShow && (
+								<div className="mb-4">
+									<img className="w-full h-auto" src={imageShow} alt="image" />
+								</div>
+							)
+						}
+						<button type="submit" className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">
+							Upload Banner
+						</button>
 					</form>
 				</div>
 			</div>

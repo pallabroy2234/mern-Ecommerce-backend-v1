@@ -125,12 +125,13 @@ const SellerDashboard = () => {
 	
 	return (
 		<div className="px-2 md:px-7 py-5">
-			{
-				loader &&
-				<div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-black opacity-40 z-[999]">
-					<FadeLoader color="#ffff" />
-				</div>
-			}
+			{/*{*/}
+			{/*	loader &&*/}
+			{/*	<div className="w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-black opacity-40 z-[999]">*/}
+			{/*		<FadeLoader color="#ffff" />*/}
+			{/*	</div>*/}
+			{/*}*/}
+			
 			{/* Card */}
 			<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-7">
 				{
