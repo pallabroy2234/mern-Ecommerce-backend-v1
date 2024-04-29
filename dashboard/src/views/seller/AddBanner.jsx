@@ -1,8 +1,11 @@
 import {Link, useParams} from "react-router-dom";
 import {BiSolidCloudUpload} from "react-icons/bi";
 import {useState} from "react";
+import {useDispatch} from "react-redux";
+import {addBanner} from "../../store/Reducers/bannerReducer.js";
 
 const AddBanner = () => {
+    const dispatch = useDispatch();
 	const {productId} = useParams();
 	const [imageShow, setImageShow] = useState("");
 	const [banner, setBanner] = useState("");
@@ -11,14 +14,22 @@ const AddBanner = () => {
 	const handleImage = (e) => {
 		const files = e.target.files;
 		const length = files.length;
-		console.log(length);
-		console.log(files);
 		if (length > 0) {
 			setBanner(files[0]);
 			setImageShow(URL.createObjectURL(files[0]));
 		}
 		
 	};
+	
+	const handleSubmitBanner = (e)=> {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append("productId", productId);
+		formData.append("banner", banner);
+		dispatch(addBanner(formData));
+	}
+	
+	
 	
 	
 	return (
@@ -31,7 +42,7 @@ const AddBanner = () => {
 				</div>
 				
 				<div>
-					<form>
+					<form onSubmit={(e)=> handleSubmitBanner(e)}>
 						<div className=" text-white mb-6">
 							<label htmlFor="image" className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-indigo-500 w-full text-white">
 								<span className="text-4xl"><BiSolidCloudUpload /></span>

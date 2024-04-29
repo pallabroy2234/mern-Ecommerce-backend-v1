@@ -2,29 +2,29 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-// export const get_categories = createAsyncThunk(
-// 	"category/get_categories",
-// 	async ({parPage, page, searchValue}, {rejectWithValue, fulfillWithValue}) => {
-// 		try {
-//
-// 			const {data} = await api.get(`/get-categories?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}`, {withCredentials: true})
-// 			return fulfillWithValue(data)
-//
-// 		} catch (e) {
-// 			console.log(e.response.data)
-// 			return rejectWithValue(e.response.data)
-// 		}
-// 	}
-// )
+// * ADD BANNER
+export const addBanner = createAsyncThunk(
+	"banner/get_categories",
+	async (info, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post("/dashboard/banner/add-banner", info, {withCredentials: true});
+			console.log(data);
+			return fulfillWithValue(data);
+		} catch (e) {
+			console.log(e.response.data);
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 
 export const bannerReducer = createSlice({
-	name: "banners",
+	name: "banner",
 	initialState: {
 		successMessage: "",
 		errorMessage: "",
 		loader: false,
-		banners: [],
+		banners: []
 	},
 	reducers: {
 		messageClear: (state) => {
