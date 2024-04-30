@@ -54,51 +54,54 @@ const AddBanner = () => {
 	
 	
 	// * GET BANNER BY PRODUCT ID
-	useEffect(()=> {
-		if(userInfo){
-			dispatch(getBanner(productId))
+	useEffect(() => {
+		if (userInfo) {
+			dispatch(getBanner(productId));
 		}
 		
-	},[productId])
+	}, [productId]);
 	
 	
-	
-	return (
-		<div className="px-2 md:px-7 py-5">
-			{/* Heading */}
-			<div className="w-full bg-secondary p-4 rounded-md pb-4">
-				<div className="flex  justify-between items-center pb-4">
-					<h1 className="text-white text-xl font-semibold">Add Banner</h1>
-					<Link to={"/seller/dashboard/banners"} className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">Banners</Link>
-				</div>
-				
-				<div>
-					<form onSubmit={(e) => handleSubmitBanner(e)}>
-						<div className=" text-white mb-6">
-							<label htmlFor="image" className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-indigo-500 w-full text-white">
-								<span className="text-4xl"><BiSolidCloudUpload /></span>
-								<span>Select Banner Image</span>
-							</label>
-							<input onChange={(e) => handleImage(e)} type="file" id="image" name="image" className="hidden" accept="image" />
-						</div>
-						
-						{
-							imageShow && (
-								<div className="mb-4">
-									<img className="w-full h-auto object-contain" src={imageShow} alt="image" />
-								</div>
-							)
-						}
-						<div className="text-white pt-8 flex">
-							<button disabled={loader} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
-								{loader ?
-									<PropagateLoader color="#fff" cssOverride={overrideStyle} /> : "Upload Banner"}
-							</button>
-						</div>
-					</form>
-				</div>
+	console.log(banner.banner);
+	return (<div className="px-2 md:px-7 py-5">
+		{/* Heading */}
+		<div className="w-full bg-secondary p-4 rounded-md pb-4">
+			<div className="flex  justify-between items-center pb-4">
+				<h1 className="text-white text-xl font-semibold">Add Banner</h1>
+				<Link to={"/seller/dashboard/banners"} className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">Banners</Link>
+			</div>
+			
+			<div>
+				<form onSubmit={(e) => handleSubmitBanner(e)}>
+					<div className=" text-white mb-6">
+						<label htmlFor="image" className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-indigo-500 w-full text-white">
+							<span className="text-4xl"><BiSolidCloudUpload /></span>
+							<span>Select Banner Image</span>
+						</label>
+						<input onChange={(e) => handleImage(e)} type="file" id="image" name="image" className="hidden" accept="image" />
+					</div>
+					
+					{
+						banner?.banner ? (<div className="mb-4">
+								<img className="w-full h-auto object-contain" src={imageShow ? imageShow : banner?.banner} alt="image" />
+							</div>
+						) : imageShow ? (
+							<div className="mb-4">
+								<img className="w-full h-auto object-contain" src={imageShow} alt="image" />
+							</div>
+						) : null
+					}
+					
+					
+					<div className="text-white pt-8 flex">
+						<button disabled={loader} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+							{loader ?
+								<PropagateLoader color="#fff" cssOverride={overrideStyle} /> : "Upload Banner"}
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
-	);
+	</div>);
 };
 export default AddBanner;

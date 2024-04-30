@@ -45,15 +45,30 @@ export const bannerReducer = createSlice({
 		}
 	},
 	extraReducers: builder => {
+		//  * UPLOAD BANNER
 		builder.addCase(addBanner.fulfilled, (state, {payload}) => {
+			const banner = payload.payload;
 			state.loader = false;
 			state.successMessage = payload.message;
-			state.banner = payload.payload || {};
+			state.banner = state.banner !== banner ? banner : state.banner;
 		});
 		builder.addCase(addBanner.pending, (state, _) => {
 			state.loader = true;
 		});
 		builder.addCase(addBanner.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		
+		// 	* GET BANNER
+		builder.addCase(getBanner.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.banner = payload.payload.banner;
+		});
+		builder.addCase(getBanner.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(getBanner.rejected, (state, {payload}) => {
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
