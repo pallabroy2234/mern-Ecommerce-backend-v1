@@ -13,7 +13,7 @@ const AddBanner = () => {
 	const [imageShow, setImageShow] = useState("");
 	const [image, setImage] = useState("");
 	const {userInfo} = useSelector(state => state.auth);
-	const {banner, successMessage, errorMessage, loader} = useSelector(state => state.banner);
+	const {banner, successMessage, errorMessage, loader, deleteLoader} = useSelector(state => state.banner);
 	
 	
 	const handleImage = (e) => {
@@ -109,8 +109,9 @@ const AddBanner = () => {
 						</button>
 						{
 							banner.banner ? imageShow ? null : (
-								<button onClick={handleDeleteBanner} type="button" className="bg-red-500 w-[200px] hover:shadow-red-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
-									Delete Banner
+								<button onClick={handleDeleteBanner} disabled={deleteLoader} type="button" className="bg-red-500 w-[200px] hover:shadow-red-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+									{deleteLoader ?
+										<PropagateLoader color="#fff" cssOverride={overrideStyle} /> : "Delete Banner"}
 								</button>
 							) : null
 						}

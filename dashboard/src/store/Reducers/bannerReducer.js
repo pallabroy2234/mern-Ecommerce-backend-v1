@@ -42,11 +42,18 @@ export const deleteBanner = createAsyncThunk("banner/deleteBanner", async (info,
 
 export const bannerReducer = createSlice({
 	name: "banner", initialState: {
-		successMessage: "", errorMessage: "", loader: false, banners: [], banner: {}
+		successMessage: "",
+		errorMessage: "",
+		loader: false,
+		deleteLoader: false,
+		banners: [],
+		banner: {}
 	}, reducers: {
 		messageClear: (state) => {
 			state.successMessage = "";
 			state.errorMessage = "";
+
+			
 		}
 	}, extraReducers: builder => {
 		//  * UPLOAD BANNER
@@ -79,15 +86,15 @@ export const bannerReducer = createSlice({
 		
 		// 	* DELETE BANNER
 		builder.addCase(deleteBanner.fulfilled, (state, {payload}) => {
-			state.loader = false;
+			state.deleteLoader = false;
 			state.successMessage = payload.message;
 			state.banner = {};
 		});
 		builder.addCase(deleteBanner.pending, (state, _) => {
-			state.loader = true;
+			state.deleteLoader = true;
 		});
 		builder.addCase(deleteBanner.rejected, (state, {payload}) => {
-			state.loader = false;
+			state.deleteLoader = false;
 			state.errorMessage = payload.message;
 		});
 	}
