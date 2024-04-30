@@ -5,6 +5,6 @@ const {upload} = require("../../utiles/upload");
 const bannerRouter = express.Router();
 
 // * ADD BANNER || POST || /api/dashboard/banner/add-banner
-bannerRouter.post("/add-banner", upload.single("banner"), authMiddleware, isSeller, handleAddBanner);
+bannerRouter.post("/add-banner", upload.single("image"), authMiddleware, isSeller, handleAddBanner);
 
 module.exports = bannerRouter;

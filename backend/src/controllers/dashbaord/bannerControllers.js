@@ -66,7 +66,7 @@ const handleAddBanner = async (req, res) => {
 		return successResponse(res, {
 			statusCode: 201,
 			message: "Banner upload successfully",
-			payload: bannerData,
+			payload: bannerData || {},
 		});
 	} catch (e) {
 		console.log(e.message, "handleAddBanner");

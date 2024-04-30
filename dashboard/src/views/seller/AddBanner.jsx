@@ -1,35 +1,56 @@
 import {Link, useParams} from "react-router-dom";
 import {BiSolidCloudUpload} from "react-icons/bi";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
-import {addBanner} from "../../store/Reducers/bannerReducer.js";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {addBanner, messageClear} from "../../store/Reducers/bannerReducer.js";
+import {toast} from "react-hot-toast";
+import {PropagateLoader} from "react-spinners";
+import {overrideStyle} from "../../utils/utils.js";
 
 const AddBanner = () => {
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const {productId} = useParams();
 	const [imageShow, setImageShow] = useState("");
-	const [banner, setBanner] = useState("");
+	const [image, setImage] = useState("");
+	const {userInfo} = useSelector(state => state.auth);
+	const {banner, successMessage, errorMessage, loader} = useSelector(state => state.banner);
 	
 	
 	const handleImage = (e) => {
 		const files = e.target.files;
 		const length = files.length;
 		if (length > 0) {
-			setBanner(files[0]);
+			setImage(files[0]);
 			setImageShow(URL.createObjectURL(files[0]));
 		}
-		
 	};
 	
-	const handleSubmitBanner = (e)=> {
+	const handleSubmitBanner = (e) => {
 		e.preventDefault();
-		const formData = new FormData();
-		formData.append("productId", productId);
-		formData.append("banner", banner);
-		dispatch(addBanner(formData));
-	}
+		if (userInfo) {
+			const formData = new FormData();
+			formData.append("productId", productId);
+			formData.append("image", image);
+			dispatch(addBanner(formData));
+		} else {
+			toast.error("Please login first");
+		}
+	};
 	
 	
+	useEffect(() => {
+		if (successMessage) {
+			toast.success(successMessage);
+			dispatch(messageClear());
+			setImageShow("");
+			setImage("");
+		}
+		if (errorMessage) {
+			toast.error(errorMessage);
+			dispatch(messageClear());
+			
+		}
+	}, [errorMessage, successMessage]);
 	
 	
 	return (
@@ -42,7 +63,7 @@ const AddBanner = () => {
 				</div>
 				
 				<div>
-					<form onSubmit={(e)=> handleSubmitBanner(e)}>
+					<form onSubmit={(e) => handleSubmitBanner(e)}>
 						<div className=" text-white mb-6">
 							<label htmlFor="image" className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-indigo-500 w-full text-white">
 								<span className="text-4xl"><BiSolidCloudUpload /></span>
@@ -54,13 +75,16 @@ const AddBanner = () => {
 						{
 							imageShow && (
 								<div className="mb-4">
-									<img className="w-full h-auto" src={imageShow} alt="image" />
+									<img className="w-full h-auto object-contain" src={imageShow} alt="image" />
 								</div>
 							)
 						}
-						<button type="submit" className="bg-blue-500  hover:shadow-blue-500/50 hover:shadow-lg rounded-md px-7 py-2 text-white text-center">
-							Upload Banner
-						</button>
+						<div className="text-white pt-8 flex">
+							<button disabled={loader} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+								{loader ?
+									<PropagateLoader color="#fff" cssOverride={overrideStyle} /> : "Upload Banner"}
+							</button>
+						</div>
 					</form>
 				</div>
 			</div>

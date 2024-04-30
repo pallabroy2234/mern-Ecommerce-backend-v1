@@ -257,7 +257,7 @@ const AddProduct = () => {
                             <input multiple  onChange={imageHandle} type="file" id="image" name="image" className="hidden" accept="image"/>
                         </div>
                         <div className="text-white pt-8 flex">
-                            <button disabled={loader ? true : false} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+                            <button disabled={loader} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
                                 {loader ? <PropagateLoader color="#fff" cssOverride={overrideStyle}/> : "Add Product"}
                             </button>
                         </div>

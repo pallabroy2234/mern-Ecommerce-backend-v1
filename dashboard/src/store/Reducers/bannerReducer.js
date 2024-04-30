@@ -8,10 +8,8 @@ export const addBanner = createAsyncThunk(
 	async (info, {rejectWithValue, fulfillWithValue}) => {
 		try {
 			const {data} = await api.post("/dashboard/banner/add-banner", info, {withCredentials: true});
-			console.log(data);
 			return fulfillWithValue(data);
 		} catch (e) {
-			console.log(e.response.data);
 			return rejectWithValue(e.response.data);
 		}
 	}
@@ -24,7 +22,8 @@ export const bannerReducer = createSlice({
 		successMessage: "",
 		errorMessage: "",
 		loader: false,
-		banners: []
+		banners: [],
+		banner: {}
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -33,7 +32,18 @@ export const bannerReducer = createSlice({
 		}
 	},
 	extraReducers: builder => {
-	
+		builder.addCase(addBanner.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.banner = payload.payload || {};
+		});
+		builder.addCase(addBanner.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(addBanner.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
 	}
 	
 });
