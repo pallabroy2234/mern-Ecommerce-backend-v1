@@ -36,6 +36,19 @@ export const logout = createAsyncThunk("auth/logout", async (_, {rejectWithValue
 	}
 });
 
+// * CHANGE PASSWORD || POST || /api/frontend/user/change-password
+
+export const changePassword = createAsyncThunk("auth/changePassword", async (info, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.post("frontend/user/change-password", info);
+		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		console.log(e.response.data);
+		return rejectWithValue(e.response.data);
+	}
+});
+
 // ! JWT DECODE TOKEN
 
 const decodeToken = (token) => {
@@ -54,11 +67,15 @@ export const authReducer = createSlice({
 		userInfo: decodeToken(localStorage.getItem("userAuthorization")),
 		successMessage: "",
 		errorMessage: "",
+		changePasswordSuccessMessage: "",
+		changePasswordErrorMessage: "",
 	},
 	reducers: {
 		messageClear: (state, _) => {
 			state.successMessage = "";
 			state.errorMessage = "";
+			state.changePasswordSuccessMessage = "";
+			state.changePasswordErrorMessage = "";
 		},
 		userReset: (state, _) => {
 			state.userInfo = "";
@@ -102,6 +119,18 @@ export const authReducer = createSlice({
 			state.errorMessage = payload.message;
 		});
 		builder.addCase(logout.pending, (state, {payload}) => {
+			state.loader = true;
+		});
+		// 	* CHANGE PASSWORD
+		builder.addCase(changePassword.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.changePasswordSuccessMessage = payload.message;
+		});
+		builder.addCase(changePassword.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.changePasswordErrorMessage = payload.message;
+		});
+		builder.addCase(changePassword.pending, (state, {payload}) => {
 			state.loader = true;
 		});
 	},

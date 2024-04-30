@@ -1,7 +1,12 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
+import {useDispatch, useSelector} from "react-redux";
+import {changePassword, messageClear} from "../../store/reducers/authReducer.js";
 
 const ChangePassword = () => {
+	const dispatch = useDispatch();
+	const {userInfo, changePasswordErrorMessage, changePasswordSuccessMessage} = useSelector((state) => state.auth);
+
 	const [state, setState] = useState({
 		oldPassword: "",
 		newPassword: "",
@@ -17,12 +22,31 @@ const ChangePassword = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (state.oldPassword === "" || state.newPassword === "") {
-			toast.error("Please fill all the fields");
-		} else if (state.oldPassword === state.newPassword) {
-			toast.error("Old password and new password should not be same");
+		if (userInfo) {
+			if (state.oldPassword === "" || state.newPassword === "") {
+				toast.error("Please fill all the fields");
+			} else if (state.oldPassword === state.newPassword) {
+				toast.error("Old password and new password should not be same");
+			} else if (state.oldPassword !== state.newPassword) {
+				dispatch(changePassword(state));
+			}
 		}
 	};
+
+	useEffect(() => {
+		if (changePasswordSuccessMessage) {
+			toast.success(changePasswordSuccessMessage);
+			dispatch(messageClear());
+			setState({
+				oldPassword: "",
+				newPassword: "",
+			});
+		}
+		if (changePasswordErrorMessage) {
+			toast.error(changePasswordErrorMessage);
+			dispatch(messageClear());
+		}
+	}, [changePasswordSuccessMessage, changePasswordErrorMessage]);
 
 	return (
 		<div className='p-4 bg-white rounded-md'>

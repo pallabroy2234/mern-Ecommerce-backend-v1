@@ -161,7 +161,6 @@ const handleChangePassword = async (req, res) => {
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Password updated successfully",
-			payload: updatePassword,
 		});
 	} catch (e) {
 		console.log(e.message, "handleChangePassword");
