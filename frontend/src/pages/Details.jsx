@@ -385,8 +385,9 @@ const Details = () => {
 
 						{/*  Chatting Option  */}
 						<div className={`flex py-5 gap-3 flex-wrap`}>
+							{/* Buy now Button hidden  */}
 							{product?.stock > 0 ? (
-								<button onClick={handleBuyNow} className='px-9 py-3  whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>
+								<button onClick={handleBuyNow} className='px-9 py-3 hidden   whitespace-nowrap sm:w-full  cursor-pointer hover:shadow-lg hover:shadow-emerald-500/40 bg-emerald-500 text-white rounded-sm capitalize'>
 									Buy Now
 								</button>
 							) : null}
