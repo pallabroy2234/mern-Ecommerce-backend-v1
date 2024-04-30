@@ -2,12 +2,25 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 
 
-// * ADD BANNER
+// * ADD BANNER || POST || /api/dashboard/banner/add-banner
 export const addBanner = createAsyncThunk(
-	"banner/get_categories",
+	"banner/addBanner",
 	async (info, {rejectWithValue, fulfillWithValue}) => {
 		try {
 			const {data} = await api.post("/dashboard/banner/add-banner", info, {withCredentials: true});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
+
+// * GET BANNER BY PRODUCT ID || GET || /api/dashboard/banner/get-banner/:productId
+export const getBanner = createAsyncThunk(
+	"banner/getBanner",
+	async (productId, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.get(`/dashboard/banner/get-banner/${productId}`, {withCredentials: true});
 			return fulfillWithValue(data);
 		} catch (e) {
 			return rejectWithValue(e.response.data);

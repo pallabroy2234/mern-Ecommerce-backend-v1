@@ -6,6 +6,10 @@ const bannerSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
+		sellerId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+		},
 		link: {
 			type: String,
 			required: true,

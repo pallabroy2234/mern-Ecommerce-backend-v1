@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import {BiSolidCloudUpload} from "react-icons/bi";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {addBanner, messageClear} from "../../store/Reducers/bannerReducer.js";
+import {addBanner, getBanner, messageClear} from "../../store/Reducers/bannerReducer.js";
 import {toast} from "react-hot-toast";
 import {PropagateLoader} from "react-spinners";
 import {overrideStyle} from "../../utils/utils.js";
@@ -51,6 +51,16 @@ const AddBanner = () => {
 			
 		}
 	}, [errorMessage, successMessage]);
+	
+	
+	// * GET BANNER BY PRODUCT ID
+	useEffect(()=> {
+		if(userInfo){
+			dispatch(getBanner(productId))
+		}
+		
+	},[productId])
+	
 	
 	
 	return (

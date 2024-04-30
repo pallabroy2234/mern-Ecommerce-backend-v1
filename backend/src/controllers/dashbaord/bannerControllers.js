@@ -53,6 +53,7 @@ const handleAddBanner = async (req, res) => {
 		if (!bannerExists) {
 			bannerData = await BannerModal.create({
 				productId: productId,
+				sellerId: id,
 				banner: result,
 				link: productExists.slug,
 			});
@@ -77,6 +78,47 @@ const handleAddBanner = async (req, res) => {
 	}
 };
 
+// * HANDLE GET BANNER || GET || /api/dashboard/banner/get-banner/:productId
+
+const handleGetBanner = async (req, res) => {
+	try {
+		const {id} = req;
+		const {productId} = req.params;
+		if (!ObjectId.isValid(id) || !ObjectId.isValid(productId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const sellerExists = await SellerModal.findOne({_id: id});
+		if (!sellerExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please register first",
+			});
+		}
+
+		const banner = await BannerModal.findOne({
+			$and: [{productId: new ObjectId(productId)}, {sellerId: new ObjectId(id)}],
+		});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Banner get successfully",
+			payload: {
+				banner: banner || {},
+			},
+		});
+	} catch (e) {
+		console.log(e.message, "handleGetBanner");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddBanner,
+	handleGetBanner,
 };
