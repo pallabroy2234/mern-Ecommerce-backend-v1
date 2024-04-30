@@ -86,9 +86,21 @@ export const submitUserReview = createAsyncThunk("home/submitUserReview", async 
 	}
 });
 
+// * GET PRODUCT REVIEWS || GET || /api/frontend/get-product-reviews/:productId
 export const getProductReviews = createAsyncThunk("home/getProductReviews", async ({productId, pageNumber, limit}, {rejectWithValue, fulfillWithValue}) => {
 	try {
 		const {data} = await api.get(`/frontend/get-product-reviews/${productId}?pageNumber=${pageNumber || 1}&&limit=${limit || 5}`);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
+	}
+});
+
+//  * GET BANNERS || GET || /api/frontend/banner/get-banner
+
+export const getBanners = createAsyncThunk("home/getBanners", async (_, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.get("/frontend/banner/get-banner");
 		return fulfillWithValue(data);
 	} catch (e) {
 		return rejectWithValue(e.response.data);
@@ -122,6 +134,9 @@ export const homeReducer = createSlice({
 		reviews: [],
 		ratings: [],
 		reviewPagination: {},
+
+		// 	* BANNER
+		banners: [],
 	},
 	reducers: {
 		messageClear: (state) => {
@@ -254,6 +269,19 @@ export const homeReducer = createSlice({
 		});
 		builder.addCase(getProductReviews.pending, (state, {payload}) => {
 			state.loading = true;
+		});
+
+		// 	* GET BANNERS
+		builder.addCase(getBanners.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.banners = payload.payload;
+		});
+		builder.addCase(getBanners.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		builder.addCase(getBanners.pending, (state, {payload}) => {
+			state.loader = true;
 		});
 	},
 });
