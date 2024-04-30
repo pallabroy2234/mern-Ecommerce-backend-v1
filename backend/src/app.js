@@ -45,6 +45,7 @@ app.use("/api/payment/", require("./routes/payment/paymentRoutes"));
 app.use("/api/frontend", require("./routes/frontend/homeRoutes"));
 app.use("/api/frontend/user", require("./routes/frontend/authRoutes"));
 app.use("/api/frontend/product", require("./routes/frontend/cartRoutes"));
+app.use("/api/frontend/banner", require("./routes/frontend/bannerRoutes"));
 
 // * ORDER ROUTES
 app.use("/api/frontend/product/order", require("./routes/order/orderRoutes"));
