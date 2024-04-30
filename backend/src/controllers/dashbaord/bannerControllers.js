@@ -118,7 +118,46 @@ const handleGetBanner = async (req, res) => {
 	}
 };
 
+// * HANDLE DELETE BANNER || POST || /api/dashboard/banner/delete-banner
+
+const handleDeleteBanner = async (req, res) => {
+	try {
+		const {id} = req;
+		const {productId, bannerId} = req.body;
+		if (!ObjectId.isValid(id) || !ObjectId.isValid(productId) || !ObjectId.isValid(bannerId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid id",
+			});
+		}
+		const sellerExists = await SellerModal.findOne({_id: id});
+		if (!sellerExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+
+		const deleteBanner = await BannerModal.findOneAndDelete({
+			$and: [{productId: new ObjectId(productId)}, {sellerId: new ObjectId(id)}, {_id: new ObjectId(bannerId)}],
+		});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Banner delete successfully",
+			payload: deleteBanner,
+		});
+	} catch (e) {
+		console.log(e.message, "handleDeleteBanner");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleAddBanner,
 	handleGetBanner,
+	handleDeleteBanner,
 };

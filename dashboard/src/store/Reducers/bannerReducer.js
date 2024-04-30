@@ -28,6 +28,19 @@ export const getBanner = createAsyncThunk(
 	}
 );
 
+// * DELETE BANNER BY PRODUCT Id and Banner Id || DELETE || /api/dashboard/banner/delete-banner
+
+export const deleteBanner = createAsyncThunk(
+	"banner/deleteBanner",
+	async (info, {rejectWithValue, fulfillWithValue}) => {
+		try {
+			const {data} = await api.post(`/dashboard/banner/delete-banner`, info, {withCredentials: true});
+			return fulfillWithValue(data);
+		} catch (e) {
+			return rejectWithValue(e.response.data);
+		}
+	}
+);
 
 export const bannerReducer = createSlice({
 	name: "banner",

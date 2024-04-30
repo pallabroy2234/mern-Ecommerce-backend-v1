@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import {BiSolidCloudUpload} from "react-icons/bi";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {addBanner, getBanner, messageClear} from "../../store/Reducers/bannerReducer.js";
+import {addBanner, deleteBanner, getBanner, messageClear} from "../../store/Reducers/bannerReducer.js";
 import {toast} from "react-hot-toast";
 import {PropagateLoader} from "react-spinners";
 import {overrideStyle} from "../../utils/utils.js";
@@ -34,6 +34,16 @@ const AddBanner = () => {
 			dispatch(addBanner(formData));
 		} else {
 			toast.error("Please login first");
+		}
+	};
+	
+	const handleDeleteBanner = () => {
+		if (userInfo) {
+			const obj = {
+				productId: productId,
+				bannerId: banner._id
+			};
+			dispatch(deleteBanner(obj));
 		}
 	};
 	
@@ -92,12 +102,18 @@ const AddBanner = () => {
 						) : null
 					}
 					
-					
-					<div className="text-white pt-8 flex">
+					<div className="text-white pt-8 flex gap-2">
 						<button disabled={loader} type="submit" className="bg-blue-500 w-[200px] hover:shadow-blue-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
 							{loader ?
 								<PropagateLoader color="#fff" cssOverride={overrideStyle} /> : "Upload Banner"}
 						</button>
+						{
+							banner.banner ? imageShow ? null : (
+								<button onSubmit={handleDeleteBanner} disabled={loader} type="button" className="bg-red-500 w-[200px] hover:shadow-red-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+									Delete Banner
+								</button>
+							) : null
+						}
 					</div>
 				</form>
 			</div>
