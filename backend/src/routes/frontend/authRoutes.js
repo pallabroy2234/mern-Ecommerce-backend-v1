@@ -1,6 +1,6 @@
 const express = require("express");
-const {handleUserRegister, handleUserLogin, handleUserLogout} = require("../../controllers/frontend/authControllers");
-const {userRegisterValidator, userLoginValidator} = require("../../validator/frontend/authValidator");
+const {handleUserRegister, handleUserLogin, handleUserLogout, handleChangePassword} = require("../../controllers/frontend/authControllers");
+const {userRegisterValidator, userLoginValidator, userChangePasswordValidator} = require("../../validator/frontend/authValidator");
 const {runValidation} = require("../../validator");
 const {authMiddleware, isLoggedOut, isUser} = require("../../middleware/frontend/authMiddleware");
 
@@ -16,4 +16,6 @@ authRouter.post("/user-login", isLoggedOut, userLoginValidator, runValidation, h
 // *  USER LOGOUT
 authRouter.get("/user-logout", authMiddleware, handleUserLogout);
 
+// * CHANGE PASSWORD
+authRouter.post("/change-password", authMiddleware, isUser, userChangePasswordValidator, runValidation, handleChangePassword);
 module.exports = authRouter;

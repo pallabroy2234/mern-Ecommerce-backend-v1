@@ -3,6 +3,9 @@ const User = require("../../models/userModal");
 const SellerCustomer = require("../../models/chat/sellerCustomerModal");
 const {createToken} = require("../../utiles/jsonWebToken");
 const bcrypt = require("bcrypt");
+const {
+	Types: {ObjectId},
+} = require("mongoose");
 
 //  ! HANDLE USER REGISTER
 const handleUserRegister = async (req, res) => {
@@ -121,8 +124,57 @@ const handleUserLogout = async (req, res) => {
 	}
 };
 
+// * HANDLE CHANGE PASSWORD || POST || /api/frontend/user/change-password
+
+const handleChangePassword = async (req, res) => {
+	try {
+		const {userId} = req;
+		const {oldPassword, newPassword} = req.body;
+		if (!ObjectId.isValid(userId)) {
+			return errorResponse(res, {
+				statusCode: 400,
+				message: "Invalid  id",
+			});
+		}
+
+		const userExists = await User.findById(userId).select("+password");
+
+		if (!userExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Please login first",
+			});
+		}
+
+		const isPasswordMatch = await bcrypt.compare(oldPassword, userExists.password);
+		if (!isPasswordMatch) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Old password is not correct",
+			});
+		}
+
+		const updatePassword = await User.findByIdAndUpdate(userId, {
+			password: newPassword,
+		});
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Password updated successfully",
+			payload: updatePassword,
+		});
+	} catch (e) {
+		console.log(e.message, "handleChangePassword");
+		return errorResponse(res, {
+			statusCode: 500,
+			message: e.message || "Internal Server Error",
+		});
+	}
+};
+
 module.exports = {
 	handleUserRegister,
 	handleUserLogin,
 	handleUserLogout,
+	handleChangePassword,
 };
