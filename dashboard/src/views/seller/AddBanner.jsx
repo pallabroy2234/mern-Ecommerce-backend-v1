@@ -38,7 +38,8 @@ const AddBanner = () => {
 	};
 	
 	const handleDeleteBanner = () => {
-		if (userInfo) {
+		console.log("delete");
+		if (userInfo && banner?._id && productId) {
 			const obj = {
 				productId: productId,
 				bannerId: banner._id
@@ -72,7 +73,6 @@ const AddBanner = () => {
 	}, [productId]);
 	
 	
-	console.log(banner.banner);
 	return (<div className="px-2 md:px-7 py-5">
 		{/* Heading */}
 		<div className="w-full bg-secondary p-4 rounded-md pb-4">
@@ -109,13 +109,14 @@ const AddBanner = () => {
 						</button>
 						{
 							banner.banner ? imageShow ? null : (
-								<button onSubmit={handleDeleteBanner} disabled={loader} type="button" className="bg-red-500 w-[200px] hover:shadow-red-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
+								<button onClick={handleDeleteBanner} type="button" className="bg-red-500 w-[200px] hover:shadow-red-500/20 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3">
 									Delete Banner
 								</button>
 							) : null
 						}
 					</div>
 				</form>
+			
 			</div>
 		</div>
 	</div>);

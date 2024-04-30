@@ -138,14 +138,24 @@ const handleDeleteBanner = async (req, res) => {
 			});
 		}
 
-		const deleteBanner = await BannerModal.findOneAndDelete({
+		const bannerExists = await BannerModal.findOne({
 			$and: [{productId: new ObjectId(productId)}, {sellerId: new ObjectId(id)}, {_id: new ObjectId(bannerId)}],
 		});
+
+		if (!bannerExists) {
+			return errorResponse(res, {
+				statusCode: 404,
+				message: "Banner not found",
+			});
+		}
+
+		const publicId = await publicIdWithOutExtensionFromUrl(bannerExists.banner);
+		await deleteImageFromCloudinary(res, publicId, "multiVendor/banner");
+		await bannerExists.deleteOne();
 
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Banner delete successfully",
-			payload: deleteBanner,
 		});
 	} catch (e) {
 		console.log(e.message, "handleDeleteBanner");

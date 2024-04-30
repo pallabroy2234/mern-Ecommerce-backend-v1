@@ -3,61 +3,52 @@ import api from "../../api/api.js";
 
 
 // * ADD BANNER || POST || /api/dashboard/banner/add-banner
-export const addBanner = createAsyncThunk(
-	"banner/addBanner",
-	async (info, {rejectWithValue, fulfillWithValue}) => {
-		try {
-			const {data} = await api.post("/dashboard/banner/add-banner", info, {withCredentials: true});
-			return fulfillWithValue(data);
-		} catch (e) {
-			return rejectWithValue(e.response.data);
-		}
+export const addBanner = createAsyncThunk("banner/addBanner", async (info, {rejectWithValue, fulfillWithValue}) => {
+	try {
+		const {data} = await api.post("/dashboard/banner/add-banner", info, {withCredentials: true});
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
 	}
-);
+});
 
 // * GET BANNER BY PRODUCT ID || GET || /api/dashboard/banner/get-banner/:productId
-export const getBanner = createAsyncThunk(
-	"banner/getBanner",
-	async (productId, {rejectWithValue, fulfillWithValue}) => {
-		try {
-			const {data} = await api.get(`/dashboard/banner/get-banner/${productId}`, {withCredentials: true});
-			return fulfillWithValue(data);
-		} catch (e) {
-			return rejectWithValue(e.response.data);
-		}
+export const getBanner = createAsyncThunk("banner/getBanner", async (productId, {
+	rejectWithValue,
+	fulfillWithValue
+}) => {
+	try {
+		const {data} = await api.get(`/dashboard/banner/get-banner/${productId}`, {withCredentials: true});
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
 	}
-);
+});
 
 // * DELETE BANNER BY PRODUCT Id and Banner Id || DELETE || /api/dashboard/banner/delete-banner
 
-export const deleteBanner = createAsyncThunk(
-	"banner/deleteBanner",
-	async (info, {rejectWithValue, fulfillWithValue}) => {
-		try {
-			const {data} = await api.post(`/dashboard/banner/delete-banner`, info, {withCredentials: true});
-			return fulfillWithValue(data);
-		} catch (e) {
-			return rejectWithValue(e.response.data);
-		}
+export const deleteBanner = createAsyncThunk("banner/deleteBanner", async (info, {
+	rejectWithValue,
+	fulfillWithValue
+}) => {
+	try {
+		const {data} = await api.post(`/dashboard/banner/delete-banner`, info, {withCredentials: true});
+		console.log(data);
+		return fulfillWithValue(data);
+	} catch (e) {
+		return rejectWithValue(e.response.data);
 	}
-);
+});
 
 export const bannerReducer = createSlice({
-	name: "banner",
-	initialState: {
-		successMessage: "",
-		errorMessage: "",
-		loader: false,
-		banners: [],
-		banner: {}
-	},
-	reducers: {
+	name: "banner", initialState: {
+		successMessage: "", errorMessage: "", loader: false, banners: [], banner: {}
+	}, reducers: {
 		messageClear: (state) => {
 			state.successMessage = "";
 			state.errorMessage = "";
 		}
-	},
-	extraReducers: builder => {
+	}, extraReducers: builder => {
 		//  * UPLOAD BANNER
 		builder.addCase(addBanner.fulfilled, (state, {payload}) => {
 			const banner = payload.payload;
@@ -82,6 +73,20 @@ export const bannerReducer = createSlice({
 			state.loader = true;
 		});
 		builder.addCase(getBanner.rejected, (state, {payload}) => {
+			state.loader = false;
+			state.errorMessage = payload.message;
+		});
+		
+		// 	* DELETE BANNER
+		builder.addCase(deleteBanner.fulfilled, (state, {payload}) => {
+			state.loader = false;
+			state.successMessage = payload.message;
+			state.banner = {};
+		});
+		builder.addCase(deleteBanner.pending, (state, _) => {
+			state.loader = true;
+		});
+		builder.addCase(deleteBanner.rejected, (state, {payload}) => {
 			state.loader = false;
 			state.errorMessage = payload.message;
 		});
