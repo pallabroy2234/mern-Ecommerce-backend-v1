@@ -1,7 +1,0 @@
-
-database-userName : roypallabtushar2234
-database-password : eycVxHxRmsaGoH18
-
-
-npm i express bcrypt body-parser cloudinary cookie-parser cors dotenv formidable jsonwebtoken mongoose moment socket.io stripe uuid nodemon  http-errors
- express-validator
