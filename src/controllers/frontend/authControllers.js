@@ -110,6 +110,8 @@ const handleUserLogout = async (req, res) => {
 		res.cookie("userAuthorization", null, {
 			expires: new Date(Date.now()),
 			httpOnly: true,
+			secure:true,
+			sameSite: "none",
 		});
 
 		return successResponse(res, {
