@@ -10,7 +10,7 @@ const connectDatabase = async (options = {}) => {
            await mongoose.connect(process.env.DB_PRODUCTION_URL, {
                ...options,
            });
-           console.log("Mongodb connection established");
+           console.log("Mongodb production  connection established");
            mongoose.connection.on("error", (error) => {
                console.error("Mongodb connection error", error);
            });
