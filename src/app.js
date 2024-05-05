@@ -26,6 +26,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
+
+app.get("/", (req, res) => {
+    res.send("Welcome to the E-commerce API");
+})
+
 // * BACKEND ROUTES
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
