@@ -13,11 +13,13 @@ const sellerRouter = require("./routes/dashboard/sellerRouters");
 
 // * ALL API MIDDLEWARE
 app.use(
-	cors({
-		origin: /.*/,
-		preflightContinue: false,
-		credentials: true,
-	}),
+    cors({
+        // origin: /.*/,
+        origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_CLIENT_DASHBOARD_PRODUCTION_URL] :
+            [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL],
+        preflightContinue: false,
+        credentials: true,
+    }),
 );
 
 app.use(bodyParser.json());
@@ -58,33 +60,33 @@ app.use("/api/dashboard/chat/admin", require("./routes/dashboard/adminChatRoutes
 
 // * CLOUDINARY CONFIG
 cloudinary.config({
-	cloud_name: process.env.CLOUD_NAME,
-	api_key: process.env.CLOUD_API_KEY,
-	api_secret: process.env.CLOUD_SECRET_KEY,
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
 //  * Client error handle
 app.use((req, res, next) => {
-	// next(createError(404, "Route not found"));
-	return errorResponse(res, {
-		statusCode: 404,
-		message: "Route not found",
-	});
+    // next(createError(404, "Route not found"));
+    return errorResponse(res, {
+        statusCode: 404,
+        message: "Route not found",
+    });
 });
 
 // * All Server Error Handler
 app.use((err, req, res, next) => {
-	console.log(err);
-	if (err instanceof multer.MulterError) {
-		return errorResponse(res, {
-			statusCode: 500,
-			message: err.message,
-		});
-	}
-	return errorResponse(res, {
-		statusCode: err.status,
-		message: err.message,
-	});
+    console.log(err);
+    if (err instanceof multer.MulterError) {
+        return errorResponse(res, {
+            statusCode: 500,
+            message: err.message,
+        });
+    }
+    return errorResponse(res, {
+        statusCode: err.status,
+        message: err.message,
+    });
 });
 
 module.exports = app;

@@ -10,7 +10,9 @@ const server = http.createServer(app);
 
 const io = socketIo(server, {
 	cors: {
-		origin: "*",
+		// origin: "*",
+		origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_CLIENT_DASHBOARD_PRODUCTION_URL] :
+			[process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL],
 		credentials: true,
 	},
 });
