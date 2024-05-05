@@ -32,7 +32,7 @@ const io = socketIo(server, {
             }
             return callback(null, true);
         },
-        preflightContinue: false,
+        // preflightContinue: false,
         credentials: true,
         optionsSuccessStatus: 200,
     },

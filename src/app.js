@@ -46,7 +46,7 @@ app.use(cors({
     },
     credentials: true,
     optionsSuccessStatus: 200,
-    preflightContinue: false,
+    // preflightContinue: false,
 }));
 
 
