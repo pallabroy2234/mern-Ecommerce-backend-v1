@@ -85,8 +85,8 @@ const handleUserLogin = async (req, res) => {
 		res.cookie("userAuthorization", token, {
 			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 			httpOnly: true,
-			secure: true,
-			sameSite: "lax",
+			secure: false,
+			sameSite: "none",
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
