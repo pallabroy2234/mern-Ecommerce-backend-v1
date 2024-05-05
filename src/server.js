@@ -20,7 +20,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 
-
 const io = socketIo(server, {
     cors: {
         // origin: "*",
@@ -33,11 +32,11 @@ const io = socketIo(server, {
             }
             return callback(null, true);
         },
-        // preflightContinue: false,
+        preflightContinue: false,
         credentials: true,
+        optionsSuccessStatus: 200,
     },
 });
-
 
 
 let allSeller = [];

@@ -45,6 +45,8 @@ app.use(cors({
         return callback(null, true);
     },
     credentials: true,
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
 }));
 
 
