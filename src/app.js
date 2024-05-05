@@ -14,9 +14,9 @@ const sellerRouter = require("./routes/dashboard/sellerRouters");
 // * ALL API MIDDLEWARE
 app.use(
     cors({
-        // origin: /.*/,
-        origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL] :
-            [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL],
+        origin: /.*/,
+        // origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL] :
+        //     [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL],
         preflightContinue: false,
         credentials: true,
     }),
