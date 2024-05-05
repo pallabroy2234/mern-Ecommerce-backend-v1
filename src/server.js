@@ -9,16 +9,31 @@ const cors = require("cors");
 const server = http.createServer(app);
 
 
+let allowedOrigins = [];
 
+if (process.env.NODE_ENV === 'development') {
+    // Development environment
+    allowedOrigins = [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL];
+} else if (process.env.NODE_ENV === 'production') {
+    // Production environment
+    allowedOrigins = [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL];
+}
 
 
 
 const io = socketIo(server, {
     cors: {
         // origin: "*",
-        origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL] :
-            [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL],
-        preflightContinue: false,
+        origin: function (origin, callback) {
+            // allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.indexOf(origin) === -1) {
+                let msg = "The CORS policy for this site does not allow access from the specified Origin.";
+                return callback(new Error(msg), false);
+            }
+            return callback(null, true);
+        },
+        // preflightContinue: false,
         credentials: true,
     },
 });
