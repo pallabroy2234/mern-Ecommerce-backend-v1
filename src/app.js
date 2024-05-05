@@ -12,16 +12,41 @@ const multer = require("multer");
 const sellerRouter = require("./routes/dashboard/sellerRouters");
 
 // * ALL API MIDDLEWARE
-app.use(
-    cors({
-        // origin: /.*/,
-        origin: process.env.CLIENT_USER_PRODUCTION_URL,
-        // origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL] :
-        //     [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL],
-        preflightContinue: false,
-        credentials: true,
-    }),
-);
+// app.use(
+//     cors({
+//         // origin: /.*/,
+//
+//         // origin: process.env.MODE === "production" ? [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL] :
+//         //     [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL],
+//         preflightContinue: false,
+//         credentials: true,
+//     }),
+// );
+
+let allowedOrigins = [];
+
+if (process.env.NODE_ENV === 'development') {
+    // Development environment
+    allowedOrigins = [process.env.CLIENT_USER_LOCAL_URL, process.env.CLIENT_DASHBOARD_LOCAL_URL];
+} else if (process.env.NODE_ENV === 'production') {
+    // Production environment
+    allowedOrigins = [process.env.CLIENT_USER_PRODUCTION_URL, process.env.CLIENT_DASHBOARD_PRODUCTION_URL];
+}
+
+// Use CORS middleware with dynamic allowed origins
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            let msg = "The CORS policy for this site does not allow access from the specified Origin.";
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+}));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
