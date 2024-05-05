@@ -88,6 +88,7 @@ const handleUserLogin = async (req, res) => {
 			secure:true,
 			sameSite: "none",
 			maxAge: 7 * 24 * 60 * 60 * 1000,
+			partitioned:true,
 		});
 
 		return successResponse(res, {
@@ -112,6 +113,7 @@ const handleUserLogout = async (req, res) => {
 			httpOnly: true,
 			secure:true,
 			sameSite: "none",
+			partitioned:true,
 		});
 
 		return successResponse(res, {
