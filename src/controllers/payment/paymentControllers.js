@@ -25,8 +25,10 @@ const handleSellerConnectAccount = async (req, res) => {
 			const account = await stripe.accounts.create({type: "express"});
 			const accountLink = await stripe.accountLinks.create({
 				account: account.id,
-				refresh_url: "http://localhost:5173/refresh",
-				return_url: `http://localhost:5173/success?activecode=${uuid}`,
+				// refresh_url: "https://mern-ecommerce-frontend-v1.onrender.com/refresh",
+					refresh_url: process.env.MODE === "production" ? `${process.env.CLIENT_DASHBOARD_PRODUCTION_URL}/refresh` : `${process.env.CLIENT_DASHBOARD_LOCAL_URL}/refresh`,
+				// return_url: `https://mern-ecommerce-frontend-v1.onrender.com/success?activecode=${uuid}`,
+					return_url: process.env.MODE === "production" ? `${process.env.CLIENT_DASHBOARD_PRODUCTION_URL}/success?activecode=${uuid}` : `${process.env.CLIENT_DASHBOARD_LOCAL_URL}/success?activecode=${uuid}`,
 				type: "account_onboarding",
 			});
 
@@ -47,8 +49,10 @@ const handleSellerConnectAccount = async (req, res) => {
 			const account = await stripe.accounts.create({type: "express"});
 			const accountLink = await stripe.accountLinks.create({
 				account: account.id,
-				refresh_url: "http://localhost:5173/refresh",
-				return_url: `http://localhost:5173/success?activecode=${uuid}`,
+				// refresh_url: "https://mern-ecommerce-frontend-v1.onrender.com/refresh",
+				refresh_url: process.env.MODE === "production" ? `${process.env.CLIENT_DASHBOARD_PRODUCTION_URL}/refresh` : `${process.env.CLIENT_DASHBOARD_LOCAL_URL}/refresh`,
+				// return_url: `https://mern-ecommerce-frontend-v1.onrender.com/success?activecode=${uuid}`,
+				return_url: process.env.MODE === "production" ? `${process.env.CLIENT_DASHBOARD_PRODUCTION_URL}/success?activecode=${uuid}` : `${process.env.CLIENT_DASHBOARD_LOCAL_URL}/success?activecode=${uuid}`,
 				type: "account_onboarding",
 			});
 
