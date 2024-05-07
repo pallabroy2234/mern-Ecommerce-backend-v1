@@ -68,6 +68,7 @@ class authControllers {
 				shopInfo: {},
 			});
 
+			
 			if (!seller) {
 				throw createError(400, "Seller register failed");
 			}
