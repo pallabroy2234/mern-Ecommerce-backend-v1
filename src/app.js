@@ -25,58 +25,50 @@ if (process.env.NODE_ENV === 'development') {
 
 
 // * CORS middleware configuration
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true); // Allow the request
-        } else {
-            callback(new Error("The CORS policy for this site does not allow access from the specified origin."), false);
-        }
-    },
-    credentials: true,
-    optionsSuccessStatus: 200,
-    preflightContinue: false,
-};
-
-app.use(cors(corsOptions));
-
-// * Additional CORS configuration for all routes
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.indexOf(origin) > -1) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
-
-
-// Use CORS middleware with dynamic allowed origins
-// app.use(cors({
-//     // origin: function (origin, callback) {
-//     //     // allow requests with no origin (like mobile apps or curl requests)
-//     //     if (!origin) return callback(null, true);
-//     //     if (allowedOrigins.indexOf(origin) === -1) {
-//     //         let msg = "The CORS policy for this site does not allow access from the specified Origin.";
-//     //         return callback(new Error(msg), false);
-//     //     }
-//     //     return callback(null, true);
-//     // },
+// const corsOptions = {
 //     origin: function (origin, callback) {
-//         // Check if the request origin is in the allowedOrigins array
 //         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
 //             callback(null, true); // Allow the request
 //         } else {
 //             callback(new Error("The CORS policy for this site does not allow access from the specified origin."), false);
 //         }
 //     },
-//     // origin: /.*/,
 //     credentials: true,
 //     optionsSuccessStatus: 200,
 //     preflightContinue: false,
-// }));
+// };
+
+// app.use(cors(corsOptions));
+
+// * Additional CORS configuration for all routes
+// app.use((req, res, next) => {
+//     const origin = req.headers.origin;
+//     if (allowedOrigins.indexOf(origin) > -1) {
+//         res.setHeader('Access-Control-Allow-Origin', origin);
+//     }
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     next();
+// });
+
+
+// Use CORS middleware with dynamic allowed origins
+app.use(cors({
+    // origin: function (origin, callback) {
+    //     // allow requests with no origin (like mobile apps or curl requests)
+    //     if (!origin) return callback(null, true);
+    //     if (allowedOrigins.indexOf(origin) === -1) {
+    //         let msg = "The CORS policy for this site does not allow access from the specified Origin.";
+    //         return callback(new Error(msg), false);
+    //     }
+    //     return callback(null, true);
+    // },
+    origin: /.*/,
+    credentials: true,
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
