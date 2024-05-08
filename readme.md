@@ -47,10 +47,10 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
    ```sh
    https://github.com/pallabroy2234/mern-Ecommerce-backend-v1.git
-2. FRONTEND LIVE LINK
+2. frontend repository:
    ```sh
-   https://mern-ecommerce-frontend-v1.onrender.com
+   https://github.com/pallabroy2234/mern-Ecommerce-frontend-v1.git
 
-3. DASHBOARD LIVE LINK
+3. dashboard repository:
    ```sh
-   https://mern-ecommerce-dashboard-v1.onrender.com
+   https://github.com/pallabroy2234/mern-Ecommerce-dashboard-v1.git
