@@ -1,5 +1,5 @@
 admin : pallab@gmail.com
-    pass : pallab@2234
+    pass : my_common_passowrd || pallab@
 
 
 
