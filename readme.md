@@ -22,7 +22,7 @@ backend, frontend, and database operations.
 - Redux: A predictable state container for JavaScript apps used for managing application state.
 - JWT (JSON Web Tokens): Used for authentication and authorization.
 - Stripe: A payment processing platform used for payment integration.
-- - React Stripe.js: A library for Stripe used for payment processing.
+- React Stripe.js: A library for Stripe used for payment processing.
 - Cloudinary: A cloud-based image and video management service used for image uploads.
 - Tailwind CSS: A utility-first CSS framework used for styling the frontend.
 - Axios: A promise-based HTTP client used for making API requests.
