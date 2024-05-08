@@ -9,10 +9,22 @@ npm i express bcrypt body-parser cloudinary cookie-parser cors dotenv formidable
 
  env secret key
 
- PORT=3000
- DB_URL=mongodb+srv://roypallabtushar2234:eycVxHxRmsaGoH18@cluster0.yoqk1xy.mongodb.net/ecommerce
- SECRET_KEY=pallabtushar
- CLOUD_NAME=davejnroo
- CLOUD_API_KEY=113341648511738
- CLOUD_SECRET_KEY=JMIclVRjg6UI51hUAgYVab317uo
- STRIPE_SECRET_KEY=sk_test_51P85zqKkIuFqly0WNuFK8FAGxv08xBdPkYE5iuty3rVobSHANt68eKvmHLYpwRyYcHTpPSzriGHFwNrAJTTOIv3W00xeJd9MSL
+PORT=3000
+MODE=development
+DB_PRODUCTION_URL=mongodb+srv://roypallabtushar2234:eycVxHxRmsaGoH18@cluster0.yoqk1xy.mongodb.net/ecommerce
+DB_LOCAL_URL=mongodb://localhost:27017/multivendor-ecommerce
+SECRET_KEY=pallabtushar
+CLOUD_NAME=davejnroo
+CLOUD_API_KEY=113341648511738
+CLOUD_SECRET_KEY=JMIclVRjg6UI51hUAgYVab317uo
+STRIPE_SECRET_KEY=sk_test_51P85zqKkIuFqly0WNuFK8FAGxv08xBdPkYE5iuty3rVobSHANt68eKvmHLYpwRyYcHTpPSzriGHFwNrAJTTOIv3W00xeJd9MSL
+
+# apis
+
+# Client User URLs
+CLIENT_USER_LOCAL_URL=http://localhost:5173
+CLIENT_DASHBOARD_LOCAL_URL=http://localhost:5174
+
+# Client production  Dashboard URLs
+CLIENT_USER_PRODUCTION_URL=https://mern-ecommerce-frontend-v1.onrender.com
+CLIENT_DASHBOARD_PRODUCTION_URL=https://mern-ecommerce-dashboard-v1.onrender.com

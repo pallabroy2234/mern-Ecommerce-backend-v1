@@ -64,7 +64,7 @@ const handleSellerConnectAccount = async (req, res) => {
 
 			return successResponse(res, {
 				statusCode: 201,
-				message: "account create successfully",
+				message: "account create successfully	",
 				payload: {
 					url: accountLink.url,
 				},
